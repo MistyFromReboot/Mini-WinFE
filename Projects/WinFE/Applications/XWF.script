@@ -1,0 +1,215 @@
+[main]
+Title=X-Ways Forensics
+Description=
+Selected=False
+Level=5
+Author=Misty
+Version=20220524
+Date=2022-05-24
+Interface=Interface1
+
+[Interface1]
+pTextLabelMenu1="1",1,1,35,3,70,18,10,Bold
+pButtonMenu2="2",1,8,75,0,70,20,pButtonMenu2,0,True,_pButtonMenu2_,True
+pButtonMenu3="?",1,8,145,0,70,20,pButtonMenu3,0,True,_pButtonMenu3_,True
+pBevel_B1=,1,12,10,70,500,40
+pTextLabel_B1="PATH to 32-bit",1,1,20,80,130,18,8,Bold
+pFileBox_B1=,1,13,150,80,230,20,file
+pButton_B1="ADD TO CACHE",1,8,404,80,96,20,B1.RUN,0,True,_B1.RUN_,True
+pBevel_B2=,1,12,10,130,500,40
+pTextLabel_B2="PATH to 64-bit",1,1,20,140,130,18,8,Bold
+pFileBox_B2=,1,13,150,140,230,20,file
+pButton_B2="ADD TO CACHE",1,8,404,140,96,20,B2.RUN,0,True,_B2.RUN_,True
+pWebLabel1=http://www.x-ways.net/forensics/,1,10,120,43,180,18,http://www.x-ways.net/forensics/
+pTextLabel5="X-Ways Website",1,1,10,45,150,18,10,Bold
+pCheckBoxInWim="Include Program in boot.wim",1,3,10,265,180,18,True
+
+[Interface2]
+pButtonMenu1="1",1,8,5,0,70,20,pButtonMenu1,0,True,_pButtonMenu1_,True
+pTextLabelMenu2="2",1,1,108,3,70,18,10,Bold
+pButtonMenu3="?",1,8,145,0,70,20,pButtonMenu3,0,True,_pButtonMenu3_,True
+pBevel1=,1,12,10,65,66,2
+pTextLabel="Menu Entries",1,1,10,50,230,18,8,Bold
+pCheckBoxShortcutDesktop="Add to Desktop Menu",1,3,40,80,150,18,True
+pCheckBoxShortcutQuick="Add to Quicklaunch Menu",1,3,40,110,150,18,True
+pCheckBoxShortcutPrograms="Add to #$qStart#$q > ",1,3,40,140,99,18,True
+pCheckBoxShortcutLaunchBar="Add to LaunchBar Menu ",1,3,40,170,150,18,True
+pButtonShortcut1=?,1,8,10,80,18,18,pButtonShortcut1,0,True,_pButtonShortcut1_,True
+pButtonShortcut2=?,1,8,10,110,18,18,pButtonShortcut2,0,True,_pButtonShortcut2_,True
+pButtonShortcut3=?,1,8,10,140,18,18,pButtonShortcut3,0,True,_pButtonShortcut3_,True
+pButtonShortcut4=?,1,8,10,170,18,18,pButtonShortcut4,0,True,_pButtonShortcut4_,True
+pTextBox1=,1,0,140,140,150,21,Programs
+
+[pButtonMenu1]
+IniWrite,%ScriptFile%,Main,Interface,Interface1
+System,REFRESHINTERFACE
+
+[pButtonMenu2]
+IniWrite,%ScriptFile%,Main,Interface,Interface2
+System,REFRESHINTERFACE
+
+[pButtonMenu3]
+message,"Click on the buttons to toggle between tabs 1 and 2. #$x#$xTab 2 contains menu options for use in the selected shell. Click on the ? button for information about the different options."
+
+[pButtonShortcut1]
+message,"WinXShell only#$x#$xSelect this option to add a program shortcut to the Desktop."
+
+[pButtonShortcut2]
+message,"WinXShell only#$x#$xSelect this option to add a program menu option to the Quicklaunch menu - similar in appearence to the 'Pin to Taskbar' option in Windows 7/8/10."
+
+[pButtonShortcut3]
+message,"Applies to WinXShell#$c BBLean and LaunchBar Shell(s)#$x#$xSelect this option to add a program menu option to the Start menu. Leave blank to add to the root of the menu#$c or manually type a path to place in a sub-menu (do not use spaces in the path). E.g. #$x#$s- FileManager#$x#$s- Programs#$x#$s- Programs\FileManager#$x#$xAnd looking at the examples above - #$x#$xLeave this option blank to add a menu entry to the root of the program menu (the 'Start' menu in WinXShell#$c the 'Start' menu in BBLean#$c or the root of the LaunchBar menu bar if LaunchBar is selected as Shell)#$x#$xEnter 'FileManager' to add a menu entry for this application to the 'Start' > 'FileManager' sub-menu (WinXShell and bblean) or the 'FileManager' sub-menu in LaunchBar.#$x#$xEnter 'Programs' to add a menu entry for this application to the 'Start' > 'Programs' sub-menu (WinXShell and bblean) or the 'Programs' sub-menu in LaunchBar.#$x#$xEnter 'Programs\FileManager' to add a menu entry for this application to the 'Start' > 'Programs' > 'FileManager' sub-menu (WinXShell and bblean) or the 'Programs' > 'FileManager' sub-menu in LaunchBar."
+
+[pButtonShortcut4]
+message,"This setting does not apply to any LaunchBar instance running as the WinPE Shell. This option only applies to a LaunchBar instance when the Applications' > 'LaunchBar' program script is selected in the build.#$x#$xIf the 'Applications' > 'LaunchBar' program script is selected than enable this option to add a program menu entry to the root of the LaunchBar menu bar. #$x#$xPlease note that if option '6] Programs in boot.wim' in the main project script is set as 'NO'#$c then LaunchBar and a number of other applications will not be available at boot. In this case a text based .ini file will be used for LaunchBar menu settings."
+
+[B1.RUN]
+If,ExistFile,"%Programs%\XWF\x86\xwforensics.exe",Message,"The cache already contains a copy of X-Ways Forensics. Exiting..."
+Else,Begin
+set,%XWF%,%pFileBox_B1%
+If,%XWF%,Equal,"",Begin
+Message,"ERROR - The filebox is empty. Change the path and retry. Exiting..."
+Exit,"ERROR - The filebox is empty. Change the path and retry. Exiting..."
+End
+If,Not,ExistFile,"%XWF%",Begin
+Message,"ERROR - The selected file does not exist. Change the path and retry. Exiting..."
+Exit,"ERROR - The selected file does not exist. Change the path and retry. Exiting..."
+End
+StrFormat,PATH,"%XWF%","%XWF.PATH%"
+StrFormat,FILENAME,"%XWF%","%XWF.EXE%"
+If,Not,%XWF.EXE%,Equal,xwforensics.exe,Begin
+Message,"ERROR - Selected file is not xwforensics.exe. Change the path and retry. Aborting..."
+Exit,"ERROR - Selected file is not xwforensics.exe. Change the path and retry. Aborting..."
+End
+If,Not,ExistDir,"%Programs%\XWF\x86",DirMake,"%Programs%\XWF\x86"
+Echo,"Copying files to cache"
+DirCopy,"%XWF.PATH%\*.*","%Programs%\XWF\x86"
+If,Not,ExistFile,"%Programs%\XWF\x86\xwforensics.exe",Begin
+Message,"There appears to have been an error copying W-Ways Forensics to the cache. Exiting..."
+Exit,"There appears to have been an error copying X-Ways Forensics to the cache. Exiting..."
+End
+Else,Message,"W-Ways Forensics added to the following path -#$x#$x#$s#$s#$s#$q%Programs%\XWF\x86#$q"
+End
+
+[B2.RUN]
+If,ExistFile,"%Programs%\XWF\x64\xwforensics64.exe",Message,"The cache already contains a copy of X-Ways Forensics. Exiting..."
+Else,Begin
+set,%XWF%,%pFileBox_B2%
+If,%XWF%,Equal,"",Begin
+Message,"ERROR - The filebox is empty. Change the path and retry. Exiting..."
+Exit,"ERROR - The filebox is empty. Change the path and retry. Exiting..."
+End
+If,Not,ExistFile,"%XWF%",Begin
+Message,"ERROR - The selected file does not exist. Change the path and retry. Exiting..."
+Exit,"ERROR - The selected file does not exist. Change the path and retry. Exiting..."
+End
+StrFormat,PATH,"%XWF%","%XWF.PATH%"
+StrFormat,FILENAME,"%XWF%","%XWF.EXE%"
+If,Not,%XWF.EXE%,Equal,xwforensics64.exe,Begin
+Message,"ERROR - Selected file is not xwforensics64.exe. Change the path and retry. Aborting..."
+Exit,"ERROR - Selected file is not xwforensics64.exe. Change the path and retry. Aborting..."
+End
+If,Not,ExistDir,"%Programs%\XWF\x64",DirMake,"%Programs%\XWF\x64"
+Echo,"Copying files to cache"
+DirCopy,"%XWF.PATH%\*.*","%Programs%\XWF\x64"
+If,Not,ExistFile,"%Programs%\XWF\x64\xwforensics64.exe",Begin
+Message,"There appears to have been an error copying W-Ways Forensics to the cache. Exiting..."
+Exit,"There appears to have been an error copying X-Ways Forensics to the cache. Exiting..."
+End
+Else,Message,"W-Ways Forensics added to the following path -#$x#$x#$s#$s#$s#$q%Programs%\XWF\x64#$q"
+End
+
+[process]
+If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRun
+AddInterface,%ScriptFile%,Interface1,""
+AddInterface,%ScriptFile%,Interface2,""
+If,%pCheckBoxInWim%,Equal,True,Set,%PROGRAMS.IN.WIM%,YES
+Else,Set,%PROGRAMS.IN.WIM%,NO
+Run,%ScriptFile%,CHECKS
+Run,%ScriptFile%,MENU
+Run,%ScriptFile%,COMMON
+If,%PROGRAMS.IN.WIM%,Equal,NO,Run,%ScriptFile%,NOT.IN.WIM
+If,%PROGRAMS.IN.WIM%,Equal,YES,Run,%ScriptFile%,IN.WIM
+
+[CHECKS]
+If,%ARCH%,Equal,x86,Run,%ScriptFile%,CHECKS-x86
+If,%ARCH%,Equal,x64,Run,%ScriptFile%,CHECKS-x64
+
+[CHECKS-x86]
+If,Not,ExistFile,"%Programs%\XWF\x86\xwforensics.exe",Begin
+Set,%CONTINUE%,NO
+Message,"X-Ways Forensics 32-bit is missing."
+Exit
+End
+
+[CHECKS-x64]
+If,Not,ExistFile,"%Programs%\XWF\x64\xwforensics64.exe",Begin
+Set,%CONTINUE%,No
+  IniRead,"%ProjectDir%\Core\G_WoW64.script",main,Selected,%WoW64YesOrNo%
+  If,%WoW64YesOrNo%,Equal,False,Run,%ScriptFile%,Exit
+  If,Question,ERROR - could not find 64-bit X-Ways Forensics. Select YES to attempt to use 32-bit source files (SysWoW Support required) - or NO to Exit,Set,%CONTINUE%,YES
+  If,%CONTINUE%,Equal,No,Run,%ScriptFile%,Exit
+  If,%CONTINUE%,Equal,YES,Begin
+    Set,%XWF_SYSWOW64%,yes
+    Run,%ScriptFile%,CHECKS-x86
+  End
+End
+
+[Exit]
+Exit,X-Ways Forensics is missing - exiting script...,WARN
+
+[MENU]
+If,%ARCH%,Equal,x86,Set,%XWF.EXE%,xwforensics.exe
+If,%ARCH%,Equal,x64,Set,%XWF.EXE%,xwforensics64.exe
+If,%XWF_SYSWOW64%,Equal,yes,Set,%XWF.EXE%,xwforensics.exe
+If,%PROGRAMS.IN.WIM%,Equal,NO,Begin
+  If,Not,ExistFile,"%OutputDir%\Programs\ShortcutsNotInWim.txt",Run,"%ProjectDir%\Core\common.script",NotInWim
+  TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$p~dp0XWF\%XWF.EXE%#$q #$q#$pTemp#$p\ShortCuts#$q #$qXWF#$q",Append
+End 
+If,%PROGRAMS.IN.WIM%,Equal,YES,Begin
+  ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\XWF\%XWF.EXE%#$q /F:#$q%ProjectTemp%\X-Ways.lnk#$q /I:#$q#$pSystemDrive#$p\Programs\XWF\%XWF.EXE%#$c0#$q"
+  If,ExistFile,"%ProjectTemp%\X-Ways.lnk",Begin
+    Set,%MyShortcut%,X-Ways.lnk
+    If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
+    If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
+    If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
+      Set,%ProgramMenuPath%,%pTextBox1%
+      Run,"%ProjectDir%\Core\common.script",StartMenu
+    End
+    If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
+    If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
+    FileDelete,"%ProjectTemp%\%MyShortcut%"
+  End
+End
+
+[COMMON]
+If,%PROGRAMS.IN.WIM%,Equal,NO,Set,%PATH%,%OutputDir%
+If,%PROGRAMS.IN.WIM%,Equal,YES,Set,%PATH%,%TargetDir%
+If,Not,ExistDir,"%PATH%\Programs",DirMake,"%PATH%\Programs"
+DirMake,"%PATH%\Programs\XWF"
+If,%ARCH%,Equal,x86,DirCopy,"%Programs%\XWF\x86\*.*","%PATH%\Programs\XWF"
+If,%ARCH%,Equal,x64,Begin
+  If,%XWF_SYSWOW64%,Equal,yes,DirCopy,"%Programs%\XWF\x86\*.*","%PATH%\Programs\XWF"
+  Else,DirCopy,"%Programs%\XWF\x64\*.*","%PATH%\Programs\XWF"
+End
+IniWrite,"%OutputDir%\Project.Settings.ini",PROGRAMS,X-Ways,YES
+
+[IN.WIM]
+If,%FullProjectRun%,Equal,NO,Begin
+  IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
+  WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+End
+//Wait,1
+
+[NOT.IN.WIM]
+//Wait,1
+If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunNotInWim
+
+[AuthorEncoded]
+xwforensics.ico=1655,2207
+logo=xwforensics.ico
+
+[EncodedFile-AuthorEncoded-xwforensics.ico]
+lines=0
+0=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
+

@@ -1,0 +1,131 @@
+[main]
+Title=SwiftSearch
+Description=
+Selected=False
+Level=5
+Author=Misty
+Version=20220524
+Date=2022-05-24
+Interface=Interface1
+
+[Interface1]
+pTextLabelMenu1="1",1,1,35,3,70,18,10,Bold
+pButtonMenu2="2",1,8,75,0,70,20,pButtonMenu2,0,True,_pButtonMenu2_,True
+pButtonMenu3="?",1,8,145,0,70,20,pButtonMenu3,0,True,_pButtonMenu3_,True
+pCheckBoxInWim="Include Program in boot.wim",1,3,51,265,180,18,True
+
+[Interface2]
+pButtonMenu1="1",1,8,5,0,70,20,pButtonMenu1,0,True,_pButtonMenu1_,True
+pTextLabelMenu2="2",1,1,108,3,70,18,10,Bold
+pButtonMenu3="?",1,8,145,0,70,20,pButtonMenu3,0,True,_pButtonMenu3_,True
+pBevel1=,1,12,10,65,66,2
+pTextLabel="Menu Entries",1,1,10,50,230,18,8,Bold
+pCheckBoxShortcutDesktop="Add to Desktop Menu",1,3,40,80,150,18,True
+pCheckBoxShortcutQuick="Add to Quicklaunch Menu",1,3,40,110,150,18,True
+pCheckBoxShortcutPrograms="Add to #$qStart#$q > ",1,3,40,140,99,18,True
+pCheckBoxShortcutLaunchBar="Add to LaunchBar Menu ",1,3,40,170,150,18,True
+pButtonShortcut1=?,1,8,10,80,18,18,pButtonShortcut1,0,True,_pButtonShortcut1_,True
+pButtonShortcut2=?,1,8,10,110,18,18,pButtonShortcut2,0,True,_pButtonShortcut2_,True
+pButtonShortcut3=?,1,8,10,140,18,18,pButtonShortcut3,0,True,_pButtonShortcut3_,True
+pButtonShortcut4=?,1,8,10,170,18,18,pButtonShortcut4,0,True,_pButtonShortcut4_,True
+pTextBox1=,1,0,140,140,150,21,Programs
+
+[pButtonMenu1]
+IniWrite,%ScriptFile%,Main,Interface,Interface1
+System,REFRESHINTERFACE
+
+[pButtonMenu2]
+IniWrite,%ScriptFile%,Main,Interface,Interface2
+System,REFRESHINTERFACE
+
+[pButtonMenu3]
+message,"Click on the buttons to toggle between tabs 1 and 2. #$x#$xTab 2 contains menu options for use in the selected shell. Click on the ? button for information about the different options."
+
+[pButtonShortcut1]
+message,"WinXShell only#$x#$xSelect this option to add a program shortcut to the Desktop."
+
+[pButtonShortcut2]
+message,"WinXShell only#$x#$xSelect this option to add a program menu option to the Quicklaunch menu - similar in appearence to the 'Pin to Taskbar' option in Windows 7/8/10."
+
+[pButtonShortcut3]
+message,"Applies to WinXShell#$c BBLean and LaunchBar Shell(s)#$x#$xSelect this option to add a program menu option to the Start menu. Leave blank to add to the root of the menu#$c or manually type a path to place in a sub-menu (do not use spaces in the path). E.g. #$x#$s- FileManager#$x#$s- Programs#$x#$s- Programs\FileManager#$x#$xAnd looking at the examples above - #$x#$xLeave this option blank to add a menu entry to the root of the program menu (the 'Start' menu in WinXShell#$c the 'Start' menu in BBLean#$c or the root of the LaunchBar menu bar if LaunchBar is selected as Shell)#$x#$xEnter 'FileManager' to add a menu entry for this application to the 'Start' > 'FileManager' sub-menu (WinXShell and bblean) or the 'FileManager' sub-menu in LaunchBar.#$x#$xEnter 'Programs' to add a menu entry for this application to the 'Start' > 'Programs' sub-menu (WinXShell and bblean) or the 'Programs' sub-menu in LaunchBar.#$x#$xEnter 'Programs\FileManager' to add a menu entry for this application to the 'Start' > 'Programs' > 'FileManager' sub-menu (WinXShell and bblean) or the 'Programs' > 'FileManager' sub-menu in LaunchBar."
+
+[pButtonShortcut4]
+message,"This setting does not apply to any LaunchBar instance running as the WinPE Shell. This option only applies to a LaunchBar instance when the Applications' > 'LaunchBar' program script is selected in the build.#$x#$xIf the 'Applications' > 'LaunchBar' program script is selected than enable this option to add a program menu entry to the root of the LaunchBar menu bar. #$x#$xPlease note that if option '6] Programs in boot.wim' in the main project script is set as 'NO'#$c then LaunchBar and a number of other applications will not be available at boot. In this case a text based .ini file will be used for LaunchBar menu settings."
+
+[process]
+If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRun
+AddInterface,%ScriptFile%,Interface1,""
+AddInterface,%ScriptFile%,Interface2,""
+If,%pCheckBoxInWim%,Equal,True,Set,%PROGRAMS.IN.WIM%,YES
+Else,Set,%PROGRAMS.IN.WIM%,NO
+Run,%ScriptFile%,CHECKS
+Run,%ScriptFile%,MENU
+Run,%ScriptFile%,COMMON
+If,%PROGRAMS.IN.WIM%,Equal,NO,Run,%ScriptFile%,NOT.IN.WIM
+If,%PROGRAMS.IN.WIM%,Equal,YES,Run,%ScriptFile%,IN.WIM
+
+[CHECKS]
+If,%ARCH%,Equal,x86,If,Not,ExistFile,"%Programs%\SwiftSearch\SwiftSearch32.exe",Begin
+  Message,SwiftSearch is missing - exiting script...,Error,5
+  Exit,SwiftSearch is missing - exiting script...,WARN
+End
+If,%ARCH%,Equal,x64,If,Not,ExistFile,"%Programs%\SwiftSearch\SwiftSearch64.exe",Begin
+  Message,SwiftSearch is missing - exiting script...,Error,5
+  Exit,SwiftSearch is missing - exiting script...,WARN
+End
+
+[MENU]
+If,%PROGRAMS.IN.WIM%,Equal,NO,Begin
+  If,Not,ExistFile,"%OutputDir%\Programs\ShortcutsNotInWim.txt",Run,"%ProjectDir%\Core\common.script",NotInWim
+  If,%ARCH%,Equal,x86,TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$p~dp0SwiftSearch\SwiftSearch32.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qSwiftSearch#$q",Append
+  If,%ARCH%,Equal,x64,TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$p~dp0SwiftSearch\SwiftSearch64.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qSwiftSearch#$q",Append
+End 
+If,%PROGRAMS.IN.WIM%,Equal,YES,Begin
+  If,%ARCH%,Equal,x86,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\SwiftSearch\SwiftSearch32.exe#$q /F:#$q%ProjectTemp%\SwiftSearch.lnk#$q /I:#$q#$pSystemDrive#$p\Programs\SwiftSearch\SwiftSearch32.exe#$c0#$q"
+  If,%ARCH%,Equal,x64,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\SwiftSearch\SwiftSearch64.exe#$q /F:#$q%ProjectTemp%\SwiftSearch.lnk#$q /I:#$q#$pSystemDrive#$p\Programs\SwiftSearch\SwiftSearch64.exe#$c0#$q"
+  If,ExistFile,"%ProjectTemp%\SwiftSearch.lnk",Begin
+    Set,%MyShortcut%,SwiftSearch.lnk
+    If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
+    If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
+    If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
+      Set,%ProgramMenuPath%,%pTextBox1%
+      Run,"%ProjectDir%\Core\common.script",StartMenu
+    End
+    If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
+    If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
+    FileDelete,"%ProjectTemp%\%MyShortcut%"
+  End
+End
+
+[COMMON]
+If,%PROGRAMS.IN.WIM%,Equal,NO,Set,%PATH%,%OutputDir%
+If,%PROGRAMS.IN.WIM%,Equal,YES,Set,%PATH%,%TargetDir%
+If,Not,ExistDir,"%PATH%\Programs",DirMake,"%PATH%\Programs"
+DirMake,"%PATH%\Programs\SwiftSearch"
+If,%ARCH%,Equal,x64,FileCopy,"%Programs%\SwiftSearch\SwiftSearch64.exe","%PATH%\Programs\SwiftSearch"
+If,%ARCH%,Equal,x86,FileCopy,"%Programs%\SwiftSearch\SwiftSearch32.exe","%PATH%\Programs\SwiftSearch"
+IniWrite,"%OutputDir%\Project.Settings.ini",PROGRAMS,SwiftSearch,YES
+
+[IN.WIM]
+If,%FullProjectRun%,Equal,NO,Begin
+  IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
+  WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+End
+//Wait,1
+
+[NOT.IN.WIM]
+//Wait,1
+If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunNotInWim
+
+[AuthorEncoded]
+SwiftSearch.ico=22926,16704
+Logo=SwiftSearch.ico
+
+[EncodedFile-AuthorEncoded-SwiftSearch.ico]
+lines=4
+0=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
+1=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
+2=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
+3=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
+4=Xnllx/wFsiafLP/Uefmncj6fID5eusx59pw5JpMnv7iTjK+J/6m/Xf7fRKMvA/NndIYmPbzKjF97ZGABcyU9k8av9G9tjF8N6Ht4XfDwOg2vbLy+/PDP8chM/Fkeg/Gg6+EfM3sUeU140d8wOw0fXmn9dEYMPbzCw/L0UBVzHfoLri//whXlgNHHrgvwOjYuJ/MniQzo1ZBhEphDXPRax/QPYAULYPzvltB3/x/LdSQteJzjDy7PTCsJTk0sSs7Qy0zOZxgFIwr0RULo+QbY5R2/rONjYAMArLwJiRueWtUBAAAAAgAAACsAAACfMAAAAAAAAAEAAAAAAAAAAAAAAA
