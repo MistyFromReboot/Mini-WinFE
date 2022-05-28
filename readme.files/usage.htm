@@ -1,0 +1,293 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html><head><link type="text/css" rel="stylesheet" href="WinFE.css" media="screen" /><title>Mini-WinFE</title></head><body><font> 
+ 
+ 
+ 
+<p> 
+<select ONCHANGE="location = this.options[this.selectedIndex].value;"> 
+<option value="" disabled></option> 
+<option value="../readme.html">Contents</option> 
+<option value="" disabled>=======</option> 
+<option value="winfe.htm">Windows FE</option>  
+<option value="winpe.htm">Windows PE</option>  
+<option value="builder.htm">Builder</option>  
+<option value="options.htm">Project Options</option>  
+<option value="project.htm">Project Scripts</option>  
+<option value="instructions_pebakery.htm">Instructions</option>  
+<option value="menu_system.htm">Menu System</option>  
+<option value="not_in_wim.htm">Include...in boot.wim</option>  
+<option value="postconfig.htm">Post Config</option>  
+<option value="packages.htm">Packages</option>  
+<option value="usb.htm">...Bootable USB...</option>  
+<option value="uefi.htm">UEFI, BIOS, GPT...</option>  
+<option value="multiboot.htm">Multiboot WinPE</option>  
+<option value="" disabled></option> 
+<option value="" disabled>Appendices</option> 
+<option value="" disabled>=========</option> 
+<option value="quick_pebakery.htm">Quick Start - Build...</option>  
+<option value="usage.htm" selected="selected">Quick Start - run...</option>  
+<option value="diskmgr.htm">DiskMgr</option>  
+<option value="links.htm">Download\Links</option>  
+<option value="acknowledgements.htm">Acknowledgements</option>  
+<option value="" disabled></option> 
+</select> 
+</p> 
+ 
+ 
+ 
+<hr> 
+<a href="http://winfe.mistyprojects.co.uk/index.html"><img src="img/home.jpg" BORDER=1></a> 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html><head><link type="text/css" rel="stylesheet" href="WinFE.css" media="screen" /><title>MistyPE</title></head><body><font>
+
+
+
+<h2><u>Quick Start - Running Mini-WinFE</u></h2>
+
+
+<p>
+This page contains the following sections -
+<ul>
+<li><a class="internal" href="#overview">DiskMgr/protect Overview</a></li>
+<li><a class="internal" href="#menu1">Menu System - BlackBox Lean</a></li>
+<li><a class="internal" href="#menu2">Menu System - LaunchBar</a></li>
+<li><a class="internal" href="#menu3">Menu System - WinXShell</a></li>
+<li><a class="internal" href="#sanpolicy">SAN Policy Overview</a></li>
+<li><a class="internal" href="#7">Pre build 6.2.9200 (Windows Vista/2008/7)</a></li>
+<li><a class="internal" href="#8">Post build 6.2.9200 (Windows 8/2012/8.1/10)</a></li>
+<li><a class="internal" href="#warning">WARNING</a></li>
+</ul>
+</p>
+
+
+
+
+<a name="overview"></a><br>
+<h2 class="breaktop"><u>DiskMgr/protect Overview</u></h2>
+
+
+<p>
+The project can be configured to ensure that when <font class="file">Mini-WinFE</font> is booted, either <font class="file">DiskMgr.exe</font> or <font class="file">protect.exe</font> will be automatically launched before any other programs. Either of these tools can be used to check the current status of any disks attached to the system, and can also be used to change disk attributes in order to ensure that any evidence disks are set as <font class="file">Read Only</font> and <font class="file">Offline</font> - reducing the risk of evidence contamination.
+</p>
+
+
+
+
+
+<p>
+Screenshot of <font class="file">DiskMgr.exe</font> running in <font class="file">WinFE</font> 10.0.22000 (the program was launched automatically via <font class="file">winpeshl.ini</font> during the boot process) -
+<br />
+<a href="img/diskmgr.png"><IMG SRC="img/diskmgr.png" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+
+
+<p>
+Screenshots of <font class="file">protect.exe</font> running in <font class="file">WinFE</font> 10.0.22000 (the program was launched automatically via <font class="file">winpeshl.ini</font> during the boot process). Press the <font class="file">OK</font> button to select the language -
+<br />
+<a href="img/protect1.png"><IMG SRC="img/protect1.png" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+<p>
+Press the <font class="file">OK</font> button on the warning screen to run the program -
+<br />
+<a href="img/protect2.png"><IMG SRC="img/protect2.png" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+<p>
+<a href="img/protect3.png"><IMG SRC="img/protect3.png" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+
+<p>
+After ensuring that disk attributes are set as required, close down <font class="file">DiskMgr.exe</font> / <font class="file">protect.exe</font> to use <font class="file">Mini-WinFE</font>
+</p>
+
+
+
+<p>
+More detailed information about <font class="file">protect.exe</font> usage and features is available on Colin's WinFE site - <a class="external" target="_blank" href="https://www.winfe.net/use">https://www.winfe.net/</a>
+</p>
+
+
+
+
+
+
+
+
+
+
+
+<a name="menu1"></a><br>
+<h2 class="breaktop"><u>Menu System - BlackBox Lean</u></h2>
+
+<p>
+To select a menu option, right-click anywhere on the desktop or alternatively press the <font class="file">Windows</font> key. This will display a menu similar to the following -
+<br />
+<a href="img/menu_bblean1.png"><IMG SRC="img/menu_bblean1.png" float=left width=80% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+<p>
+The majority of the programs and utilities supported in <font class="file">Mini-WinFE</font> are accessible via the <font class="file">Start</font> &#62; <font class="file">Programs</font> menu 
+</p>
+
+
+
+<p>
+The <font class="file">BlackBox Lean</font> shell also supports keyboard shortcuts. <font class="file">Mini-WinFE</font> supports the following shortcuts at the time of writing - 
+<ul>
+<li><b>[</b><font class="file">Windows</font><b>]</b> + <b>[</b><font class="file">E</font><b>]</b> - launch file manager</li>
+<li><b>[</b><font class="file">Windows</font><b>]</b> + <b>[</b><font class="file">R</font><b>]</b> - Run dialog</li>
+</ul>
+</p>
+
+
+
+
+
+
+
+
+<a name="menu2"></a><br>
+<h2 class="breaktop"><u>Menu System - LaunchBar</u></h2>
+
+
+<p>
+Screenshot of <font class="file">LaunchBar</font> running in <font class="file">Mini-WinFE</font> -
+<br />
+<a href="img/launchbar.jpg"><IMG SRC="img/launchbar.jpg" float=left width=80% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+
+
+
+<p class="break3em">
+Screenshot of <font class="file">LaunchBar</font> menu displaying sub-menus -
+<br />
+<a href="img/menu_launchbar2.png"><IMG SRC="img/menu_launchbar2.png" float=left width=80% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+
+
+
+
+
+
+
+
+<a name="menu3"></a><br>
+<h2 class="breaktop"><u>Menu System - WinXShell</u></h2>
+
+
+
+<p class="break3em">
+Screenshot of <font class="file">WinXShell</font> Start Menu -
+<br />
+<a href="img/menu_winxshell1.png"><IMG SRC="img/menu_winxshell1.png" float=left width=80% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+<p>
+<font class="file">WinXShell</font> also supports desktop shortcuts. 
+</p>
+
+
+
+
+
+
+
+<a name="sanpolicy"></a><br>
+<h2 class="breaktop"><u>SAN Policy Overview</u></h2>
+
+
+<p>
+<font class="file">WinFE</font> registry settings are automatically applied in <font class="file">Mini-WinFE</font> - the project does allow the <font class="file">SAN Policy</font> settings to be set to either 3 or 4. <font class="file">SAN Policy</font> 4 settings were introduced with the release of Windows 8 (<font class="file">WinFE</font> 4.0). 
+<ul>
+<li><font class="file">SAN Policy</font> <b>3</b> - Doesn't mount storage devices.</li>
+<li><font class="file">SAN Policy</font> <b>4</b> - Makes internal disks offline. Note. All external disks and the boot disk are online.</li>
+</ul>
+</p>
+
+
+
+
+<p>
+Please be aware that there are some reports of internal disks not being write protected if <font class="file">SAN Policy</font> 4 settings are used. If using <font class="file">Mini-WinFE</font> there is no reason to set the <font class="file">SAN Policy</font> as 4 as either the <font class="file">DiskMgr.exe</font> or <font class="file">protect.exe</font> tools can be used to manually change disk attributes as required - for example setting USB attached storage as <font class="file">Read-Write</font> and <font class="file">Online</font> so that evidence can be captured/saved.
+</p>
+
+
+
+
+
+
+
+
+<a name="7"></a><br>
+<h2 class="breaktop"><u>Pre build 6.2.9200 (Windows Vista/2008/7)</u></h2>
+
+<p>
+<font class="file">WinFE</font> based on earlier (than build 6.2.9200) versions of Windows do not apply the same level of write protection as more recent versions of Windows. The following screenshot shows <font class="file">DiskMgr.exe</font> running in <font class="file">WinFE</font> 3.1 (build 6.1.7601 (Windows 7 SP1 source)). The program was launched automatically via <font class="file">winpeshl.ini</font> during the boot process -
+<br />
+<a href="img/usage08.jpg"><IMG SRC="img/usage08.jpg" float=left width=80% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+<p>
+As displayed in the screenshot above, the disk attributes are set as <font class="file">Online</font> and <font class="file">Read-Write</font>. Whilst it is possible to use <font class="file">DiskMgr</font> (or <font class="file">protect.exe</font>) to change the attributes of any evidence disks to <font class="file">Offline</font> and <font class="file">Read-Only</font> at this stage, the write protection will obviously not have been applied earlier in the boot process. In tests this resulted in a disk signature being written at offset 0x1B8 on any disks not already containing a disk signature. In the unlikely event of two disks on the same system containing the same disk signature, one would presumably automatically be changed to avoid a collision. 
+</p>
+
+
+<p>
+All Windows NT Operating Systems will automatically write a unique disk signature at offset 0x1B8 - this is a well-documented feature of these Operating Systems. If an evidence disk has at some point been attached to a running Windows NT system then it is likely to already contain a disk signature at offset 0x1B8 - the only exception being if the disk signature has since been overwritten. Provided that an evidence disk is set as <font class="file">Offline</font> and <font class="file">Read-Only</font> using either <font class="file">DiskMgr</font> or <font class="file">wprotect.exe</font> before any other actions are performed, write protection will be applied and the only exception <i><u>might</u></i> be the writing of a disk signature earlier in the boot process.  
+</p>
+
+
+<p>
+In summary, the <font class="file">WinFE</font> registry settings set volume attributes as <font class="file">Offline</font> in builds pre-dating 6.2.9200 and have no effect on disk attributes. Whilst it is possible to manually set disk attributes as <font class="file">Offline</font> and <font class="file">Read-Only</font> using either <font class="file">DiskMgr</font> or <font class="file">protect.exe</font>, the registry settings do not apply these settings. 
+</p>
+
+
+
+
+
+
+
+
+<a name="8"></a><br>
+<h2 class="breaktop"><u>Post build 6.2.9200 (Windows 8/2012/8.1/10)</u></h2>
+
+
+
+
+<p>
+As displayed in the screenshots in the <a class="internal" href="#overview">DiskMgr/protect Overview</a> section of this page, <font class="file">WinFE</font> 10.0.22000 applies write protection early in the boot process - before any programs are launched via <font class="file">winpeshl.ini</font>. In the tests carried out by the author, all Windows versions since build 6.2.9200 (Windows 8) appear to provide robust write protection. This write protection is applied early enough in the boot process that a disk signature is not written to any disks that do not already have a signature at offset 0x1B8. 
+</p>
+
+
+
+
+
+
+
+<a name="warning"></a><br>
+<h2 class="breaktop"><u>WARNING</u></h2>
+
+<p>
+Significant effort has been taken to ensure that <font class="file">Mini-WinFE</font> can be safely used as a software write blocker. Please be aware that it may be possible to bypass write protection with some tools - care should therefore be taken. 
+</p>
+
+<p>
+Please ensure that you validate your <font class="file">Mini-WinFE</font> build and tools.
+</p>
+
+
+
+
+
+<p class="breaktop"><font class="file">Document date - 28<sup>th</sup> May 2022</font></p></font></body></html> 

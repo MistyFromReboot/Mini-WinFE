@@ -1,0 +1,833 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html><head><link type="text/css" rel="stylesheet" href="WinFE.css" media="screen" /><title>Mini-WinFE</title></head><body><font> 
+ 
+ 
+ 
+<p> 
+<select ONCHANGE="location = this.options[this.selectedIndex].value;"> 
+<option value="" disabled></option> 
+<option value="../readme.html">Contents</option> 
+<option value="" disabled>=======</option> 
+<option value="winfe.htm">Windows FE</option>  
+<option value="winpe.htm">Windows PE</option>  
+<option value="builder.htm">Builder</option>  
+<option value="options.htm">Project Options</option>  
+<option value="project.htm" selected="selected">Project Scripts</option>  
+<option value="instructions_pebakery.htm">Instructions</option>  
+<option value="menu_system.htm">Menu System</option>  
+<option value="not_in_wim.htm">Include...in boot.wim</option>  
+<option value="postconfig.htm">Post Config</option>  
+<option value="packages.htm">Packages</option>  
+<option value="usb.htm">...Bootable USB...</option>  
+<option value="uefi.htm">UEFI, BIOS, GPT...</option>  
+<option value="multiboot.htm">Multiboot WinPE</option>  
+<option value="" disabled></option> 
+<option value="" disabled>Appendices</option> 
+<option value="" disabled>=========</option> 
+<option value="quick_pebakery.htm">Quick Start - Build...</option>  
+<option value="usage.htm">Quick Start - Run...</option>  
+<option value="diskmgr.htm">DiskMgr</option>  
+<option value="links.htm">Download\Links</option>  
+<option value="acknowledgements.htm">Acknowledgements</option>  
+<option value="" disabled></option> 
+</select> 
+</p> 
+ 
+ 
+ 
+<hr> 
+<a href="http://winfe.mistyprojects.co.uk/index.html"><img src="img/home.jpg" BORDER=1></a> 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html><head><link type="text/css" rel="stylesheet" href="WinFE.css" media="screen" /><title>MistyPE</title></head><body><font>
+
+
+
+<h2><u>Project Scripts</u></h2>
+
+
+<p>
+<b><u>NOTE</u></b> - there are currently two different <font class="file">Mini-WinFE</font> project branches/repositories on <font class="file">GitHub</font>. Some of the features/applications documented in this page may not be present in both branches.
+<ul>
+<li><a class="external" target="_blank" href="https://github.com/MistyFromReboot/Mini-WinFE/tree/main">main Branch</a> - forensic focus. A number of applications and settings that could potentially perform disk writes have been removed.</li>
+</ul>
+
+<ul>
+<li><a class="external" target="_blank" href="https://github.com/MistyFromReboot/Mini-WinFE/tree/WinPE">WinPE Branch</a> - includes more applications and options - use with caution as it is possible to use settings that will <b><u>not</u></b> write protect disks.</li>
+</ul>
+</p>
+
+
+
+
+
+<p>
+The <font class="file">ChrisPE</font> project scripts can currently be divided into seven distinct sections -
+<ul>
+<li><a class="internal" href="#core">Core</a></li>
+<li><a class="internal" href="#shell">Shell</a></li>
+<li><a class="internal" href="#settings">Settings</a></li>
+<li><a class="internal" href="#applications">Applications</a></li>
+<li><a class="internal" href="#finalise">Finalise</a></li>
+<li><a class="internal" href="#drivers">Drivers</a></li>
+<li><a class="internal" href="#mediacreation">MediaCreation</a></li>
+<li><a class="internal" href="#postconfig">PostConfig</a></li>
+</ul>
+</p>
+
+
+
+
+
+<p>
+A number of configurable options are contained in the main project file. The screenshots below display these options (clicking on the <i>HELP</i> button from within the project displays information about what the individual options do) - 
+<br />
+<a href="img/main_1_1.jpg"><IMG SRC="img/main_1_1.jpg" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+
+
+<br />
+<br />
+<a href="img/main_2_1.jpg"><IMG SRC="img/main_2_1.jpg" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+<br />
+</p>
+
+
+
+
+
+<a name="core"></a><br>
+<h2><u>Core Scripts</u></h2>
+
+
+<p>
+Please note that only two of the scripts in this section are actually visible to the end user in the PEBakery User Interface - the remainder are hidden from view in an effort to declutter the interface.
+
+
+<ul class="break3em"><li>
+<b>Core Files</b> - This script cannot be disabled. Most of the work is carried out in this script, including error checks, file checks, verifying source language/build/processor architecture, and copying and extracting the required files from the selected source. <br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Core</font> &gt; <font class="file">A_core.script</font>
+</li></ul>
+
+
+
+<ul class="break3em">
+<li><b>Browse for Folder</b> - used to add Browse for Folder dialog support. This script is hidden and is executed by other scripts to ensure that Browse for Folder support is added as required for individual applications. <br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Core</font> &gt; <font class="file">Browse.For.Folder.script</font></li>
+</ul>
+
+
+
+<ul class="break3em">
+<li><b>Common Commands</b> - this script is hidden and is executed by other scripts as required. Supported commands include directory delete (following an error) and creating startmenu shortcuts. <br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Core</font> &gt; <font class="file">common.script</font></li>
+</ul>
+
+
+<ul class="break3em">
+<li><b>Tweaks</b> - includes a range of tweaks. Click on the <font class="file">?</font> buttons for information about the available options. 
+<br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Core</font> &gt; <font class="file">D_Tweaks.script</font></li>
+	<br />
+	<a href="img/tweaks.png"><IMG SRC="img/tweaks.png" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+</ul>
+
+
+
+<ul class="break3em">
+<li><b>WoW64</b> - Add WoW64 support. <br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Core</font> &gt; <font class="file">G_WoW64.script</font>.</li>
+</ul>
+
+
+
+<ul class="break3em">
+<li><b>SysWOW64</b> - this script is hidden. It contains registry settings required for WoW64 support. <br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Core</font> &gt; <font class="file">syswow64.script</font></li>
+</ul>
+
+
+
+
+<ul class="break3em">
+<li><b>Verification Checks</b> - this script is hidden and is executed by other program scripts for a range of checks including identification of source files. <br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Core</font> &gt; <font class="file">verify.script</font></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+<a name="shell"></a><br>
+<h2><u>Shell Scripts</u></h2>
+
+
+<p>
+<ul class="break3em">
+<li><b>Shell</b> - select a shell. Current options are <font class="file">WinXShell</font>, <font class="file">bblean</font>, <font class="file">CMD</font> and <font class="file">LaunchBar</font>. The shell script is context sensitive and different options will be visible depending on the selected shell. Click on the <font class="file">HELP</font> buttons for information about the available options. 
+
+
+<br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Shell</font> &gt; <font class="file">B_shell.script</font></li>
+	<br />
+	<ul>
+	<b>WinXShell</b> shell options -
+	<br />
+	<a href="img/shell_1.jpg"><IMG SRC="img/shell_1.jpg" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+	</ul>
+
+	<ul>
+	<b>LaunchBar</b> shell options -
+	<br />
+	<a href="img/shell_2.jpg"><IMG SRC="img/shell_2.jpg" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+	</ul>
+</ul>
+
+
+
+
+
+
+
+<ul class="break3em">
+<li><b>Default Filemanager</b> - set the default FileExplorer. Either <font class="file">7-zip</font>, <font class="file">Explorer++</font>, <font class="file">Q-Dir</font> or <font class="file">7-zip</font> can be selected.<br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Shell</font> &gt; <font class="file">D_filemanager.script</font></li>
+	<br />
+	<ul>
+	<a href="img/filemanager_1.jpg"><IMG SRC="img/filemanager_1.jpg" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+	</ul>
+</ul>
+</p>
+
+
+
+
+
+
+
+
+<a name="settings"></a><br>
+<h2><u>Settings Scripts</u></h2>
+
+
+<p>
+
+<ul class="break3em">
+<li><b>Network</b> - this script can be enabled without selecting any of the script options to give different results - 
+	<ul>
+	<li class="break1em">No options selected - will add a batch file + a menu entry to run it. The batch file runs the command <i>"wpeutil InitializeNetwork"</i> - this will Initialize network components and drivers, and set the computer name to a randomly chosen value. Running the InitializeNetwork command can cause an unnecessary delay when <font class="file">WinPE</font> boots - added it as a menu option ensures that the network can be started <i><u>if required</u></i>.</li>
+	</ul>
+	<ul>
+	<li class="break1em">Option(s) selected - selecting any combination of script options will add <font class="file">unattend.xml</font> to the build, with a menu entry added to <font class="file">winpeshl.ini</font> to automatically run <font class="file">wpeinit</font>. This will Initialize the network during the boot process. This is useful if an application requires network access - e.g. TightVNC Server.</li>
+	</ul>
+<br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Settings</font> &gt; <font class="file">Network.script</font></li>
+</ul>
+
+
+
+
+<ul class="break3em">
+<li><b>Recommended</b> - <br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Settings</font> &gt; <font class="file">Recommended.script</font></li>
+	<ul>
+	<li class="break1em"><b>BootSect</b> - tool used to add <font class="file">NTLDR</font> or <font class="file">BOOTMGR</font> code to a Volume Boot Record. This script adds a batch file to the build as the required program is already included. The batch can be executed by right-clicking on a drive in Explorer. 
+	</li>
+
+	<li class="break1em"><b>CMD Here</b> - Start a command prompt from the right-click context menu. 
+	</li>
+
+	<li class="break1em"><b>Keyboard Layout</b> - change the keyboard layout in <font class="file">WinPE</font> whilst it's running. Uses <font class="file">wpeutil</font> tool that is already included in the build.
+	</li>
+
+	<li class="break1em"><b>ScreenRes</b> - This will add a menu option for changing the screen resolution. No external programs are used, however a number of xml files are added - this option simply starts a batch file that will run the <font class="file">wpeinit</font> command to change the screen resolution to a value set in the included xml files. A number of screen resolutions are available in the batch file. 
+	</li>
+	</ul>
+</ul>
+
+
+
+
+<ul class="break3em">
+<li><b>Wallpaper</b> - select a custom wallpaper. A project wallpaper can be used. Not working if <font class="file">LaunchBar</font> or <font class="file">CMD</font> are selected as shell. <br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Settings</font> &gt; <font class="file">wallpaper.script</font></li>
+</ul>
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<a name="applications"></a><br>
+<h2><u>Applications Scripts</u></h2>
+
+<p>
+The following lists all of the program/application scripts that are included in the <font class="file">ChrisPE</font> project download.
+</p>
+
+
+
+<p>
+<ul class="break3em">
+<li>
+<b>LaunchBar</b> - a program launcher created by <font class="file">Peter Lerup</font>. "<i>...LaunchBar is a small Windows freeware program that mimics the behavior of the dockable QuickLaunch toolbar that was available in all Windows versions before Windows 7...</i>". Please refer to the <font class="file">LaunchBar</font> website (see <a class="external" target="_blank" href="http://www.lerup.com/LaunchBar/">here</a>) for more information. 
+<br /><br />
+If <font class="file">LaunchBar</font> is enabled, an option to add shortcuts to the LaunchBar menu can be selected in application scripts. Screenshot of <font class="file">LaunchBar</font> running -
+</li>
+<IMG SRC="img/launchbar.jpg" WIDTH=500 BORDER=2>
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</ul>
+
+
+
+
+<ul class="break3em"><li>
+<b>Add Custom Batch and run at Start-up</b> - add a custom batch file to the build. Edit the custom batch file via a button embedded in the script. 
+	<ul>
+	<li>Included in download - N/A</li>
+	<li>Processor Architecture - N/A</li>
+	</ul>
+
+</li>
+</ul>
+
+
+
+
+
+
+<ul class="break3em">
+<li>
+<b>Add Custom Folders\Files</b> - select a directory and it's contents will be added to the build.
+	<ul>
+	<li>Included in download - N/A</li>
+	<li>Processor Architecture - N/A</li>
+	</ul>
+
+</li>
+</ul>
+
+
+
+<ul class="break3em">
+<li>
+<b>7-Zip</b> (version 19.00) - File archiver. Used to extract contents from <i>.zip</i>/<i>.7z</i>/<i>.iso</i>/<i>.wim</i> files and numerous other file types. Can also create <i>.zip</i> and <i>.7z</i> files. Right click a file in explorer to access menu options for extracting from or creating files. <a class="external" target="_blank" href="http://www.7-zip.org/">7-zip website</a>
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+
+</li>
+</ul>
+
+
+
+<ul class="break3em">
+<li>
+<b>AccessGain</b> (version 1.1) - Used to bypass file system security
+checks in order to access folders protected by NTFS security permissions or by 
+3rd-party software. Right click on a drive in the included File Manager to access the options. This is really useful if you can't delete a file/folder due to restricted security permissions. 
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+<ul class="break3em">
+<li>
+<b>BOOTICE</b> (version 1.3.3) - "BOOTICE is a boot-related maintenance gadget that is primarily used to install, repair, backup, and restore MBR or partition PBR of disks (images); edit Windows boot configuration files BCD; manage UEFI boot entries; and VHD/VHDX file management. In addition, there are disk sector editing, disk filling..."
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+<ul class="break3em">
+<li>
+<b>Disk Management</b> - Disk management console (diskmgmt.msc). Not working in <font class="file">WinPE</font> 2.* (Vista sources). This will add an option to install diskmgmt.msc on demand. Credit to IcemanND on the msfn forum - see <a class="external" target="_blank" href="http://www.msfn.org/board/topic/153842-disk-partition-gui-in-winpe/?p=979055">here</a>.
+	<ul>
+	<li>Included in download - <b>N/A</b></li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+
+
+<ul class="break3em">
+<li>
+<b>DMDE</b> (Version 4.0.0.800) - "...is a powerful software for data searching, editing, and recovery on disks. It may recover directory structure and files in some complicated cases through the use of special algorithms when other software can't help....DMDE has a number of freeware features such as disk editor, simple partition manager (e.g. allows undelete a partition), a tool to create disk images and clones, RAID constructor, file recovery from the current panel....DMDE supports FAT12/16, FAT32, NTFS, Ext2/3/4..." The Free Edition is included in the download - please refer to the  License Agreement - <a class="internal" href="eula_en.txt">here</a>. <a class="external" target="_blank" href="http://dmde.com/">DMDE website</a>
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+
+<ul class="break3em">
+<li>
+<b>Explorer++</b> (version 1.3.5) - file manager with multiple pane and tab support. <a class="external" target="_blank" href="https://explorerplusplus.com/">Explorer++ website</a>
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+
+
+<ul class="break3em">
+<li>
+<b>Forensic Acquisition Utilities (FAU)</b> - "...a collection of utilities and libraries intended for forensic or forensic-related investigative use...". Includes a dd utility for imaging systems. Combined with NetCat (also included) it can image systems over a network. FAU is the property of GMG Systems, Inc. and is being reproduced with the kind permission of the author. GMG Systems, Inc. Please refer to the FAU End User License Agreement - <a class="internal" href="FAU_END_USER_LICENSE_AGREEMENT.pdf">here</a>.
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+<ul class="break3em">
+<li>
+<b>Free Shooter</b> (Version 2.0.7) - "...tool for taking screenshots without bloatware features, simple as life, light as air....". Capture fullscreen, active window, or a selected are of the screen. The following file types can be captured using Free Shooter - BMP, JPG, TIFF, PNG and GIF formats. <a class="external" target="_blank" href="https://www.henrypp.org/product/freeshooter">Free Shooter website</a>
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - <b>x86 only</b></li>
+	</ul>
+</li>
+</ul>
+
+
+
+<ul class="break3em"><li>
+<b>FTK Imager Lite</b> - Create a physical or logical image of any drive. This program can create an image using the raw, SMART or E01 formats. <a class="external" target="_blank" href="https://accessdata.com/">FTK Imager website</a>
+	<ul>
+	<li>Included in download - <b>NO</b></li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+
+
+<ul class="break3em">
+<li>
+<b>HWiNFO</b> (Version 7.24.4770.0) - system diagnostic tool that can be used to check hardware. <a class="external" target="_blank" href="http://www.hwinfo.com/">HWiNFO website</a>
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+
+
+<ul class="break3em">
+<li>
+<b>HxD</b> (version 2.5.0.0) - "...HxD is a carefully designed and fast hex editor which, additionally to raw disk editing and modifying of main memory (RAM), handles files of any size....". <a class="external" target="_blank" href="https://mh-nexus.de/en/hxd/">HxD website</a>
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+
+<ul class="break3em">
+<li>
+<b>ImDisk</b> (version 2.0.10) - ImDisk is a virtual disk driver for Windows. It can create virtual hard disk, floppy or CD/DVD drives using image files or system memory. Right click on supported image types (e.g. <b>.iso</b> files) to mount them as virtual drives. Can also be used to create disc images of real drives. <a class="external" target="_blank" href="http://www.ltr-data.se/opencode.html/#ImDisk">ImDisk website</a>
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+<ul class="break3em">
+<li>
+<b>IrfanView</b> (version 4.51.0.0) - "...IrfanView is a fast, compact and innovative FREEWARE (for non-commercial use) graphic viewer for Windows XP, Vista, 7, 8 and 10. 
+...". <a class="external" target="_blank" href="https://www.irfanview.com/">IrfanView website</a>
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+
+
+
+
+<ul class="break3em">
+<li>
+<b>JkDefrag</b> (Version 3.66) - command-line disk and file defragmentation tool. A batch file with several options can be executed from the right-click context menu. <a class="external" target="_blank" href="http://www.kessels.com/jkdefrag/">JkDefrag website</a>
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+<ul class="break3em">
+<li>
+<b>JustManager</b> (Version 0.1 Alpha 54) - file manager with multiple pane and tab support. <a class="external" target="_blank" href="http://justmanager.ru/">JustManager website</a>
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+
+<ul class="break3em">
+<li>
+<b>NT Password Editor</b> (version 0.7) - NT Password Editor. This program can be used to edit passwords on a Windows NT based systems (Windows 2000, XP, Vista, 7, 8). Can be used to reset forgotten passwords and allow access to locked user accounts - it can only change or remove passwords for local system accounts. This program can NOT decrypt passwords or change domain and Active Directory passwords. <a class="external" target="_blank" href="http://cdslow.webhost.ru/en/ntpwedit/">NT Password Edit website</a>
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+
+<ul class="break3em">
+<li>
+<b>Opera</b> - Web Browser. Opera USB Version 12.18 is included in the download. <a class="external" target="_blank" href="http://www.opera-usb.com/">OperaUSB website</a>
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+
+<ul class="break3em">
+<li>
+<b>Product Key Scanner</b> (version 1.01) - "...Product Key Scanner is a tool that scans the Registry of Windows Operating system and finds the product keys of Windows and other Microsoft products. You can scan the Registry of your current running system, as well as you can scan the Registry from external hard drive plugged to your computer....". <a class="external" target="_blank" href="https://www.nirsoft.net/utils/product_key_scanner.html">Product Key Scanner website</a>
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+
+
+<ul class="break3em">
+<li>
+<b>Q-Dir</b> - Quad explorer file manager with multiple pane and tab support. <a class="external" target="_blank" href="https://www.softwareok.com/?seite=Freeware/Q-Dir">Q-Dir website</a>
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+<ul class="break3em">
+<li>
+<b>sDelete</b> - Secure delete application. "...SDelete is a command line utility that takes a number of options. In any given use, it allows you to delete one or more files and/or directories, or to cleanse the free space on a logical disk...". <a class="external" target="_blank" href="https://docs.microsoft.com/en-us/sysinternals/downloads/sdelete">sDelete website</a>
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+
+<ul class="break3em">
+<li>
+<b>Drive Snapshot</b> - partition backup tool. Can be used to backup and restore an operating system. This utility is not included in the download, however the script will automatically attempt to download a time limited trial version. If you have a licensed copy then copy it to the <i>"/Project/Cache/Programs/SnapShot"</i> folder. <a class="external" target="_blank" href="http://www.drivesnapshot.de/en/">Drive Snapshot website</a>
+	<ul>
+	<li>Included in download - <b>NO</b></li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+
+<ul class="break3em">
+<li>
+<b>Sumatra</b> (Version 3.1.2) - <b>.PDF</b> file reader. <a class="external" target="_blank" href="https://www.sumatrapdfreader.org/">SumatraPDF website</a>
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+
+<ul class="break3em">
+<li>
+<b>SwiftSearch</b> (version 7.5.1) - "...SwiftSearch is a lightweight program whose purpose is to help you quickly find the files you need on your Windows machine without ever requiring you to index your drives. Most search utilities that achieve similar speeds do so by indexing drives while the computer is idle, but because idleness detection is so difficult to get right, in practice they end up slowing down the whole system just to speed up search. SwiftSearch works differently: given administrator privileges, it completely bypasses the file system (only NTFS supported) and reads the file table directly every time, which speeds up search by many orders of magnitude....". 
+<a class="external" target="_blank" href="https://sourceforge.net/projects/swiftsearch/">SwiftSearch website</a>
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+
+<ul class="break3em">
+<li>
+<b>TightVNC Server</b> (Version 2.8.8.0) - <font class="file">VNC</font> server application. Boot <font class="file">WinPE</font> and create a Remote Desktop - accessing the <font class="file">WinPE</font> system from a <font class="file">VNC</font> client application. Includes an option to run at boot - this is useful if booting <font class="file">WinPE</font> on a remote/headless system. <a class="external" target="_blank" href="https://www.tightvnc.com/">TightVNC website</a>
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+
+
+
+<ul class="break3em">
+<li>
+<b>TinyHexer</b> (version 1.7) - Tiny hexer is a hex editor for binary files. It will also allow access and editing of disk sectors. 
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - <b>x86 only</b></li>
+	</ul>
+</li>
+</ul>
+
+
+
+
+<ul class="break3em">
+<li>
+<b>wimlib</b> - "...wimlib is an open source, cross-platform library for creating, extracting, and modifying Windows Imaging (WIM) archives. WIM is a file archiving format, somewhat comparable to ZIP (and many other file archiving formats); but unlike ZIP, it allows storing various Windows-specific metadata, allows storing multiple "images" in a single archive, automatically deduplicates all file contents, and supports optional solid compression to get a better compression ratio. wimlib and its command-line frontend wimlib-imagex provide a free and cross-platform alternative to Microsoft's WIMGAPI, ImageX, and DISM....". <a class="external" target="_blank" href="https://wimlib.net/">wimlib website</a>
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+
+
+<ul class="break3em">
+<li>
+<b>WinHex</b> - versatile Hex editor. In addition to the common hex editor functions, this software can be used for computer forensics, data recovery, system imaging and restore and disk editing. <a class="external" target="_blank" href="http://www.x-ways.net/winhex/">WinHex website</a>
+	<ul>
+	<li>Included in download - <b>NO</b></li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+
+
+<ul class="break3em">
+<li>
+<b>X-Ways Forensic</b> - X-Ways Forensics is an advanced work environment for computer forensic examiners. <a class="external" target="_blank" href="http://www.x-ways.net/forensics/">X-Ways website</a>
+	<ul>
+	<li>Included in download - <b>NO</b></li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+</p>
+
+
+
+
+
+
+
+<a name="finalise"></a><br>
+<h2><u>Finalise</u></h2>
+
+
+
+<p>
+<ul class="break3em"><li>
+<b>Subst</b> - add a batch file to locate the boot media (via a unique tag file created during the boot process) and use the <font class="file">subst.exe</font> utility to assign a virtual drive letter. This is useful if using custom scripts/utilities/shortcuts with a hardcoded path. 
+<br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Finalise</font> &gt; <font class="file">Subst.script</font>
+</li></ul>
+
+
+<ul class="break3em"><li>
+<b>WinFE</b> - Add the registry settings required to create a Windows Forensic Environment. <font class="file">Erwan Labalec</font>'s <font class="file">DiskMgr</font> or <font class="file">Colin Ramsden's</font>'s <font class="file">Protect.exe</font> (Write Protect Tool) will be added to the build - this provides a User Interface for toggling disk attributes. 
+<br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Finalise</font> &gt; <font class="file">winfe.script</font>
+</li>
+</ul>
+
+
+
+<ul class="break3em"><li>
+<b>Shell - Finalise</b> - This script cannot be disabled. Menu entries are configured via this script , <font class="file">winpeshl.ini</font> is created, and files are injected to <font class="file">boot.wim</font>. <br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Finalise</font> &gt; <font class="file">xxxShell.script</font>
+</li></ul>
+</p>
+
+
+
+
+
+
+
+
+<a name="drivers"></a><br>
+<h2><u>Drivers</u></h2>
+
+
+
+<p>
+Only one script is included in this section -
+
+
+<ul class="break3em"><li>
+<b>Drivers</b> - Use this script to integrate drivers to the build. <font class="file">Get WAIK Tools</font> is used to download <font class="file">DISM</font>. There are two options in the script -
+
+	<ul><li class="break1em"><b>EXTRACT</b> - the contents of the image selected in <font class="file">boot.wim</font> will be fully extracted and <font class="file">DISM</font> will be used to inject the drivers to the offline image. If this method is selected then setting option 4 in the main project script (<b>METHOD</b>) as <font class="file">EXTRACT</font> is recommended - this will fully extract <font class="file">boot.wim</font> early in the build process.</ul>
+
+	<ul><li class="break1em"><b>MOUNT</b> - <font class="file">DISM</font> will be used to mount the image selected in <font class="file">boot.wim</font></li> &gt; inject drivers to the mounted image &gt; unmount the image.</ul>
+
+<br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Drivers</font> &gt; <font class="file">drivers.script</font>
+</li></ul>
+</p>
+
+
+
+
+
+
+
+<a name="mediacreation"></a><br>
+<h2><u>MediaCreation</u></h2>
+
+<p>
+The script in this section can either be selected during the build process, or can be executed independently afterwards - as long as the build completed successfully. Files in the <font color="red">%BaseDir%</font><font color="blue">\ChrisPE.Files\ISO.ROOT\</font> directory (where <i><font color="red">%BaseDir%</font></i> refers to the directory from which <font class="file">PEBakeryLauncher.exe</font> is running) are added to the .iso file.
+</p>
+
+
+<p>
+<ul class="break3em">
+<li>
+<b>Create ISO</b> - this script includes a number of options, the default settings will create a RAM bootable ISO file using MKISOFS - for use on BIOS and UEFI based systems. It's also possible to create a Flat Boot <font class="file">WinPE</font> (<font class="file">WinPE</font> 2.x/3.x only) or even a multiboot ISO file with options for RAM Boot and Flat Boot - bootable on UEFI and BIOS based systems. 
+</li>
+</ul>
+
+
+
+<p class="break3em">
+To execute the Create ISO script following a build, simply select the script in the directory tree and click on the <font class="file">Run Script</font> button to the right of the title bar -
+<br />
+<a href="img/project1.png"><IMG SRC="img/project1.png" float=left width=90% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+
+
+
+
+
+
+
+<a name="postconfig"></a><br>
+<h2><u>PostConfig</u></h2>
+
+<p>
+The scripts in this section cannot be executed during the build process and is designed for post processing.
+</p>
+
+
+
+<p>
+<ul class="break3em">
+<li>
+<b>Advanced Options</b> - Can be used to mount/unmount the registry hives created when the <font class="file">ChrisPE</font> project has finished the build process. This script can also be used to inject (add) additional files to <font class="file">boot.wim</font> and carry out some additional tasks. 
+</li>
+</ul>
+
+
+
+
+
+
+
+<ul class="break3em">
+<li>
+<b>Add Package</b> - Use this script to add a <font class="file">ChrisPE</font> compatible <font class="file">Package</font> to the project (refer to the <a class="internal" href="packages.htm">Packages</a> section for more information) -
+</li>
+<a href="img/packages01.png"><IMG SRC="img/packages01.png" float=left width=80% margin-right=1% margin-bottom=0.5em border=1></a>
+</ul>
+</p>
+
+
+
+
+
+
+
+
+
+
+<p class="breaktop"><font class="file">Document date - 28<sup>th</sup> May 2022</font></p></font></body></html>
+
+ 

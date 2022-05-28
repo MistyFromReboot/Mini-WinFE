@@ -1,0 +1,183 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html><head><link type="text/css" rel="stylesheet" href="WinFE.css" media="screen" /><title>Mini-WinFE</title></head><body><font> 
+ 
+ 
+ 
+<p> 
+<select ONCHANGE="location = this.options[this.selectedIndex].value;"> 
+<option value="" disabled></option> 
+<option value="../readme.html">Contents</option> 
+<option value="" disabled>=======</option> 
+<option value="winfe.htm">Windows FE</option>  
+<option value="winpe.htm">Windows PE</option>  
+<option value="builder.htm">Builder</option>  
+<option value="options.htm">Project Options</option>  
+<option value="project.htm">Project Scripts</option>  
+<option value="instructions_pebakery.htm">Instructions</option>  
+<option value="menu_system.htm">Menu System</option>  
+<option value="not_in_wim.htm">Include...in boot.wim</option>  
+<option value="postconfig.htm">Post Config</option>  
+<option value="packages.htm">Packages</option>  
+<option value="usb.htm">...Bootable USB...</option>  
+<option value="uefi.htm">UEFI, BIOS, GPT...</option>  
+<option value="multiboot.htm">Multiboot WinPE</option>  
+<option value="" disabled></option> 
+<option value="" disabled>Appendices</option> 
+<option value="" disabled>=========</option> 
+<option value="quick_pebakery.htm">Quick Start - Build...</option>  
+<option value="usage.htm">Quick Start - Run...</option>  
+<option value="diskmgr.htm" selected="selected">DiskMgr</option>  
+<option value="links.htm">Download\Links</option>  
+<option value="acknowledgements.htm">Acknowledgements</option>  
+<option value="" disabled></option> 
+</select> 
+</p> 
+ 
+ 
+ 
+<hr> 
+<a href="http://winfe.mistyprojects.co.uk/index.html"><img src="img/home.jpg" BORDER=1></a> 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html><head><link type="text/css" rel="stylesheet" href="WinFE.css" media="screen" /><title>MistyPE</title></head><body><font>
+
+
+
+<a name="diskmgr"></a><br>
+<h2><u>DiskMgr</u></h2>
+
+<p>
+<font class="file">DiskMgr</font> has been developed primarily for use in a Windows Forensic Environment (<font class="file">WinFE</font>) to provide a user friendly method of changing the following <font class="file">DISK</font> attributes -
+<ul>
+<li><font class="file">Offline</font></li>
+<li><font class="file">Online</font></li>
+<li><font class="file">Read-Only</font></li>
+<li><font class="file">Read-Write</font></li>
+</ul>
+</p>
+
+
+<p class="break3em">
+<font class="file">DiskMgr</font> is similar in use to <font class="file">Colin Ramsden's</font> "<font class="file">Write Protect</font>" application (see <a class="external" target="_blank" href="http://www.ramsdens.org.uk/">here</a>). <font class="file">DiskMgr</font> is available in native Windows 32-bit and 64-bit versions.
+</p>
+
+
+
+
+<p class="break3em">
+The Microsoft <font class="file">DiskPart</font> application has historically been used in <font class="file">WinPE</font> to manipulate <font class="file">DISK</font> attributes. Unfortunately, if <font class="file">WinFE</font> registry settings have been applied, then <font class="file">DiskPart</font> may fail to change certain <font class="file">DISK</font> attributes, as displayed in the textbox below (output is from <font class="file">DiskPart</font> version 6.1.7601) -  
+
+<br />
+<textarea rows="15" cols="60" readonly="" align="left">
+
+DISKPART> attribute disk
+Current Read-only State : No
+Read-only  : No
+Boot Disk  : No
+Pagefile Disk  : No
+Hibernation File Disk  : No
+Crashdump Disk  : No
+Clustered Disk  : No
+
+DISKPART> attribute disk set readonly
+
+DiskPart failed to set disk attributes.
+</textarea>
+</p>
+
+
+
+<p class="break3em">
+<font class="file">DiskMgr</font> utilises the Microsoft API to set/change <font class="file">DISK</font> attributes. The program has a very simple User Interface with an information panel displaying a list of <font class="file">DISKS</font> and some basic information (including attributes) -
+<br />
+<IMG SRC="img/DiskMgr1a.jpg" border=1>
+</p>
+
+
+
+<p class="break3em">
+Right-clicking in the information window will display context sensitive options, including <font class="file">Show Disk/Part Informations</font> -
+<br />
+<IMG SRC="img/DiskMgr1c.jpg" border=1>
+</p>
+
+
+<p class="break3em">
+Sample output from the <font class="file">Show Disk/Part Informations</font> option - 
+<br />
+<IMG SRC="img/DiskMgr3.jpg" border=1>
+</p>
+
+
+
+
+
+
+
+<p class="break3em">
+Underneath the information panel is a row of buttons for changing attributes - 
+<br />
+<IMG SRC="img/DiskMgr1b.jpg" border=1>
+</p>
+
+
+
+
+
+<p class="break3em">
+And below is a brief summary of these options -
+<ul>
+<li><font class="file">Offline</font> - change the target <font class="file">DISK</font> attribute to <font class="file">Offline</font>. This option will dismount any volumes on the target <font class="file">DISK</font>.</li>
+</ul>
+
+<ul>
+<li><font class="file">Online</font> - change the target <font class="file">DISK</font> attribute to <font class="file">Online</font>. This option will automatically mount any volumes on the target <font class="file">DISK</font> - even if the <font class="file">NoAutoMount</font> registry setting has been applied. </li>
+</ul>
+
+<ul>
+<li><font class="file">Read-Only</font> - set the target <font class="file">DISK</font> attribute to <font class="file">Read-Only</font>, write protecting the disk and any volumes on it. If the disk is <font class="file">Online</font> when this setting is applied, then <font class="file">DiskMgr</font> will temporarily <font class="file">Offline</font> the disk before applying the changes. </li>
+</ul>
+
+<ul>
+<li><font class="file">Read-Write</font> - set the target <font class="file">DISK</font> attribute to <font class="file">Read-Write</font>, removing any write protection from the disk and any volumes on it. If the disk is <font class="file">Online</font> when this setting is applied, then <font class="file">DiskMgr</font> will temporarily <font class="file">Offline</font> the disk before applying the changes. </li>
+</ul>
+</p>
+
+
+<p class="break3em">
+Pressing any of the buttons will display a prompt before committing any changes. Below is a sample output from selecting the <font class="file">Read-Write</font> option -
+<br />
+<IMG SRC="img/DiskMgr5.jpg" border=1>
+</p>
+
+
+
+
+
+<p class="break3em">
+And below is the prompt displayed when selecting the <font class="file">Online</font> option -
+<br />
+<IMG SRC="img/DiskMgr4.jpg" border=1>
+</p>
+
+
+
+
+
+
+
+<p class="break3em">
+<font class="file">DiskMgr</font> has been developed by <font class="file">Erwan.L</font>. <font class="file">Erwan</font> has kindly given consent for it to be distributed with <font class="file">MistyPE</font>/<font class="file">Mini-WinFE</font>. I would like to express my sincere gratitude to <font class="file">Erwan</font> for spending his valuable time developing this program - thank you my friend. 
+</p>
+
+
+<p class="break3em">
+<font class="file">Erwan's</font> website - <a class="external" target="_blank" href="http://erwan.labalec.fr/">http://erwan.labalec.fr/</a>
+</p>
+
+
+
+
+
+
+
+
+
+<p class="breaktop"><font class="file">Document date - 28<sup>th</sup> May 2022</font></p></font></body></html> 

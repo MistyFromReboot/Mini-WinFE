@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html><head><link type="text/css" rel="stylesheet" href="WinFE.css" media="screen" /><title>Mini-WinFE</title></head><body><font> 
+ 
+ 
+ 
+<p> 
+<select ONCHANGE="location = this.options[this.selectedIndex].value;"> 
+<option value="" disabled></option> 
+<option value="../readme.html">Contents</option> 
+<option value="" disabled>=======</option> 
+<option value="winfe.htm" selected="selected">Windows FE</option>  
+<option value="winpe.htm">Windows PE</option>  
+<option value="builder.htm">Builder</option>  
+<option value="options.htm">Project Options</option>  
+<option value="project.htm">Project Scripts</option>  
+<option value="instructions_pebakery.htm">Instructions</option>  
+<option value="menu_system.htm">Menu System</option>  
+<option value="not_in_wim.htm">Include...in boot.wim</option>  
+<option value="postconfig.htm">Post Config</option>  
+<option value="packages.htm">Packages</option>  
+<option value="usb.htm">...Bootable USB...</option>  
+<option value="uefi.htm">UEFI, BIOS, GPT...</option>  
+<option value="multiboot.htm">Multiboot WinPE</option>  
+<option value="" disabled></option> 
+<option value="" disabled>Appendices</option> 
+<option value="" disabled>=========</option> 
+<option value="quick_pebakery.htm">Quick Start - Build...</option>  
+<option value="usage.htm">Quick Start - Run...</option>  
+<option value="diskmgr.htm">DiskMgr</option>  
+<option value="links.htm">Download\Links</option>  
+<option value="acknowledgements.htm">Acknowledgements</option>  
+<option value="" disabled></option> 
+</select> 
+</p> 
+ 
+ 
+ 
+<hr> 
+<a href="http://winfe.mistyprojects.co.uk/index.html"><img src="img/home.jpg" BORDER=1></a> 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html><head><link type="text/css" rel="stylesheet" href="WinFE.css" media="screen" /><title>MistyPE</title></head><body><font>
+
+
+
+<h2><u>Windows Forensic Environment</u></h2>
+
+
+
+
+<p>
+The Windows Forensic Environment (a.k.a. <font class="file">WinFE</font>) is a Windows based boot disk that can be used as a platform for digital forensic analysis. Being Windows based it enables users to run a number of Windows programs that they might already be familiar with. It is an alternative <u><i>or</i></u> addition to a number of forensically focused Linux distributions. 
+</p>
+
+
+<p>
+<font class="file">WinFE</font> does not appear to be available as a commercial product from Microsoft. It is however relatively easy to create <font class="file">WinFE</font> for personal use from freely available tools. <font class="file">WinFE</font> is in essence a Windows Preinstallation Environment (<font class="file">WinPE</font>) with two minor registry edits that are applied to ensure that any hard disks are not automatically mounted during the <font class="file">WinPE</font>/<font class="file">WinFE</font> boot process - minimising the risk of the contamination of data/evidence. <font class="file">WinFE</font> is a lightweight version of Windows that can be used for many tasks - it is a complete, standalone operating system and will work independently of any other operating systems already installed.
+
+</p>
+
+
+
+
+
+<p>
+Troy Larson, Senior Forensic Examiner of Microsoft©, is credited with creating the Windows Forensic Environment. A Guide to Basic Computer Forensics is available <a class="external" target="_blank" href="http://download.microsoft.com/documents/uk/technet/downloads/technetmagazine/CompForensicsUKdesFIN2.pdf">here</a> and is worth reading for those new to the subject. 
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p>
+Tests utilsing <font class="file">WinFE</font> based on <font class="file">WinPE</font> versions 3.*, 4.* and 5.* are documented <a class="external" target="_blank" href="http://mistyprojects.co.uk/documents/WinFE/winfe.htm">here</a>. Based on the results, a recommendation is made to use <font class="file">WinFE</font> based on <font class="file">WinPE</font> 4.0 or newer, with the <i>SanPolicy</i> set as <b>3</b>. Based on results this appears to provide robust protection from any writes to the disk(s) being carried out. It is however possible with all versions of <font class="file">WinFE</font> to manually override write protection so care should be taken. Please note that the experiments did not include testing <font class="file">WinPE</font> 5.1 / 10.x builds - based on initial tests these builds appear to function similarly to <font class="file">WinPE</font> 5.0 builds, however this needs validating. 
+</p>
+
+
+
+
+
+
+
+
+
+<p>
+It is strongly advised against using <font class="file">WinFE</font> 2.*/3.* without the Write Protect Tool as the simple act of browsing a mounted disk appears to perform a write action - as evidenced by the MD5 checks carried out before and after booting <font class="file">WinFE</font> in the tests. It was not possible to use <font class="file">DiskPart</font> to set a disk as <i>READONLY</i> despite documentation elsewhere stating that this command works. If you must use <font class="file">WinFE</font> based on earlier versions of <font class="file">WinPE</font> (2.*/3.*) then a recommendation is made to use Colin Ramsden's Write Protect Tool (see <a class="external" target="_blank" href="https://www.winfe.net/">here</a>) or <font class="file">DiskMgr</font> (included in the project) to ensure that all internal disks are set as read-only before any further action is carried out - just be aware that a disk signature will be written if one is not already present on the disk. 
+</p>
+
+
+
+
+
+
+
+
+<p>
+In something as critical as Forensic Examination, <font class="file">WinFE</font> needs validation and testing to ensure that no writes are performed on any evidence disk(s), or to at least be clear in what circumstances writes might be performed. The tests carried out were limited to 32-bit Windows Forensic Environments - other versions may behave differently. 
+</p>
+
+
+
+
+
+
+<p>
+<b><u>Warning</u></b>
+</p>
+
+
+
+
+
+
+
+<p>
+The tests performed were limited to a virtual environment, however the builds appear to function in the same way on physical hardware. 
+</p>
+
+
+
+
+
+
+
+
+
+<p>
+There are a number of variables that need to be taken into consideration before using <font class="file">WinFE</font>. The <font class="file">WinFE</font>'s that were used during testing were modified <font class="file">boot.wim</font> files from Windows Installation Media - they were not created using the Windows Automated Installation Kit (<font class="file">WAIK</font>) or the Windows Assessment and Deployment Kit (<font class="file">ADK</font>). <font class="file">WAIK</font> or <font class="file">ADK</font> builds of <font class="file">WinFE</font> can contain different combinations of optional <i>"Packages"</i>, which might affect usage. 
+</p>
+
+
+
+
+
+
+
+
+<p>
+There are reports that dynamic disks are automatically mounted and writable with some builds of <font class="file">WinFE</font> (see <a class="external" target="_blank" href="http://reboot.pro/topic/15883-winfe-dynamic-disk-problem/">here</a> and <a class="external" target="_blank" href="http://reboot.pro/topic/18882-some-questions-and-sanpolicy-values/">here</a>).
+</p>
+
+
+
+
+
+<p class="breaktop"><font class="file">Document date - 28<sup>th</sup> May 2022</font></p></font></body></html> 

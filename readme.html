@@ -1,0 +1,194 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"> <html>
+<html>
+<head>
+<link type="text/css" rel="stylesheet" href="readme.files/WinFE.css" media="screen" />
+<title>Mini-WinFE</title>
+</head>
+<body>
+<font>
+
+
+<p> 
+<select ONCHANGE="location = this.options[this.selectedIndex].value;"> 
+<option value="" disabled></option> 
+<option value="readme.html" selected="selected">Contents</option>  
+<option value="" disabled>=======</option>   
+<option value="readme.files/winfe.htm">Windows FE</option>  
+<option value="readme.files/winpe.htm">Windows PE</option>  
+<option value="readme.files/builder.htm">Builder</option>  
+<option value="readme.files/options.htm">Project Options</option>  
+<option value="readme.files/project.htm">Project Scripts</option>  
+<option value="readme.files/instructions_pebakery.htm">Instructions</option>  
+<option value="readme.files/menu_system.htm">Menu System</option>  
+<option value="readme.files/not_in_wim.htm">Include...in boot.wim</option>  
+<option value="readme.files/postconfig.htm">Post Config</option>  
+<option value="readme.files/packages.htm">Packages</option>  
+<option value="readme.files/usb.htm">...Bootable USB...</option>  
+<option value="readme.files/uefi.htm">UEFI, BIOS, GPT...</option>  
+<option value="readme.files/multiboot.htm">Multiboot WinPE</option>   
+<option value="" disabled></option> 
+<option value="" disabled>Appendices</option> 
+<option value="" disabled>=========</option> 
+<option value="readme.files/quick_pebakery.htm">Quick Start - Build...</option>  
+<option value="readme.files/usage.htm">Quick Start - Run...</option>  
+<option value="readme.files/diskmgr.htm">DiskMgr</option>  
+<option value="readme.files/links.htm">Download\Links</option>  
+<option value="readme.files/acknowledgements.htm">Acknowledgements</option>   
+<option value="" disabled></option> 
+</select> 
+</p> 
+ 
+ 
+ 
+<hr> 
+<a href="http://winfe.mistyprojects.co.uk/"><img src="readme.files/img/home.jpg" BORDER=1></a> 
+ 
+
+ 
+ 
+<h2><u>Introduction</u></h2>
+
+
+<p>
+This project has evolved from the Winbuilder <a class=external href="http://mistyprojects.co.uk/documents/Mini-WinFE/index.html">Mini-WinFE</a> project. A move has been made to the <a class=external href="https://github.com/pebakery/pebakery">PEBakery</a> build engine, with the <a class=external href="https://github.com/pebakery/chrispe">ChrisPE</a> project used as a core fileset.  Use this project to create <font class="file">WinFE</font> from a range of 32-bit and 64-bit Windows sources, including -
+<ul>
+<li><font class="file">Windows 7</font></li>
+<li><font class="file">Windows 7 (SP1)</font></li>
+<li><font class="file">Windows Server 2008 R2 SP1</font></li>
+<li><font class="file">Windows 8</font></li>
+<li><font class="file">Windows 8.1</font></li>
+<li><font class="file">Windows 8.1 Update</font></li>
+<li><font class="file">Windows 10</font></li>
+<li><font class="file">Windows 11</font></li>
+</ul>
+Windows RTM source files are recommended. The sources in the above list have been tested, other source files may also work. 
+</p>
+
+
+<p class="break3em">
+This project has been internally tested. Some of the current features include -
+<ul>
+<li>No caching of Windows source files - resulting in reduced storage space requirements on the Host OS used to build the project.</li>
+
+<li class="breakhalfem">.wim support using internal <font class="file">PEBakery</font> commands - the wimlib library is used for managing wim support. The full contents of the the Windows source and <font class="file">WinPE</font> .wim files are not applied (extracted) to a local directory - resulting in significant time savings.</li>
+
+<li class="breakhalfem">Support for a range of shells including <font class="file">bblean</font>, <font class="file">CMD</font>, <font class="file">LaunchBar</font> and <font class="file">WinXShell</font>.</li>
+
+
+<li class="breakhalfem">WoW64 support.</li>
+</ul>
+</p>
+
+
+
+
+
+
+
+
+<h2 class="breaktop"><u>Contents</u></h2>
+
+
+
+<p>
+<i>Please note that some of the screenshots used throughout this guide may have been taken from other projects.</i>
+</p>
+
+
+<ol start="1"><li>
+<a class="internal" href="readme.files/winfe.htm">Windows Forensic Environment</a> - About <i>Microsoft&copy;</i> "WinFE".
+</li></ol>
+
+
+<ol start="2"><li>
+<a class="internal" href="readme.files/winpe.htm">Windows Preinstallation Environment</a> - About <i>Microsoft&copy;</i> "WinPE".
+</li></ol>
+
+
+<ol start="3"><li>
+<a class="internal" href="readme.files/builder.htm">Builders</a> - brief overview of the PEBakery build engine.
+</li></ol>
+
+
+<ol start="4"><li>
+<a class="internal" href="readme.files/options.htm">Project Options</a> - the main settings/options.
+</li></ol>
+
+
+
+<ol start="5"><li>
+<a class="internal" href="readme.files/project.htm">Project Scripts</a> - List of all scripts included with the <font class="file">WinFE</font> download.
+</li></ol>
+
+
+
+<ol start="6"><li>
+<a class="internal" href="readme.files/instructions_pebakery.htm">Instructions</a> - a detailed walkthrough for using the <font class="file">WinFE</font> project to create <font class="file">WinPE</font>. Also covers <font class="file">PEBakery</font> usage.
+</li></ol>
+
+
+<ol start="7"><li>
+<a class="internal" href="readme.files/menu_system.htm">Menu System</a> - an overview of the menu systems for the supported Shells. Cover creating custom sub-menus.
+</li></ol>
+
+
+<ol start="8"><li>
+<a class="internal" href="readme.files/not_in_wim.htm">Include Program in boot.wim</a>
+</li></ol>
+
+
+<ol start="9"><li>
+<a class="internal" href="readme.files/postconfig.htm">Post Configuration</a>
+</li></ol>
+
+<ol start="10"><li>
+<a class="internal" href="readme.files/packages.htm">Packages</a>
+</li></ol>
+
+<ol start="11"><li>
+<a class="internal" href="readme.files/usb.htm">Create a Bootable USB Stick</a> - covers using <font class="file">DiskPart</font> (Command-line) and <font class="file">Rufus</font> (GUI).
+</li></ol>
+
+<ol start="12"><li>
+<a class="internal" href="readme.files/uefi.htm">UEFI, BIOS, GPT and MBR</a> - overview of <font class="file">UEFI</font> and <font class="file">BIOS</font>.
+</li></ol>
+
+<ol start="13"><li>
+<a class="internal" href="readme.files/multiboot.htm">MultiBoot WinPE</a>
+</li></ol>
+
+
+<ol start="14"><li>
+<a class="internal" href="readme.files/quick_pebakery.htm">Quick Start Guide (PEBakery)</a> - the basic steps for using this project in the <font class="file">PEBakery</font> build engine to create <font class="file">WinPE</font> in just a few minutes!
+</li></ol>
+
+
+<ol start="15"><li>
+<a class="internal" href="readme.files/usage.htm">Quick Start - Running Mini-WinFE</a> - overview of using the Mini-WinFE boot disk.
+</li></ol>
+
+
+
+<ol start="16"><li>
+<a class="internal" href="readme.files/diskmgr.htm">DiskMgr</a>
+</li></ol>
+
+
+
+<ol start="17"><li>
+<a class="internal" href="readme.files/links.htm">Download/Links</a>
+</li></ol>
+
+
+
+<ol start="18"><li>
+<a class="internal" href="readme.files/acknowledgements.htm">Acknowledgements</a>
+</li></ol>
+
+
+
+
+
+<p class="breaktop"><font class="file">Document date - 28<sup>th</sup> May 2022</font></p></font></body></html>
+
+

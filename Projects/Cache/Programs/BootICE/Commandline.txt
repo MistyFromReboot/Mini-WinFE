@@ -1,0 +1,120 @@
+Usage:
+BOOTICE [DEVICE] [/mbr, /pbr, /sectors, /partitions] [parameters]
+
+@ DEVICE
+===========================================
+/DEVICE=[m:n | m | X:]
+  m:n >> partition n of disk m. (m: 0,1,2...; n: Grub4Dos style, 0,1,2...)
+  X:  >> specify the disk and partition by its drive letter.
+  When n is specified, n=0.
+
+@ MBR operation
+===========================================
+BOOTICE [DEVICE] /mbr [/install /backup /restore] [parameters]
+
+/install >> Install some kind of MBR, requires /type parameter.
+    /type=[wee, GRUB4DOS, grub2, 1jf9z, 1jf9k, plop, usbhdd+, usbzip+, nt52, nt60]
+    If /type= is missed, the program will stop at the MBR screen.
+    /menu=xxx.lst >> Load menu file for WEE.
+/backup >> Backup MBR to a file. Requires /file= parameter.
+    /file=xxx:  File name. Could be a rel. path or full path name.
+    /sectors=n: Sectors to backup.
+/restore >> Restore MBR from a file. Requires /file= parameter.
+    /file=xxx: File name. Could be a rel. path or full path name.
+    /keep_dpt: Keep disk signature and partition table untouched.
+/boot_file=xxx >> Specify the boot file of GRUB4DOS boot record.
+
+@ PBR Operation
+===========================================
+BOOTICE [DEVICE] /pbr [/install /backup /restore] [parameters]
+
+/install >> Install some kind of PBR, requires /type parameter.
+    /type=[msdos | GRUB4DOS | ntldr | bootmgr | syslinux]
+    If /type= is missed, the program will stop at the PBR screen.
+/backup >> Backup PBR to a file. Requires /file= parameter.
+    /file=xxx  >> File name. Could be a rel. path or full path name.
+    /sectors=n >> Specify the sectors number to be backupped.
+/restore >> Restore PBR from a file. Requires /file= parameter.
+    /file=xxx >> File name. Could be a rel. path or full path name.
+    /keep_bpb: Keep BPB(Bios Parameter Block) untouched.
+/boot_file=xxx >> Specify the boot file of GRUB4DOS, NTLDR or BOOTMGR boot record.
+/v4            >> Install SYSLINUX v4.07 (default: v5.10).
+
+
+@ Sectors backup & restore
+===========================================
+BOOTICE [DEVICE] /sectors [/backup /restore] [parameters]
+
+/backup  >> Backup sectors to a file.
+/restore >> Restore sectors from a file.
+/lba=n   >> Specify the start sector LBA.
+/sectors=n >> Sectors to backup or restore.
+/file=xxx >> File name. Could be a rel. path or full path name.
+/keep_dpt >> Keep disk signature and partition table untouched.
+/keep_bpb >> Keep BPB untouched.
+
+@ Partitioning & Format
+===========================================
+BOOTICE [DEVICE] /partitions [operation]
+
+/backup_dpt=xxx  >> Backup the partition table to file xxx.
+/restore_dpt=xxx >> Restore the partition table from file xxx.
+/hide      >> Hide a partition.
+/unhide    >> UnHide a partition.
+/eisahide  >> Hide a partition by setting its ID to 0x12.
+/set_id=XX >> Modify the ID of a partition
+/activate  >> Activate a partition.
+/firstpart=n     >> Set as the 1st entry in the MBR DPT, n=1,2,3.
+    When n=0, resorts partition entries by start LBA.
+/assign_letter   >> Assign a drive letter for the partition.
+/assign_letter=X >> Assign a specified letter X for the partition.
+/delete_letter   >> Delete the partition's drive letter.
+/repartition     >> RePartition and Format an USB disk.
+  [/usb-fdd, /usb-zip, /usb-hdd] [/vollabel=xxx] [/fstype=xxx].
+  [/vollabel=xxx]: specify new volume label, 11 chars max.
+  [/fstype=]: /fstype=[fat16 | fat32 | ntfs | exfat].
+  [/startlba=nnn]: specify the LBA of the partition.
+
+@ Special parameters
+===========================================
+1. /quiet
+With /quiet parameter, BOOTICE will automatically start the
+installation rather than stopping and waiting for the user's
+operation (except when formatting a disk).
+
+2. /nodriveletters
+If /nodriveletters exists, BOOTICE will not detect any drive letters.
+
+3. /diskinfo
+This parameter acts as RMPARTUSB.EXE, and requires /file=xxx.cmd.
+/diskinfo /list: list disks;
+/diskinfo /find: report disk number and drive letter of the 1st drive;
+/diskinfo /getdrv /drive=n: report drive letter+size+description;
+If /usbonly is specified, list USB disks only, otherwise, all disks.
+
+4. /edit_bcd
+Used to edit BCD file of MS Windows Vista or later.
+  /easymode: Use easy mode. If missed, use professional mode.
+  /file=xxx: Specify the BCD file to edit. If missed, edit the system BCD.
+
+5. /edit_g4dmenu
+Used to edit GRUB4DOS menu file (grldr or menu.lst).
+  /file=xxx: Specify the file to edit.
+
+6. Parameters for GRUB4DOS
+Because of widely using of GRUB4DOS, BOOTICE supports these
+special parameters for GRUB4DOS:
+/v045: Install GRUB4DOS v0.4.5
+/v046: Install GRUB4DOS v0.4.6
+/mbr-bpb: Copy the BPB of the leading FAT partition to MBR
+/mbr-disable-floppy: don't search floppy for grldr
+/mbr-disable-osbr: don't boot from old MBR with an invalid partition table
+/duce: disable the unconditional console entrance
+/chs-no-tune: disable geometry tune
+/boot-prevmbr-first: boot previous MBR first
+/preferred-drive=m: preferred boot drive number
+/preferred-partition=n: preferred partition number
+/hot-key=SSAA: hot-key, four hex numbers.
+    SS=scan code, AA=ASCII. e.g.: 3920 = Space key
+/time-out=n: count down
+/boot_file=xxx: rename the boot file (default value is grldr)

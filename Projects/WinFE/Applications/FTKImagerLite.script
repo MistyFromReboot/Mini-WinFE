@@ -1,0 +1,245 @@
+[main]
+Title=FTK Imager Lite
+Description=Forensic tool that can create a physical or logical image of any drive, as well as capturing RAM. Image formats include raw, SMART format or E01 format.
+Selected=False
+Level=5
+Author=Misty
+Version=20220524
+Date=2022-05-24
+Interface=Interface1
+
+[Interface1]
+pTextLabelMenu1="1",1,1,35,3,70,18,10,Bold
+pButtonMenu2="2",1,8,75,0,70,20,pButtonMenu2,0,True,_pButtonMenu2_,True
+pButtonMenu3="?",1,8,145,0,70,20,pButtonMenu3,0,True,_pButtonMenu3_,True
+pBevel_B1=,1,12,10,70,500,40
+pTextLabel_B1="PATH to 32-bit",1,1,20,80,130,18,8,Bold
+pFileBox_B1=,1,13,150,80,230,20,file
+pButton_B1="ADD TO CACHE",1,8,404,80,96,20,B1.RUN,0,True,_B1.RUN_,True
+pBevel_B2=,1,12,10,130,500,40
+pTextLabel_B2="PATH to 64-bit",1,1,20,140,130,18,8,Bold
+pFileBox_B2=,1,13,150,140,230,20,file
+pButton_B2="ADD TO CACHE",1,8,404,140,96,20,B2.RUN,0,True,_B2.RUN_,True
+pWebLabel1=http://www.accessdata.com/,1,10,160,43,180,18,http://www.accessdata.com/
+pTextLabel5="AccessData Website",1,1,10,45,150,18,10,Bold
+pCheckBoxInWim="Include Program in boot.wim",1,3,10,265,180,18,True
+
+[Interface2]
+pButtonMenu1="1",1,8,5,0,70,20,pButtonMenu1,0,True,_pButtonMenu1_,True
+pTextLabelMenu2="2",1,1,108,3,70,18,10,Bold
+pButtonMenu3="?",1,8,145,0,70,20,pButtonMenu3,0,True,_pButtonMenu3_,True
+pBevel1=,1,12,10,65,66,2
+pTextLabel="Menu Entries",1,1,10,50,230,18,8,Bold
+pCheckBoxShortcutDesktop="Add to Desktop Menu",1,3,40,80,150,18,True
+pCheckBoxShortcutQuick="Add to Quicklaunch Menu",1,3,40,110,150,18,True
+pCheckBoxShortcutPrograms="Add to #$qStart#$q > ",1,3,40,140,99,18,True
+pCheckBoxShortcutLaunchBar="Add to LaunchBar Menu ",1,3,40,170,150,18,True
+pButtonShortcut1=?,1,8,10,80,18,18,pButtonShortcut1,0,True,_pButtonShortcut1_,True
+pButtonShortcut2=?,1,8,10,110,18,18,pButtonShortcut2,0,True,_pButtonShortcut2_,True
+pButtonShortcut3=?,1,8,10,140,18,18,pButtonShortcut3,0,True,_pButtonShortcut3_,True
+pButtonShortcut4=?,1,8,10,170,18,18,pButtonShortcut4,0,True,_pButtonShortcut4_,True
+pTextBox1=,1,0,140,140,150,21,Programs
+
+[pButtonMenu1]
+IniWrite,%ScriptFile%,Main,Interface,Interface1
+System,REFRESHINTERFACE
+
+[pButtonMenu2]
+IniWrite,%ScriptFile%,Main,Interface,Interface2
+System,REFRESHINTERFACE
+
+[pButtonMenu3]
+message,"Click on the buttons to toggle between tabs 1 and 2. #$x#$xTab 2 contains menu options for use in the selected shell. Click on the ? button for information about the different options."
+
+[pButtonShortcut1]
+message,"WinXShell only#$x#$xSelect this option to add a program shortcut to the Desktop."
+
+[pButtonShortcut2]
+message,"WinXShell only#$x#$xSelect this option to add a program menu option to the Quicklaunch menu - similar in appearence to the 'Pin to Taskbar' option in Windows 7/8/10."
+
+[pButtonShortcut3]
+message,"Applies to WinXShell#$c BBLean and LaunchBar Shell(s)#$x#$xSelect this option to add a program menu option to the Start menu. Leave blank to add to the root of the menu#$c or manually type a path to place in a sub-menu (do not use spaces in the path). E.g. #$x#$s- FileManager#$x#$s- Programs#$x#$s- Programs\FileManager#$x#$xAnd looking at the examples above - #$x#$xLeave this option blank to add a menu entry to the root of the program menu (the 'Start' menu in WinXShell#$c the 'Start' menu in BBLean#$c or the root of the LaunchBar menu bar if LaunchBar is selected as Shell)#$x#$xEnter 'FileManager' to add a menu entry for this application to the 'Start' > 'FileManager' sub-menu (WinXShell and bblean) or the 'FileManager' sub-menu in LaunchBar.#$x#$xEnter 'Programs' to add a menu entry for this application to the 'Start' > 'Programs' sub-menu (WinXShell and bblean) or the 'Programs' sub-menu in LaunchBar.#$x#$xEnter 'Programs\FileManager' to add a menu entry for this application to the 'Start' > 'Programs' > 'FileManager' sub-menu (WinXShell and bblean) or the 'Programs' > 'FileManager' sub-menu in LaunchBar."
+
+[pButtonShortcut4]
+message,"This setting does not apply to any LaunchBar instance running as the WinPE Shell. This option only applies to a LaunchBar instance when the Applications' > 'LaunchBar' program script is selected in the build.#$x#$xIf the 'Applications' > 'LaunchBar' program script is selected than enable this option to add a program menu entry to the root of the LaunchBar menu bar. #$x#$xPlease note that if option '6] Programs in boot.wim' in the main project script is set as 'NO'#$c then LaunchBar and a number of other applications will not be available at boot. In this case a text based .ini file will be used for LaunchBar menu settings."
+
+[B1.RUN]
+If,ExistFile,"%Programs%\FTKImagerLite\x86\FTK Imager.exe",Message,"The cache already contains a copy of FTK Imager. Exiting..."
+Else,Begin
+set,%FTK%,%pFileBox_B1%
+If,%FTK%,Equal,"",Begin
+Message,"ERROR - the filebox is empty. Change the path and retry. Exiting..."
+Exit,"ERROR - the filebox is empty. Change the path and retry. Exiting..."
+End
+If,Not,ExistFile,"%FTK%",Begin
+Message,"ERROR - The selected file does not exist. Change the path and retry. Exiting..."
+Exit,"ERROR - The selected file does not exist. Change the path and retry. Exiting..."
+End
+StrFormat,PATH,"%FTK%","%FTK.PATH%"
+StrFormat,FILENAME,"%FTK%","%FTK.exe%"
+If,Not,"%FTK.exe%",Equal,"FTK Imager.exe",Begin
+Message,"ERROR - Could not find #$qFTK Imager.exe#$q. Change the path and retry. Exiting..."
+Exit,"ERROR - Could not find #$qFTK Imager.exe#$q. Change the path and retry. Exiting..."
+End
+Message,"Attempting to add FTK Imager to the Program Cache..."
+If,Not,ExistDir,"%Programs%\FTKImagerLite\x86",DirMake,"%Programs%\FTKImagerLite\x86"
+DirCopy,"%FTK.PATH%\*.*","%Programs%\FTKImagerLite\x86"
+If,Not,ExistFile,"%Programs%\FTKImagerLite\x86\FTK Imager.exe",Begin
+Message,"There appears to have been an error copying FTK Imager to the cache. Exiting..."
+Exit,"There appears to have been an error copying FTK Imager to the cache. Exiting..."
+End
+Else,Message,"FTK Imager added to the following path -#$x#$x#$s#$s#$s#$q%Programs%\FTKImagerLite\x86#$q"
+End
+
+[B2.RUN]
+If,ExistFile,"%Programs%\FTKImagerLite\x64\FTK Imager.exe",Message,"The cache already contains a copy of FTK Imager. Exiting..."
+Else,Begin
+If,ExistFile,"%Cache%\temp\*.*",FileDelete,"%Cache%\temp\*.*"
+set,%FTK%,%pFileBox_B2%
+If,%FTK%,Equal,"",Begin
+Message,"ERROR - the filebox is empty. Change the path and retry. Exiting..."
+Exit,"ERROR - the filebox is empty. Change the path and retry. Exiting..."
+End
+If,Not,ExistFile,"%FTK%",Begin
+Message,"ERROR - The selected file does not exist. Change the path and retry. Exiting..."
+Exit,"ERROR - The selected file does not exist. Change the path and retry. Exiting..."
+End
+StrFormat,PATH,"%FTK%","%FTK.PATH%"
+StrFormat,FILENAME,"%FTK%","%FTK.exe%"
+If,Not,"%FTK.exe%",Equal,"FTK Imager.exe",Begin
+Message,"ERROR - Could not find #$qFTK Imager.exe#$q. Change the path and retry. Exiting..."
+Exit,"ERROR - Could not find #$qFTK Imager.exe#$q. Change the path and retry. Exiting..."
+End
+Message,"Attempting to add FTK Imager to the Program Cache..."
+If,Not,ExistDir,"%Programs%\FTKImagerLite\x64",DirMake,"%Programs%\FTKImagerLite\x64"
+DirCopy,"%FTK.PATH%\*.*","%Programs%\FTKImagerLite\x64"
+If,Not,ExistFile,"%Programs%\FTKImagerLite\x64\FTK Imager.exe",Begin
+Message,"There appears to have been an error copying FTK Imager to the cache. Exiting..."
+Exit,"There appears to have been an error copying FTK Imager to the cache. Exiting..."
+End
+Else,Message,"FTK Imager added to the following path -#$x#$x#$s#$s#$s#$q%Programs%\FTKImagerLite\x64#$q"
+End
+
+[process]
+If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRun
+AddInterface,%ScriptFile%,Interface1,""
+AddInterface,%ScriptFile%,Interface2,""
+If,%pCheckBoxInWim%,Equal,True,Set,%PROGRAMS.IN.WIM%,YES
+Else,Set,%PROGRAMS.IN.WIM%,NO
+Run,%ScriptFile%,CHECKS
+Run,%ScriptFile%,MENU
+Run,%ScriptFile%,COMMON
+If,%PROGRAMS.IN.WIM%,Equal,NO,Run,%ScriptFile%,NOT.IN.WIM
+If,%PROGRAMS.IN.WIM%,Equal,YES,Run,%ScriptFile%,IN.WIM
+
+[CHECKS]
+If,%ARCH%,Equal,x86,Run,%ScriptFile%,CHECKS-x86
+If,%ARCH%,Equal,x64,Run,%ScriptFile%,CHECKS-x64
+//If,%ARCH%,Equal,x64Run,%ScriptFile%,vcredist_x64
+
+
+[CHECKS-x86]
+If,Not,ExistFile,"%Programs%\FTKImagerLite\x86\FTK Imager.exe",Begin
+Set,%CONTINUE%,NO
+Message,"FTK Imager 32-bit is missing."
+Exit
+End
+
+[CHECKS-x64]
+If,Not,ExistFile,"%Programs%\FTKImagerLite\x64\FTK Imager.exe",Begin
+  Set,%CONTINUE%,No
+  IniRead,"%ProjectDir%\Core\G_WoW64.script",main,Selected,%WoW64YesOrNo%
+  If,%WoW64YesOrNo%,Equal,False,Run,%ScriptFile%,Exit
+  If,Question,ERROR - could not find 64-bit FTK Imager. Select YES to attempt to use 32-bit source files (SysWoW Support required) - or NO to Exit,Set,%CONTINUE%,YES
+  If,%CONTINUE%,Equal,No,Run,%ScriptFile%,Exit
+  If,%CONTINUE%,Equal,YES,Begin
+    Set,%FTK_SYSWOW64%,yes
+    Run,%ScriptFile%,CHECKS-x86
+  End
+End
+Else,Begin
+  Set,%FTK_SYSWOW64%,no
+  WimExtractBulk,%Install.wim%,%Install.wim.Image.number%,%Programs%\FTKImagerLite\dll.dependencies.txt,%TargetDir%,NOACL,NOERR
+End
+
+
+[vcredist_x64]
+If,%FTK_SYSWOW64%,Equal,no,Begin
+  Set,%Error%,0
+  If,Not,ExistFile,"%Programs%\FTKImagerLite\x64\msvcp100.dll",Set,%Error%,1
+  If,Not,ExistFile,"%Programs%\FTKImagerLite\x64\msvcr100.dll",Set,%Error%,1
+  If,Not,ExistFile,"%Programs%\FTKImagerLite\x64\mfc100u.dll",Set,%Error%,1  
+  If,%Error%,Equal,1,Begin
+    Message,"Attempting to download Microsoft Visual C++ 2010 Redistributable Package dependencies for FTK Imager (64-bit)"
+    WebGetIfNotExist,"http://download.microsoft.com/download/A/8/0/A80747C3-41BD-45DF-B505-E9710D2744E0/vcredist_x64.exe","%Cache%\temp\vcredist_x64.exe"
+    //http://download.microsoft.com/download/C/6/D/C6D0FD4E-9E53-4897-9B91-836EBA2AACD3/vcredist_x86.exe
+    If,ExistFile,"%Cache%\temp\vcredist_x64.exe",Begin
+      ShellExecute,Hide,"%Tools%\7z.exe","e -r -o#$q%Cache%\temp#$q #$q%Cache%\temp\vcredist_x64.exe#$q vc_red.cab -y"
+      Wait,1
+      ShellExecute,Hide,"%Tools%\7z.exe","e -r -o#$q%Cache%\temp#$q #$q%Cache%\temp\vc_red.cab#$q F_CENTRAL_msvcp100_x64 F_CENTRAL_msvcr100_x64 F_CENTRAL_mfc100u_x64 -y"
+      If,ExistFile,"%Cache%\temp\F_CENTRAL_msvcp100_x64",FileCopy,"%Cache%\temp\F_CENTRAL_msvcp100_x64","%Programs%\FTKImagerLite\x64\msvcp100.dll"
+      If,ExistFile,"%Cache%\temp\F_CENTRAL_msvcr100_x64",FileCopy,"%Cache%\temp\F_CENTRAL_msvcr100_x64","%Programs%\FTKImagerLite\x64\msvcr100.dll"
+      If,ExistFile,"%Cache%\temp\F_CENTRAL_mfc100u_x64",FileCopy,"%Cache%\temp\F_CENTRAL_mfc100u_x64","%Programs%\FTKImagerLite\x64\mfc100u.dll"
+    End
+  End
+  Else,message,"Microsoft Visual C++ 2010 Redistributable Package download failed. FTK Imager may not function without these file dependencies."
+End
+
+[Exit]
+Exit,FTK Imager is missing - exiting script...,WARN
+
+[MENU]
+Set,%FTK.EXE%,FTK Imager.exe
+If,%PROGRAMS.IN.WIM%,Equal,NO,Begin
+  If,Not,ExistFile,"%OutputDir%\Programs\ShortcutsNotInWim.txt",Run,"%ProjectDir%\Core\common.script",NotInWim
+  TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$p~dp0FTKImagerLite\%FTK.EXE%#$q #$q#$pTemp#$p\ShortCuts#$q #$qFTKImagerLite#$q",Append
+End 
+If,%PROGRAMS.IN.WIM%,Equal,YES,Begin
+  ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\FTKImagerLite\%FTK.EXE%#$q /F:#$q%ProjectTemp%\FTKImager.lnk#$q /I:#$q#$pSystemDrive#$p\Programs\FTKImagerLite\%FTK.EXE%#$c0#$q"
+  If,ExistFile,"%ProjectTemp%\FTKImager.lnk",Begin
+    Set,%MyShortcut%,FTKImager.lnk
+    If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
+    If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
+    If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
+      Set,%ProgramMenuPath%,%pTextBox1%
+      Run,"%ProjectDir%\Core\common.script",StartMenu
+    End
+    If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
+    If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
+    FileDelete,"%ProjectTemp%\%MyShortcut%"
+  End
+End
+
+[COMMON]
+If,%PROGRAMS.IN.WIM%,Equal,NO,Set,%PATH%,%OutputDir%
+If,%PROGRAMS.IN.WIM%,Equal,YES,Set,%PATH%,%TargetDir%
+If,Not,ExistDir,"%PATH%\Programs",DirMake,"%PATH%\Programs"
+DirMake,"%PATH%\Programs\FTKImagerLite"
+If,%ARCH%,Equal,x86,DirCopy,"%Programs%\FTKImagerLite\x86\*.*","%PATH%\Programs\FTKImagerLite"
+If,%ARCH%,Equal,x64,Begin
+  If,%FTK_SYSWOW64%,Equal,yes,DirCopy,"%Programs%\FTKImagerLite\x86\*.*","%PATH%\Programs\FTKImagerLite"
+  Else,DirCopy,"%Programs%\FTKImagerLite\x64\*.*","%PATH%\Programs\FTKImagerLite"
+End
+IniWrite,"%OutputDir%\Project.Settings.ini",PROGRAMS,FTKImager,YES
+
+[IN.WIM]
+If,%FullProjectRun%,Equal,NO,Begin
+  IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
+  WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+End
+//Wait,1
+
+[NOT.IN.WIM]
+//Wait,1
+If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunNotInWim
+
+[AuthorEncoded]
+FTKImager.ico=4002,5336
+logo=FTKImager.ico
+
+[EncodedFile-AuthorEncoded-FTKImager.ico]
+lines=1
+0=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
+1=q5ZRf2zfkz6z18zDg8PuQ5pBWex9kA6BNvbO7aPotmnVOON2DEK69jsmsC3O8twMe7i628vAv7Js83ebLJ9aNfek3y/drmdsn5PTdi3/42JH7Qj5t6wPgEUxOs2F10XfumTsignx0S8ypGjH4NiQdrUEf7uZVNkvNfz77x51IPst8M+q3nXhuLQU88hpffcmFt/vXX39jPqWmTWiX6+RekXilvgNQsN2I/za4Z0uxzZuqZhx/8ldQ0+ui5Gzp/OTXtmLBkLUYOi8bC9DzsqW1GbWPbDZ0/6Y/rb9Z57f4KPMC4cO9992PiskSklzZc9/szddKm8haptaKfHSb11lrvKam5DtRae6Btf+PERzMupwZz+jO1mHvpBqnHHuB3ZGoy41PM95EmsedC8DzpkPizdl+pnJvMshaM/MM7mP+neVi6PR87qwOob25FDuNBcmHHPjh1p5x5jsfEFE95gGfwHPo+PgC33fr3eGXGInkWrIlD5q1D7DvzN+tkvoHF2wqkXkzftF1qxj01l6VuFF9AO5mFDcFvLsPu2/jurOp2qSVv6XaT1JNJ3pqrzp2276n2npoac3rON1b8MznV8fMS6yb8OQFvv/E6tu87iE/2n8SXNZdQ4mvBF8zrdIllM3jeuW5beXbjVnvwo9tuxT/94pdY9vm3yKq41HF2bLuyDyH+fNmBGsm/TJ2bUWrPi/2benf84k+l5k3K2CR1bzbXxtS+X9BPm/o3q9yqgVOYw5o6uMdP/kFqYdOX1MN2rHNiltmnNHvNQmt0Y3/9/nJk03dKLnuMYyhqRGZlM+ak5SI69jXEjH4Fk96PxwfZ+7C2oIJrW4Vl2w7hj/Pi0fd3T3HPn4Rr2UZpZ3yw5BjH7Hnz3EiezGfJjEWpdg5mztNy+pkZnx2SOr2qsVVq9Q/2nJR6feHeGqnZF+yukrp92BtTpHZ/cvTbUr8/8+YUqeEnJn0hdfzSr89LLW/qeFPPOzW9U9ebvk1tb/o29b25mxp/+rajKC4qUt+U1ajpmwowcXMBpmcfEKZtPiDfx8ydh/HujkJMzqbesxduTz5mbf0Wcz4/JvdpOQcxI9uLGZutNjM2HZT2U2156uaDmGr3N2WThbFl5j4xOZdlEJr/N/9/6H8CJaFOKHic43UL8fbMTUxPLdLLTM5nGAUjDExTh9Ch/NjlP28q3c7ABAAnqAil+fwwYQEAAAACAAAAKQAAAFUPAAAAAAAAAQAAAAAAAAAAAAAA
+
+
