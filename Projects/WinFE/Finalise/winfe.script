@@ -6,8 +6,8 @@ Locked=True
 Mandatory=True
 Level=8
 Author=Misty
-Version=20220528
-Date=2022-05-28
+Version=20220605
+Date=2022-06-05
 Credits=Colin Ramsden, Karl Morton, Royal Meier
 Interface=Interface1
 
@@ -133,11 +133,7 @@ If,%CODEBASE%,Equal,10.0.16299,Set,%Settings%,3
 If,%CODEBASE%,Equal,10.0.17134,Set,%Settings%,3
 If,%CODEBASE%,Equal,10.0.17763,Set,%Settings%,3
 If,%CODEBASE%,Equal,10.0.18362,Set,%Settings%,3
-If,%CODEBASE%,Equal,10.0.18363,Set,%Settings%,3
 If,%CODEBASE%,Equal,10.0.19041,Set,%Settings%,3
-If,%CODEBASE%,Equal,10.0.19042,Set,%Settings%,3
-If,%CODEBASE%,Equal,10.0.19043,Set,%Settings%,3
-If,%CODEBASE%,Equal,10.0.19044,Set,%Settings%,3
 If,%CODEBASE%,Equal,10.0.22000,Set,%Settings%,3
 Set,%CONTINUE%,No
 If,%Settings%,Equal,0,Begin

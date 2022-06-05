@@ -4,8 +4,8 @@ Description=This is set as hidden and will be executed from another project scri
 Selected=False
 Level=-2
 Author=Misty
-Version=20220524
-Date=2022-05-24
+Version=20220605
+Date=2022-06-05
 
 [boot.wim]
 Echo,"Checking boot.wim for required information (build number, architecture, etc)..."
@@ -203,11 +203,7 @@ If,%CodeBase%,Equal,10.0.16299,Set,%ERROR%,1
 If,%CodeBase%,Equal,10.0.17134,Set,%ERROR%,1
 If,%CodeBase%,Equal,10.0.17763,Set,%ERROR%,1
 If,%CodeBase%,Equal,10.0.18362,Set,%ERROR%,1
-If,%CODEBASE%,Equal,10.0.18363,Set,%ERROR%,1
 If,%CODEBASE%,Equal,10.0.19041,Set,%ERROR%,1
-If,%CODEBASE%,Equal,10.0.19042,Set,%ERROR%,1
-If,%CODEBASE%,Equal,10.0.19043,Set,%ERROR%,1
-If,%CODEBASE%,Equal,10.0.19044,Set,%ERROR%,1
 If,%CODEBASE%,Equal,10.0.22000,Set,%ERROR%,1
 If,%ERROR%,Equal,0,Begin
   Set,%Officially.Supported.OS%,NO,Global

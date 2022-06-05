@@ -16,7 +16,13 @@ padding-left: 30px;
 align: justify
 }
 
+.iso {
+font-size: 12px; 
+}
 
+.anomaly {
+background-color:#03fce7;
+}
 
 .file {
 color: slategrey;
@@ -74,6 +80,6 @@ color:mediumblue;
 table, th, td {
      border: 1px solid black;
    border-collapse: collapse;
-    padding: 15px;
+    padding: 5px;
 } 
 
