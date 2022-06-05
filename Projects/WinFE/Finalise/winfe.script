@@ -6,8 +6,8 @@ Locked=True
 Mandatory=True
 Level=8
 Author=Misty
-Version=20220528.1
-Date=2022-05-28
+Version=20220605.1
+Date=2022-06-05
 Credits=Colin Ramsden, Karl Morton, Royal Meier
 Interface=Interface1
 
@@ -25,7 +25,7 @@ pScrollBox3=3,1,4,20,140,80,20,3,4
 pTextLabel3="2] SAN Policy",1,1,213,140,90,18,8,Bold
 pButton3=HELP,1,8,430,140,70,20,HELP.3,0,True,_HELP.3_,True
 pBevel4=,1,12,10,190,500,40
-pScrollBox4=ENABLED,1,4,20,200,80,20,,ENABLED
+pScrollBox4=ENABLED,1,4,20,200,80,20,ENABLED
 pTextLabel4="3] NoAutoMount",1,1,205,200,196,21,8,Bold
 pButton4=HELP,1,8,430,200,70,20,HELP.4,0,True,_HELP.4_,True
 pBevel5=,1,12,10,250,500,40
@@ -133,11 +133,7 @@ If,%CODEBASE%,Equal,10.0.16299,Set,%Settings%,3
 If,%CODEBASE%,Equal,10.0.17134,Set,%Settings%,3
 If,%CODEBASE%,Equal,10.0.17763,Set,%Settings%,3
 If,%CODEBASE%,Equal,10.0.18362,Set,%Settings%,3
-If,%CODEBASE%,Equal,10.0.18363,Set,%Settings%,3
 If,%CODEBASE%,Equal,10.0.19041,Set,%Settings%,3
-If,%CODEBASE%,Equal,10.0.19042,Set,%Settings%,3
-If,%CODEBASE%,Equal,10.0.19043,Set,%Settings%,3
-If,%CODEBASE%,Equal,10.0.19044,Set,%Settings%,3
 If,%CODEBASE%,Equal,10.0.22000,Set,%Settings%,3
 Set,%CONTINUE%,No
 If,%Settings%,Equal,0,Begin
