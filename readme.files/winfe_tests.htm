@@ -1,0 +1,2207 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html><head><link type="text/css" rel="stylesheet" href="WinFE.css" media="screen" /><title>Mini-WinFE</title></head><body><font> 
+ 
+ 
+ 
+<p> 
+<select ONCHANGE="location = this.options[this.selectedIndex].value;"> 
+<option value="" disabled></option> 
+<option value="../readme.html">Contents</option> 
+<option value="" disabled>=======</option> 
+<option value="winfe.htm">Windows FE</option>  
+<option value="winpe.htm">Windows PE</option>  
+<option value="builder.htm">Builder</option>  
+<option value="options.htm">Project Options</option>  
+<option value="project.htm">Project Scripts</option>  
+<option value="instructions_pebakery.htm">Instructions</option>  
+<option value="menu_system.htm">Menu System</option>  
+<option value="not_in_wim.htm">Include...in boot.wim</option>  
+<option value="postconfig.htm">Post Config</option>  
+<option value="packages.htm">Packages</option>  
+<option value="usb.htm">...Bootable USB...</option>  
+<option value="uefi.htm">UEFI, BIOS, GPT...</option>  
+<option value="multiboot.htm">Multiboot WinPE</option>  
+<option value="" disabled></option> 
+<option value="" disabled>Appendices</option> 
+<option value="" disabled>=========</option> 
+<option value="quick_pebakery.htm">Quick Start - Build...</option>  
+<option value="usage.htm">Quick Start - Run...</option>  
+<option value="diskmgr.htm">DiskMgr</option>  
+<option value="winfe_tests.htm" selected="selected">WinFE Tests</option>  
+<option value="links.htm">Download\Links</option>  
+<option value="acknowledgements.htm">Acknowledgements</option>  
+<option value="" disabled></option> 
+</select> 
+</p> 
+ 
+ 
+ 
+<hr> 
+<a href="http://winfe.mistyprojects.co.uk/index.html"><img src="img/home.jpg" BORDER=1></a> 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html><head><link type="text/css" rel="stylesheet" href="WinFE.css" media="screen" /><title>MistyPE</title></head><body><font>
+
+
+
+<h2><u>WinFE Tests</u></h2>
+
+
+<p>
+<ul>
+<li><a href="#abstract">Abstract</a></li>
+<li><a href="#methodology">Methodology</a></li>
+<li><a href="#setup">Test system setup</a></li>
+<li><a href="#about">About the Windows Forensic Environment</a></li>
+<li><a href="#versions">WinFE Versions</a></li>
+<li><a href="#regedits">Registry Changes</a></li>
+<li><a href="#signatures">Disk Signatures</a></li>
+<li><a href="#disk1">Disk 1 test results</a></li>
+<li><a href="#disk2">Disk 2 test results</a></li>
+<li><a href="#disk3">Disk 3 test results</a></li>
+<li><a href="#disk4">Disk 4 test results</a></li>
+<li><a href="#disk5">Disk 5 test results</a></li>
+<li><a href="#pe2x3x">Analysis - WinFE 2.*\3.*</a></li>
+<li><a href="#pe4x">Analysis - WinFE 4.0</a></li>
+<li><a href="#pe5x10x">Analysis - WinFE 5.*\10.*</a></li>
+<li><a href="#conclusion">Conclusion\Recommendations</a></li>
+<li><a href="#limitations">Limitations</a></li>
+<li><a href="#sources">WinFE source files</a></li>
+</ul>
+</p>
+
+
+
+
+<a name="abstract"></a><br>
+<h2 class="breaktop"><u>Abstract</u></h2><br />
+
+
+<p>
+There are reports of Windows Forensic Environment (WinFE) performing disk writes in certain circumstances, with the write action performed during the boot process before disks are write protected or third party tools used to set disks as read-only. The reports of write action are linked to WinFE creating a four byte disk signature in LBA section 0 (the disk Master Boot Record (MBR)) at offset 0x1B8.
+</p>
+
+
+
+
+
+<p class="break3em">
+This research seeks to identify circumstances in which WinFE will write a disk signature to an internal storage device MBR. 
+</p>
+
+
+
+
+
+
+<p class="break3em">
+The research will also explore whether internal disks are write protected when WinFE is running. 
+</p>
+
+
+
+
+
+<p class="break3em">
+It expands on the results of a previous experiment completed in 2013, which pre-dates the release of Windows 10 based WinFE (see <a class="external" target="_blank" href="http://mistyprojects.co.uk/documents/WinFE/winfe.htm">here</a>).
+</p>
+
+
+
+
+
+
+
+
+
+
+<a name="methodology"></a><br>
+<h2 class="breaktop"><u>Methodology</u></h2><br />
+
+
+
+<p>
+Tests to be completed in virtual systems utilising five disk images, with the common denominator between these disk images being the abscence of a disk signature at offset 0x1B8 to 0x1BB - 
+
+<ul>
+<li>Disk 1 - blank/empty disk image with all bytes set as 00. See <a class="internal" target="_blank" href="img/disk1mbr.png">here</a> for a screenshot of the disk MBR.</li>
+</ul>
+
+
+<ul>
+<li>Disk 2 - offset 0x1FE set as 55 AA. All other bytes including the four byte disk signature at offset 0x1B8 to 0x1BB set as 00. This simulates an initialized disk due to the presence of the "magic number" 55 AA in the last two bytes of the MBR.  See <a class="internal" target="_blank" href="img/disk2mbr.png">here</a> for a screenshot of the disk MBR.</li>
+</ul>
+
+
+
+<ul>
+<li>Disk 3 - Windows 98SE boot disk used to create one primary partition spanning the disk. MSDOS FDISK does not write a disk signature at offset 0x1B8 to 0x1BB - the four bytes at this offset are set as 00. See <a class="internal" target="_blank" href="img/disk3mbr.png">here</a> for a screenshot of the disk MBR.</li>
+</ul>
+
+
+
+<ul>
+<li>Disk 4 - copy of disk 3 with two bytes at offset 0x1FE to 0x1FF written as 00 00 (overwriting the "magic number" 55 AA in the last two bytes of the MBR). See <a class="internal" target="_blank" href="img/disk4mbr.png">here</a> for a screenshot of the disk MBR. </li>
+</ul>
+
+
+<ul>
+<li>Disk 5 - copy of disk 1 with the addition of an entry in the partition table (offset 0x1BE to 0x1CD). All other bytes set as 00. See <a class="internal" target="_blank" href="img/disk5mbr.png">here</a> for a screenshot of the disk MBR.</li>
+</ul>
+</p>
+
+
+
+<p class="break3em">
+Tests to be completed on systems with the following firmware - 
+<ul>
+<li>UEFI - 64-bit (64-bit WinFE only)</li>
+<li>UEFI - 32-bit (32-bit WinFE only)</li>
+<li>BIOS (32 and 64-bit WinFE)</li>
+</ul>
+</p>
+
+
+
+<p class="break3em">
+Four steps to be completed with each disk image and WinFE build, with duplicate tests on systems with BIOS and UEFI firmware.
+
+<ol start="1">
+<li>Disk SHA1 checksum to be taken prior to booting WinFE.</li>
+</ol>
+
+
+
+<ol start="2">
+<li>Boot WinFE and check for the presence of a disk signature and any other changes to LBA sector 0 (using a disk editor). </li>
+</ol>
+
+
+
+<ol start="3">
+<li>Shutdown WinFE and recheck the SHA1 checksum.</li>
+</ol>
+
+
+
+<ol start="4">
+<li>Additional check to be completed to test whether the disk is write protected whilst WinFE is running (using a disk editor to attempt to write to LBA sector 0).</li>
+</ol>
+</p>
+
+
+
+
+
+
+
+<a name="setup"></a><br>
+<h2 class="breaktop"><u>Test system setup</u></h2><br />
+
+
+<p>
+VMWare Workstation 16 Player (version 16.2.3 build-19376536). This virtual test environment supports BIOS and UEFI 64-bit and 32-bit firmware. UEFI 32-bit firmware supported with the addition of the following setting in the .vmx configuration file - 
+<ul><li>firmware = "efi"</li></ul>
+</p>
+
+
+
+
+
+<p class="break3em">
+Test systems to be configured with one SATA disk.
+</p>
+
+
+
+
+
+<p class="break3em">
+WinFE based on boot.wim extracted from Windows installation source files. 
+</p>
+
+
+
+
+
+<p class="break3em">
+WinFE to be configured with SANPolicy 3 (supported across all WinFE versions) and NoAutoMount. 
+</p>
+
+
+
+
+
+<p class="break3em">
+
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<a name="about"></a><br>
+<h2 class="breaktop"><u>About the Windows Forensic Environment</u></h2><br />
+
+<p>
+The Windows Forensic Environment (a.k.a. <font class="file">WinFE</font>) is a Windows based boot disk that can be used as a platform for digital forensic analysis and acquisition. Being Windows based it enables users to run a number of Windows programs that they might already be familiar with. It is an alternative <u><i>or</i></u> addition to a number of forensically focused Linux distributions. 
+</p>
+
+
+<p class="break3em">
+<font class="file">WinFE</font> is a software write blocker used to prevent writes to storage devices. Usage may include gathering evidence on systems where hardware cannot be removed, triage investigations, or as an alternative to potentially expensive hardware write blockers. 
+</p>
+
+
+<p class="break3em">
+Troy Larson, Senior Forensic Examiner of Microsoft©, is credited with creating the Windows Forensic Environment. <font class="file">WinFE</font> does not appear to be available as a commercial product from Microsoft. It is however relatively easy to create <font class="file">WinFE</font> for personal use from freely available tools. <font class="file">WinFE</font> is in essence a Windows Preinstallation Environment (<font class="file">WinPE</font> - see <a class="internal" target="_blank" href="winpe.htm">here</a>) with two minor registry edits that are applied to ensure that any hard disks are not automatically mounted during the <font class="file">WinPE</font>/<font class="file">WinFE</font> boot process - minimising the risk of the contamination of data/evidence. <font class="file">WinFE</font> is a lightweight version of Windows that can be used for many tasks - it is a complete, standalone operating system and will work independently of any other operating systems already installed.
+</p>
+
+
+
+
+
+
+
+
+<a name="versions"></a><br>
+
+<h2 class="breaktop"><u>WinFE Versions</u></h2><br />
+
+<p>
+
+As WinFE is essentially a Windows Preinstallation Environment (WinPE) with two registry modifications, there are multiple builds/versions of WinFE - all available in both 32-bit and 64-bit processor architectures. The earlier versions of WinPE used the same codebase as Windows XP/2003 - these are usually referred to as <font class="file">WinPE</font> 1.*.
+</p>
+
+
+
+<p class="break3em">
+Earlier versions of <font class="file">WinPE</font> (prior to the introduction of version 2.0) were aimed at enterprise customers and were not available to the general public. As of version 2.0 it was possible for non-enterprise customers to create their own <font class="file">WinPE</font> by using the freely available Windows Automated Installation Kit (WAIK). The WAIK has now been replaced with the Windows Assessment and Deployment Kit (ADK). 
+</p>
+
+
+
+<p class="break3em">
+Windows Operating Systems use a numbering format for identification purposes - these numbers can be used to identify the codebase from which a particular <font class="file">WinPE</font> was created. Windows builds use the numbering format ‘MajorVersion.MinorVersion.Build’ - e.g. 6.1.7600. Unlike the product names associated with Windows Operating Systems (e.g. Windows 7) these numbers can refer to multiple products - version 6.1.7600 for example refers to both Windows 7 and Windows Server 2008.
+</p>
+
+
+<p class="break3em">
+<font class="file">WinFE</font> versions include -
+
+<table style="width:90%">
+  <col width="15%">
+  <col width="25%">
+  <col width="60%">
+  <tr style="background-color:#E2A9F3;color:black;">
+    <th>WinPE</th>
+    <th>Major.Minor.Build</th> 
+    <th>Windows Operating System source</th> 
+  </tr>
+  <tr>
+    <td>2.0</td>
+    <td>6.0.6000</td>
+    <td>Windows Vista</td> 
+  </tr>
+  <tr>
+    <td>2.1</td>
+    <td>6.0.6001</td>
+    <td>Windows Vista (SP1) / Server 2008</td> 
+  </tr>
+  <tr>
+    <td>3.0</td>
+    <td>6.1.7600</td>
+    <td>Windows 7 / Server 2008 R2</td> 
+  </tr>
+  <tr>
+    <td>3.1</td>
+    <td>6.1.7601</td>
+    <td>Windows 7 (SP1) / Server 2008 R2 (SP1)</td> 
+  </tr>
+  <tr>
+    <td>4.0</td>
+    <td>6.2.9200</td>
+    <td>Windows 8 / Server 2012</td> 
+  </tr>
+  <tr>
+    <td>5.0</td>
+    <td>6.3.9600</td>
+    <td>Windows 8.1</td> 
+  </tr>
+  <tr>
+    <td>5.1</td>
+    <td>6.3.9600</td>
+    <td>Windows 8.1 Update</td> 
+  </tr>
+</table>
+</p>
+
+
+
+
+
+<p class="break3em">
+Following the release of Windows 10, <font class="file">WinPE</font>/<font class="file">WinFE</font>versions are identifed by MajorVersion.MinorVersion.Build numbers that generally correspond with the Windows 10 build from which they are compiled. WinPE 10.0.16299 for example corresponds with Windows 10.0.16299 (aka Version 1709 / Fall Creators Update). 
+</p>
+
+
+<p class="break3em">
+There are some exceptions to this rule as the <font class="file">WinPE</font> included in Windows 10.0.18362 (May 2019 Update (1903)) and 10.0.18363 (November 2019 Update (1909)) sources are both based on <font class="file">WinPE</font> 10.0.18362. 
+</p>
+
+<p class="break3em">
+Another example of the same <font class="file">WinPE</font> version being included in multiple Windows sources is <font class="file">WinPE</font> 10.0.19041. The following Windows 10 sources all include/use <font class="file">WinPE</font> 10.0.19041 - 
+    <ul>
+	<li>May 2020 Update (10.0.19041 / 2004)</li>
+        <li>October 2020 Update (10.0.19042 / 20H2)</li>
+        <li>May 2021 Update (10.0.19043 / 21H1)</li> 
+        <li>November 2021 Update (10.0.19044 / 21H2)</li>
+    </ul>
+</p>
+
+
+<p class="break3em">
+<font class="file">WinPE</font> 10.* versions include -
+
+<table style="width:90%">
+  <col width="20%">
+  <col width="20%">
+  <col width="60%">
+  <tr style="background-color:#E2A9F3;color:black;">
+    <th>WinPE Build</th>
+    <th>WinPE Version</th> 
+    <th>Windows Operating System source</th> 
+  </tr>
+  <tr>
+    <td>10.0.10240</td>
+    <td>1507</td>
+    <td>-</td> 
+  </tr>
+  <tr>
+    <td>10.0.10586</td>
+    <td>1511</td>
+    <td>November Update</td> 
+  </tr>
+  <tr>
+    <td>10.0.14393</td>
+    <td>1607</td>
+    <td>Anniversary Update</td> 
+  </tr>
+  <tr>
+    <td>10.0.15063</td>
+    <td>1703</td>
+    <td>Creators Update</td> 
+  </tr>
+  <tr>
+    <td>10.0.16299</td>
+    <td>1709</td>
+    <td>Fall Creators Update</td> 
+  </tr>
+  <tr>
+    <td>10.0.17134</td>
+    <td>1803</td>
+    <td>April 2018 Update</td> 
+  </tr>  
+  <tr>
+    <td>10.0.17763</td>
+    <td>1809</td>
+    <td>October 2018 Update</td> 
+  </tr>  
+  <tr>
+    <td>10.0.18362</td>
+    <td>1903</td>
+    <td>May 2019 Update (Windows 10.0.18362 / 1903)<br/>November 2019 Update (10.0.18363 / 1909)</td> 
+  </tr>  
+  <tr>
+    <td>10.0.19041</td>
+    <td>2004</td>
+    <td>May 2020 Update (10.0.19041 / 2004)
+        <br/>October 2020 Update (10.0.19042 / 20H2)
+        <br/>May 2021 Update (10.0.19043 / 21H1) 
+        <br/>November 2021 Update (10.0.19044 / 21H2)</td>
+  </tr>  
+</table>
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<a name="regedits"></a><br>
+<h2 class="breaktop"><u>Registry Changes</u></h2><br />
+
+
+<p>
+The registry settings that are used to create WinFE are <b>NoAutoMount</b>....
+</p>
+
+
+<p>
+<table style="width:90%">
+  <col width="20%">
+  <col width="80%">
+  <tr>
+    <td style="background-color:#E2A9F3;color:black;">Key</td>
+    <td>HKLM\System\ControlSet001\Services\MountMgr</td>
+  </tr>
+  <tr>
+    <td style="background-color:#E2A9F3;color:black;">Name</td>
+	<td>NoAutoMount</td>
+  </tr>
+  <tr>
+    <td style="background-color:#E2A9F3;color:black;">Type</td>
+	<td>DWORD</td>
+  </tr>
+  <tr>
+    <td style="background-color:#E2A9F3;color:black;">Data</td>
+	<td>1</td>
+  </tr>
+</table>
+</p>
+
+
+<p class="break3em">
+...and <b>SANPolicy</b>.... 
+</p>
+
+<p>
+<table style="width:90%">
+  <col width="20%">
+  <col width="80%">
+  <tr>
+    <td style="background-color:#E2A9F3;color:black;">Key</td>
+    <td>HKLM\System\ControlSet001\Services\partmgr\Parameters</td>
+  </tr>
+  <tr>
+    <td style="background-color:#E2A9F3;color:black;">Name</td>
+	<td>SANPolicy</td>
+  </tr>
+  <tr>
+    <td style="background-color:#E2A9F3;color:black;">Type</td>
+	<td>DWORD</td>
+  </tr>
+  <tr>
+    <td style="background-color:#E2A9F3;color:black;">Data</td>
+	<td>3 (or 4 in WinFE versions 4.0 or newer)</td>
+  </tr>
+</table>
+</p>
+
+
+<p class="break3em">
+Earlier version of WinFE (versions 2.x/3.x) utilise SanPolicy 3. SANPolicy 4 can also be configured in WinFE versions 4.0 and newer (from <a target="_blank" href="http://technet.microsoft.com/library/hh825063">here</a>) - 
+<ul>
+<li>SAN policy <b>3</b> - Doesn't mount storage devices.</li>
+<li>SAN policy <b>4</b> - New for Windows 8. Makes internal disks offline. Note. All external disks and the boot disk are online.</li>
+</ul>
+</p>
+
+
+
+
+<p class="break3em">
+It is possible to set the SANPolicy as 3 (or 4 in WinFE 4.0/5.x/10.x) without setting NoAutoMount. Some results with different combinations of these two registry keys are available <a target="_blank" href="http://reboot.pro/topic/19687-winfe-sanpolicy-and-noautomount-combinations/">here</a>. Use caution as any Online disks will be allocated a drive letter if NoAutoMount is not set - potentially resulting in disk writes and evidence contamination. NoAutoMount adds a greater level of security, particularly if WinFE 2.x\3.x is used.
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<a name="signatures"></a><br>
+<h2 class="breaktop"><u>Disk Signatures</u></h2><br />
+
+<p>
+WinHex screenshot highlighting the location of a disk signature (offset 0x1B8 to 0x1BB) -
+<br/>
+<IMG SRC="img/signature.png" float=left width=80% margin-right=1% margin-bottom=0.5em border=1>
+</p>
+
+<p class="break3em">
+The most common reports of WinFE writing to a hard disk are linked to a disk signature being written when the disk does not contain a valid disk signature. For more information about WinFE and disk signatures in Windows NT based systems refer to the <a target="_blank" href="http://reboot.pro/topic/16573-winfe-script-updated/">WinFE Script Updated</a> topic on the <a class="external" target="_blank" href="http://reboot.pro/">reboot.pro</a> forum. More specifically post <a target="_blank" href="http://reboot.pro/topic/16573-winfe-script-updated/?p=151848">#15</a> (reboot.pro forum member <i>Wonko the Sane</i>) -
+<ul>
+<i>"...Rest assured that as soon as a Windows NT EITHER: finds the 4 bytes of the disk signature set as 00 00 00 00 OR: finds two disks with the SAME disk signature -
+the disk signature will be written at mount time."</i>
+</ul>
+</p>
+
+<p class="break3em">
+and also post <a target="_blank" href="http://reboot.pro/topic/18953-is-winfe-forensically-sound/?p=177532">#5</a> in the "Is WinFE Forensically Sound?" thread (by reboot.pro forum member <i>Wonko the Sane</i>) -
+<ul>
+<i>"...Any NT based system, as part of the "mounting" procedure for a volume (please read as "to assign a drive letter to it") needs to identify UNIVOCALLY the disk on which the volume resides AND the volume itself. This identification is made through TWO pieces of data:
+	<ol>
+ 	<li>the disk signature</li>
+ 	<li>the Volume PBR offset on that disk..."</li>
+	</ol>
+</i>
+</ul>
+</p>
+
+<p class="break3em">
+The following information from reboot.pro forum member <i>joakim</i> suggests that disk signature creation is linked to the Windows kernel -
+<ul>
+<i>"...I did some testing yesterday (not with WinFE, but with the 2 special registry entries), and it seems difficult to prevent Windows from writing this 4 byte signature when it's missing. I was tracing it into the kernel and suspect the relevant code is somewhere within IoCreateDisk (look for references to DeviceObject), but was unable to prevent the writing..."</i> (post <a target="_blank" href="http://reboot.pro/topic/16573-winfe-script-updated/?p=151834">#14</a>)
+</ul>
+
+<ul>
+<i>...The disk-signature-writing-process is unrelated to any mounting, and will happen regardless of whether any volume on that physical disk is mounted. In the kernel it is referenced to as "UniqueDeviceObjectNumber"...."</i> (post <a target="_blank" href="http://reboot.pro/topic/16573-winfe-script-updated/?p=151858">#16</a>)
+</ul>
+</p>
+
+
+
+<p class="break3em">
+Based on this information, disks previously mounted on Windows NT systems will contain an existing disk signature unless it has been manually removed or the MBR has become corrupted. Disks not exposed to Windows NT systems may also contain a disk signature - as an example the following screenshot shows a disk signature on a disk with ubuntu Linux installed (the operating system was installed in a virtual machine and has never been mounted on a Windows NT system) - 
+<br/>
+<IMG SRC="img/ubuntu_mbr.png" width=50% float=left margin-right=1% margin-bottom=0.5em border=1>
+</p>
+
+
+
+
+
+
+
+
+
+<a name="disk1"></a><br>
+<h2 class="breaktop"><u>Disk 1 test results</u></h2><br />
+
+<p>
+Disk 1 - blank/empty disk image with all bytes set as 00.
+<ul>
+<li>SHA1 check - confirms that a SHA1 checksum of the diskimage was taken prior to booting WinFE.</li>
+</ul>
+<ul>
+<li>Disk signature check - LBA sector 0 checked for changes from the running WinFE (visual check of bytes at offset 0x1B8 to 0x1BB using a disk editor). <b>&#10008;</b> denotes that a disk signature was written.</li>
+</ul>
+<ul>
+<li>SHA1 recheck - disk image SHA1 checksum tested after running WinFE. <b>&#10008;</b> denotes that a disk write occurred.</li>
+</ul>
+<ul>
+<li>Read-only check - check to establish if the disk is write protected when WinFE is running (using a disk editor to attempt to write to LBA sector 0). <b>&#10008;</b> denotes that the disk is not write protected.</li>
+</ul> 
+</p>
+
+<p class="break3em">
+64-bit WinFE
+<table style="width:90%">
+  <col width="15%">
+  <col width="25%">
+  <col width="15%">
+  <col width="15%">
+  <col width="15%">
+  <col width="15%">
+  <tr>
+    <th>WinFE<br/>version</th>
+    <th>WinFE source</th>
+    <th>SHA1<br/>check</th> 
+    <th>Disk<br/>signature<br/>check</th> 
+    <th>Read-only<br/>check</th> 
+    <th>SHA1<br/>recheck</th>
+  </tr>
+  <tr>
+    <td>2.1</td>
+    <td>Vista <sup><a class="internal" href="#source1">source 1</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td bgcolor="#03fce7">3.0 <b>BIOS</b></td>
+    <td>7 <sup><a class="internal" href="#source2">source 2</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td bgcolor="#03fce7">3.0 <b>UEFI</b></td>
+    <td>7 <sup><a class="internal" href="#source2">source 2</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>3.1</td>
+    <td>7 SP1 <sup><a class="internal" href="#source3">source 3</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>4.0</td>
+    <td>8.0 <sup><a class="internal" href="#source4">source 4</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>5.0</td>
+    <td>8.1<sup><a class="internal" href="#source5">source 5</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="red"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+  </tr>
+  <tr>
+    <td>5.1</td>
+    <td>8.1 Update <sup><a class="internal" href="#source6">source 6</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="red"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.10240</td>
+    <td>1507 <sup><a class="internal" href="#note7">source 7</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="red"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.10586</td>
+    <td>1511 <sup><a class="internal" href="#note8">source 8</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="red"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.14393</td>
+    <td>1607 <sup><a class="internal" href="#note9">source 9</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="red"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.15063</td>
+    <td>1703 <sup><a class="internal" href="#note10">source 10</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="red"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.16299</td>
+    <td>1709 <sup><a class="internal" href="source11">source 11</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="red"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.17134</td>
+    <td>1803 <sup><a class="internal" href="source12">source 12</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="red"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.17763</td>
+    <td>1803 <sup><a class="internal" href="source13">source 13</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="red"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.18362</td>
+    <td>1909 <sup><a class="internal" href="source14">source 14</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="red"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.19041</td>
+    <td>21H2 <sup><a class="internal" href="source15">source 15</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="red"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+  </tr>
+</table>
+</p>
+
+
+
+<p class="break3em">
+32-bit WinFE
+<table style="width:90%">
+  <col width="15%">
+  <col width="25%">
+  <col width="15%">
+  <col width="15%">
+  <col width="15%">
+  <col width="15%">
+  <tr>
+    <th>WinFE<br/>version</th>
+    <th>WinFE source</th>
+    <th>SHA1<br/>check</th> 
+    <th>Disk<br/>signature<br/>check</th> 
+    <th>Read-only<br/>check</th> 
+    <th>SHA1<br/>recheck</th>
+  </tr>
+  <tr>
+    <td>3.1</td>
+    <td>7 SP1 <sup><a class="internal" href="#source16">source 16</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>4.0</td>
+    <td>8 <sup><a class="internal" href="#source17">source 17</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>5.1</td>
+    <td>8.1 Update <sup><a class="internal" href="#source18">source 18</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="red"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.19041</td>
+    <td>21H2 <sup><a class="internal" href="#source19">source 19</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="red"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+  </tr>
+</table>
+</p>
+
+
+<p class="break3em">
+The tables above dispay results from WinFE running on systems with UEFI and BIOS firmware. The majority of the results are identical across BIOS and UEFI, with the exception of WinFE versions highlighted with a <font class="anomaly">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font> background. 
+</p>
+
+<p class="break3em">
+Based on these results there is clear evidence that Windows 5.*/10.* versions of WinFE will write a disk signature if the disk MBR contains zero bytes. WinFE 4.0 does not write a disk signature and also write protects the disk. WinFE 2.0 and 3.* do not write a disk signature, however these versions do not write protect internal SATA disks. 64-bit WinFE 3.0 based on Windows 7 source appears to be an anomaly when running on UEFI firmware, as it also adds write protection. 
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<a name="disk2"></a><br>
+<h2 class="breaktop"><u>Disk 2 test results</u></h2><br />
+
+<p>
+Disk 2 - offset 0x1FE set as 55 AA. All other bytes including the four byte disk signature at offset 0x1B8 to 0x1BB set as 00. This simulates an initialized disk due to the presence of the "magic number" 55 AA in the last two bytes of the MBR.
+<ul>
+<li>SHA1 check - confirms that a SHA1 checksum of the diskimage was taken prior to booting WinFE.</li>
+</ul>
+<ul>
+<li>Disk signature check - LBA sector 0 checked for changes from the running WinFE (visual check of bytes at offset 0x1B8 to 0x1BB using a disk editor). <b>&#10008;</b> denotes that a disk signature was written.</li>
+</ul>
+<ul>
+<li>SHA1 recheck - disk image SHA1 checksum tested after running WinFE. <b>&#10008;</b> denotes that a disk write occurred.</li>
+</ul>
+<ul>
+<li>Read-only check - check to establish if the disk is write protected when WinFE is running (using a disk editor to attempt to write to LBA sector 0). <b>&#10008;</b> denotes that the disk is not write protected.</li>
+</ul> 
+</p>
+
+
+<p class="break3em">
+64-bit WinFE
+<table style="width:90%">
+  <col width="15%">
+  <col width="25%">
+  <col width="15%">
+  <col width="15%">
+  <col width="15%">
+  <col width="15%">
+  <tr>
+    <th>WinFE<br/>version</th>
+    <th>WinFE source</th>
+    <th>SHA1<br/>check</th> 
+    <th>Disk<br/>signature<br/>check</th> 
+    <th>Read-only<br/>check</th> 
+    <th>SHA1<br/>recheck</th>
+  </tr>
+  <tr>
+    <td bgcolor="#03fce7">2.1 <b>BIOS</b></td>
+    <td>Vista <sup><a class="internal" href="#source1">source 1</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="red"><b>&#10008;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+  </tr>
+  <tr>
+    <td bgcolor="#03fce7">2.1 <b>UEFI</b></td>
+    <td>Vista <sup><a class="internal" href="#source1">source 1</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>3.0</td>
+    <td>7 <sup><a class="internal" href="#source2">source 2</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="red"><b>&#10008;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+  </tr>
+  <tr>
+    <td bgcolor="#03fce7">3.1 <b>BIOS</b></td>
+    <td>7 SP1 <sup><a class="internal" href="#source3">source 3</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="red"><b>&#10008;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+  </tr>
+  <tr>
+    <td bgcolor="#03fce7">3.1 <b>UEFI</b></td>
+    <td>7 SP1 <sup><a class="internal" href="#source3">source 3</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>4.0</td>
+    <td>8.0 <sup><a class="internal" href="#source4">source 4</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>5.0</td>
+    <td>8.1<sup><a class="internal" href="#source5">source 5</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>5.1</td>
+    <td>8.1 Update <sup><a class="internal" href="#source6">source 6</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.10240</td>
+    <td>1507 <sup><a class="internal" href="#note7">source 7</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.10586</td>
+    <td>1511 <sup><a class="internal" href="#note8">source 8</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.14393</td>
+    <td>1607 <sup><a class="internal" href="#note9">source 9</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.15063</td>
+    <td>1703 <sup><a class="internal" href="#note10">source 10</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.16299</td>
+    <td>1709 <sup><a class="internal" href="source11">source 11</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.17134</td>
+    <td>1803 <sup><a class="internal" href="source12">source 12</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.17763</td>
+    <td>1803 <sup><a class="internal" href="source13">source 13</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.18362</td>
+    <td>1909 <sup><a class="internal" href="source14">source 14</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.19041</td>
+    <td>21H2 <sup><a class="internal" href="source15">source 15</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+</table>
+</p>
+
+
+
+
+<p class="break3em">
+32-bit WinFE
+<table style="width:90%">
+  <col width="15%">
+  <col width="25%">
+  <col width="15%">
+  <col width="15%">
+  <col width="15%">
+  <col width="15%">
+  <tr>
+    <th>WinFE<br/>version</th>
+    <th>WinFE source</th>
+    <th>SHA1<br/>check</th> 
+    <th>Disk<br/>signature<br/>check</th> 
+    <th>Read-only<br/>check</th> 
+    <th>SHA1<br/>recheck</th>
+  </tr>
+  <tr>
+    <td>3.1</td>
+    <td>7 SP1 <sup><a class="internal" href="#source16">source 16</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="red"><b>&#10008;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+  </tr>
+  <tr>
+    <td>4.0</td>
+    <td>8 <sup><a class="internal" href="#source17">source 17</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>5.1</td>
+    <td>8.1 Update <sup><a class="internal" href="#source18">source 18</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.19041</td>
+    <td>21H2 <sup><a class="internal" href="#source19">source 19</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+</table>
+</p>
+
+
+<p class="break3em">
+The tables above dispay results from WinFE running on systems with UEFI and BIOS firmware. The majority of the results are identical across BIOS and UEFI, with the exception of WinFE versions highlighted with a <font class="anomaly">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font> background. 
+</p>
+
+
+<p class="break3em">
+Based on these results there is clear evidence that WinFE 4.0/5.*/10.* versions of WinFE do not write a disk signature to internal SATA disks if the two bytes at offset 0x1FE to 0x1FF (the last two bytes of the MBR) contain the "magic number" 55 AA. These versions of WinFE also write-protect internal disks, reducing the risk of accidental disk writes in forensic applications.  
+
+<p class="break3em">
+WinFE 2.1 and 3.* will write a disk signature if the two bytes at offset 0x1FE to 0x1FF (the last two bytes of the MBR) contain the "magic number" 55 AA. These versions of WinFE do not write-protect media - with the possible exceptions of 64-bit WinFE 2.1 and 3.0 (based on Windows Vista and Windows 7 respectively) running on UEFI firmware.
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<a name="disk3"></a><br>
+<h2 class="breaktop"><u>Disk 3 test results</u></h2><br />
+
+<p>
+Disk 3 - Windows 98SE boot disk used to create one primary partition spanning the disk. MSDOS FDISK does not write a disk signature at offset 0x1B8 to 0x1BB - the four bytes at this offset are set as 00.
+<ul>
+<li>SHA1 check - confirms that a SHA1 checksum of the diskimage was taken prior to booting WinFE.</li>
+</ul>
+<ul>
+<li>Disk signature check - LBA sector 0 checked for changes from the running WinFE (visual check of bytes at offset 0x1B8 to 0x1BB using a disk editor). <b>&#10008;</b> denotes that a disk signature was written.</li>
+</ul>
+<ul>
+<li>SHA1 recheck - disk image SHA1 checksum tested after running WinFE. <b>&#10008;</b> denotes that a disk write occurred.</li>
+</ul>
+<ul>
+<li>Read-only check - check to establish if the disk is write protected when WinFE is running (using a disk editor to attempt to write to LBA sector 0). <b>&#10008;</b> denotes that the disk is not write protected.</li>
+</ul> 
+<p>
+
+
+<p class="break3em">
+64-bit WinFE
+<table style="width:90%">
+  <col width="15%">
+  <col width="25%">
+  <col width="15%">
+  <col width="15%">
+  <col width="15%">
+  <col width="15%">
+  <tr>
+    <th>WinFE<br/>version</th>
+    <th>WinFE source</th>
+    <th>SHA1<br/>check</th> 
+    <th>Disk<br/>signature<br/>check</th> 
+    <th>Read-only<br/>check</th> 
+    <th>SHA1<br/>recheck</th>
+  </tr>
+  <tr>
+    <td>2.1</td>
+    <td>Vista <sup><a class="internal" href="#source1">source 1</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="red"><b>&#10008;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+  </tr>
+  <tr>
+    <td>3.0</td>
+    <td>7 <sup><a class="internal" href="#source2">source 2</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="red"><b>&#10008;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+  </tr>
+  <tr>
+    <td>3.1</td>
+    <td>7 SP1 <sup><a class="internal" href="#source3">source 3</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="red"><b>&#10008;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+  </tr>
+  <tr>
+    <td>4.0</td>
+    <td>8.0 <sup><a class="internal" href="#source4">source 4</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>5.0</td>
+    <td>8.1<sup><a class="internal" href="#source5">source 5</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>5.1</td>
+    <td>8.1 Update <sup><a class="internal" href="#source6">source 6</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.10240</td>
+    <td>1507 <sup><a class="internal" href="#note7">source 7</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.10586</td>
+    <td>1511 <sup><a class="internal" href="#note8">source 8</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.14393</td>
+    <td>1607 <sup><a class="internal" href="#note9">source 9</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.15063</td>
+    <td>1703 <sup><a class="internal" href="#note10">source 10</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.16299</td>
+    <td>1709 <sup><a class="internal" href="source11">source 11</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.17134</td>
+    <td>1803 <sup><a class="internal" href="source12">source 12</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.17763</td>
+    <td>1803 <sup><a class="internal" href="source13">source 13</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.18362</td>
+    <td>1909 <sup><a class="internal" href="source14">source 14</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.19041</td>
+    <td>21H2 <sup><a class="internal" href="source15">source 15</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+</table>
+</p>
+
+
+
+
+<p class="break3em">
+32-bit WinFE
+<table style="width:90%">
+  <col width="15%">
+  <col width="25%">
+  <col width="15%">
+  <col width="15%">
+  <col width="15%">
+  <col width="15%">
+  <tr>
+    <th>WinFE<br/>version</th>
+    <th>WinFE source</th>
+    <th>SHA1<br/>check</th> 
+    <th>Disk<br/>signature<br/>check</th> 
+    <th>Read-only<br/>check</th> 
+    <th>SHA1<br/>recheck</th>
+  </tr>
+  <tr>
+    <td>3.1</td>
+    <td>7 SP1 <sup><a class="internal" href="#source16">source 16</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="red"><b>&#10008;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+  </tr>
+  <tr>
+    <td>4.0</td>
+    <td>8 <sup><a class="internal" href="#source17">source 17</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>5.1</td>
+    <td>8.1 Update <sup><a class="internal" href="#source18">source 18</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.19041</td>
+    <td>21H2 <sup><a class="internal" href="#source19">source 19</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+</table>
+</p>
+
+
+
+<p class="break3em">
+The tables above dispay results from WinFE running on systems with UEFI and BIOS firmware. The results are identical across BIOS and UEFI systems. 
+</p>
+
+<p class="break3em">
+Based on these results there is clear evidence that WinFE 4.0/5.*/10.* versions of WinFE do not write a disk signature to internal SATA disks if MSDOS is already installed. These versions of WinFE also write-protect internal disks, reducing the risk of accidental disk writes in forensic applications.  
+
+<p class="break3em">
+WinFE 2.1 and 3.* will write a disk signature if MSDOS is installed and the disk does not already contain a disk signature. These versions of WinFE do not write-protect media.
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<a name="disk4"></a><br>
+<h2 class="breaktop"><u>Disk 4 test results</u></h2><br />
+
+<p>
+Disk 4 - copy of disk 3 with two bytes at offset 0x1FE to 0x1FF written as 00 00 (overwriting the "magic number" 55 AA in the last two bytes of the MBR)
+<ul>
+<li>SHA1 check - confirms that a SHA1 checksum of the diskimage was taken prior to booting WinFE.</li>
+</ul>
+<ul>
+<li>Disk signature check - LBA sector 0 checked for changes from the running WinFE (visual check of bytes at offset 0x1B8 to 0x1BB using a disk editor). <b>&#10008;</b> denotes that a disk signature was written.</li>
+</ul>
+<ul>
+<li>SHA1 recheck - disk image SHA1 checksum tested after running WinFE. <b>&#10008;</b> denotes that a disk write occurred.</li>
+</ul>
+<ul>
+<li>Read-only check - check to establish if the disk is write protected when WinFE is running (using a disk editor to attempt to write to LBA sector 0). <b>&#10008;</b> denotes that the disk is not write protected.</li>
+</ul> 
+</p>
+
+<p class="break3em">
+64-bit WinFE
+<table style="width:90%">
+  <col width="15%">
+  <col width="25%">
+  <col width="15%">
+  <col width="15%">
+  <col width="15%">
+  <col width="15%">
+  <tr>
+    <th>WinFE<br/>version</th>
+    <th>WinFE source</th>
+    <th>SHA1<br/>check</th> 
+    <th>Disk<br/>signature<br/>check</th> 
+    <th>Read-only<br/>check</th> 
+    <th>SHA1<br/>recheck</th>
+  </tr>
+  <tr>
+    <td>2.1</td>
+    <td>Vista <sup><a class="internal" href="#source1">source 1</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td bgcolor="#03fce7">3.0 <b>UEFI</b></td>
+    <td>7 <sup><a class="internal" href="#source2">source 2</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td bgcolor="#03fce7">3.0 <b>BIOS</b></td>
+    <td>7 <sup><a class="internal" href="#source2">source 2</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>3.1</td>
+    <td>7 SP1 <sup><a class="internal" href="#source3">source 3</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>4.0</td>
+    <td>8.0 <sup><a class="internal" href="#source4">source 4</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>5.0</td>
+    <td>8.1<sup><a class="internal" href="#source5">source 5</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>5.1</td>
+    <td>8.1 Update <sup><a class="internal" href="#source6">source 6</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.10240</td>
+    <td>1507 <sup><a class="internal" href="#note7">source 7</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.10586</td>
+    <td>1511 <sup><a class="internal" href="#note8">source 8</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.14393</td>
+    <td>1607 <sup><a class="internal" href="#note9">source 9</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.15063</td>
+    <td>1703 <sup><a class="internal" href="#note10">source 10</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.16299</td>
+    <td>1709 <sup><a class="internal" href="source11">source 11</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.17134</td>
+    <td>1803 <sup><a class="internal" href="source12">source 12</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.17763</td>
+    <td>1803 <sup><a class="internal" href="source13">source 13</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.18362</td>
+    <td>1909 <sup><a class="internal" href="source14">source 14</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.19041</td>
+    <td>21H2 <sup><a class="internal" href="source15">source 15</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+</table>
+</p>
+
+
+
+
+
+<p class="break3em">
+32-bit WinFE
+<table style="width:90%">
+  <col width="15%">
+  <col width="25%">
+  <col width="15%">
+  <col width="15%">
+  <col width="15%">
+  <col width="15%">
+  <tr>
+    <th>WinFE<br/>version</th>
+    <th>WinFE source</th>
+    <th>SHA1<br/>check</th> 
+    <th>Disk<br/>signature<br/>check</th> 
+    <th>Read-only<br/>check</th> 
+    <th>SHA1<br/>recheck</th>
+  </tr>
+  <tr>
+    <td>3.1</td>
+    <td>7 SP1 <sup><a class="internal" href="#source16">source 16</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>4.0</td>
+    <td>8 <sup><a class="internal" href="#source17">source 17</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>5.1</td>
+    <td>8.1 Update <sup><a class="internal" href="#source18">source 18</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.19041</td>
+    <td>21H2 <sup><a class="internal" href="#source19">source 19</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+</table>
+</p>
+
+
+<p class="break3em">
+The tables above dispay results from WinFE running on systems with UEFI and BIOS firmware. The majority of the results are identical across BIOS and UEFI, with the exception of WinFE versions highlighted with a <font class="anomaly">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font> background. 
+</p>
+
+
+
+<p class="break3em">
+Based on these results there is clear evidence that WinFE 2.1/3.*/4.0/5.*/10.* versions of WinFE do not write a disk signature to internal SATA disks if MSDOS is already installed and the two bytes at offset 0x1FE to 0x1FF (the last two bytes of the MBR) are set to 00 00 (overwriting the "magic number" (55 AA)))
+</p>
+
+<p class="break3em">
+WinFE 4.0/5.*/10.* will write-protect internal disks, reducing the risk of accidental disk writes in forensic applications. WinFE 2.1 and 3.* do not write-protect media - with the possible exception of 64-bit WinFE 3.0 (based on Windows 7) running on UEFI firmware.
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+<a name="disk5"></a><br>
+<h2 class="breaktop"><u>Disk 5 test results</u></h2><br />
+
+<p>
+Disk 5 - copy of disk 1 with the addition of an entry in the partition table (offset 0x1BE to 0x1CD). All other bytes set as 00.
+<ul>
+<li>SHA1 check - confirms that a SHA1 checksum of the diskimage was taken prior to booting WinFE.</li>
+</ul>
+<ul>
+<li>Disk signature check - LBA sector 0 checked for changes from the running WinFE (visual check of bytes at offset 0x1B8 to 0x1BB using a disk editor). <b>&#10008;</b> denotes that a disk signature was written.</li>
+</ul>
+<ul>
+<li>SHA1 recheck - disk image SHA1 checksum tested after running WinFE. <b>&#10008;</b> denotes that a disk write occurred.</li>
+</ul>
+<ul>
+<li>Read-only check - check to establish if the disk is write protected when WinFE is running (using a disk editor to attempt to write to LBA sector 0). <b>&#10008;</b> denotes that the disk is not write protected.</li>
+</ul> 
+<p>
+
+<p class="break3em">
+64-bit WinFE
+<table style="width:90%">
+  <col width="15%">
+  <col width="25%">
+  <col width="15%">
+  <col width="15%">
+  <col width="15%">
+  <col width="15%">
+  <tr>
+    <th>WinFE<br/>version</th>
+    <th>WinFE source</th>
+    <th>SHA1<br/>check</th> 
+    <th>Disk<br/>signature<br/>check</th> 
+    <th>Read-only<br/>check</th> 
+    <th>SHA1<br/>recheck</th>
+  </tr>
+  <tr>
+    <td>2.1</td>
+    <td>Vista <sup><a class="internal" href="#source1">source 1</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td class="anomaly">3.0 <b>UEFI</b></td>
+    <td>7 <sup><a class="internal" href="#source2">source 2</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td  bgcolor="#03fce7">3.0 <b>BIOS</b></td>
+    <td>7 <sup><a class="internal" href="#source2">source 2</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>3.1</td>
+    <td>7 SP1 <sup><a class="internal" href="#source3">source 3</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>4.0</td>
+    <td>8.0 <sup><a class="internal" href="#source4">source 4</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>5.0</td>
+    <td>8.1<sup><a class="internal" href="#source5">source 5</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>5.1</td>
+    <td>8.1 Update <sup><a class="internal" href="#source6">source 6</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.10240</td>
+    <td>1507 <sup><a class="internal" href="#note7">source 7</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.10586</td>
+    <td>1511 <sup><a class="internal" href="#note8">source 8</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.14393</td>
+    <td>1607 <sup><a class="internal" href="#note9">source 9</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.15063</td>
+    <td>1703 <sup><a class="internal" href="#note10">source 10</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.16299</td>
+    <td>1709 <sup><a class="internal" href="source11">source 11</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.17134</td>
+    <td>1803 <sup><a class="internal" href="source12">source 12</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.17763</td>
+    <td>1803 <sup><a class="internal" href="source13">source 13</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.18362</td>
+    <td>1909 <sup><a class="internal" href="source14">source 14</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.19041</td>
+    <td>21H2 <sup><a class="internal" href="source15">source 15</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+</table>
+</p>
+
+
+
+
+
+<p class="break3em">
+32-bit WinFE
+<table style="width:90%">
+  <col width="15%">
+  <col width="25%">
+  <col width="15%">
+  <col width="15%">
+  <col width="15%">
+  <col width="15%">
+  <tr>
+    <th>WinFE<br/>version</th>
+    <th>WinFE source</th>
+    <th>SHA1<br/>check</th> 
+    <th>Disk<br/>signature<br/>check</th> 
+    <th>Read-only<br/>check</th> 
+    <th>SHA1<br/>recheck</th>
+  </tr>
+  <tr>
+    <td>3.1</td>
+    <td>7 SP1 <sup><a class="internal" href="#source16">source 16</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#ffc2b3"><b>&#10008;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>4.0</td>
+    <td>8 <sup><a class="internal" href="#source17">source 17</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>5.1</td>
+    <td>8.1 Update <sup><a class="internal" href="#source18">source 18</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+  <tr>
+    <td>10.0.19041</td>
+    <td>21H2 <sup><a class="internal" href="#source19">source 19</a></sup></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="lime"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+    <td bgcolor="#d8ffcc"><b>&#10004;</b></td>
+  </tr>
+</table>
+</p>
+
+
+
+<p class="break3em">
+The tables above dispay results from WinFE running on systems with UEFI and BIOS firmware. The majority of the results are identical across BIOS and UEFI, with the exception of WinFE versions highlighted with a <font class="anomaly">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font> background. 
+</p>
+
+
+
+<p class="break3em">
+Based on these results there is clear evidence that WinFE 4.0/5.*/10.* versions of WinFE do not write a disk signature to internal SATA disks if it contains an existing entry in the partition table.  
+</p>
+
+
+<p class="break3em">
+WinFE 2.1/3.* do not write a disk signature to internal SATA disks if it contains an existing entry in the partition table and the two bytes at offset 0x1FE to 0x1FF (the last two bytes of the MBR) are set to 00 00 (overwriting the "magic number" (55 AA))).  
+</p>
+
+<p class="break3em">
+WinFE 4.0/5.*/10.* will write-protect internal disks, reducing the risk of accidental disk writes in forensic applications. WinFE 2.1 and 3.* do not write-protect media - with the possible exception of 64-bit WinFE 3.0 (based on Windows 7) running on UEFI firmware.
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+<a name="pe2x3x"></a><br>
+<h2 class="breaktop"><u>Analysis - WinFE 2.*\3.*</u></h2><br />
+
+
+<p>
+The results when running WinFE on disks 1-5 indicate that WinFE 2.*\3.* does not provide write-protection for internal SATA disks. There are some exceptions when running WinFE on systems with UEFI firmware, however these can potentially be interpreted as anomalies. 
+</p>
+
+<p class="break3em">
+Although DiskPart documentation states that it can be used to set disk attributes as read-only, the command failed in practice. The following is output from running DiskPart in WinFE 3.1 and attempting to set disk attributes as read-only (adding write-protection) -
+<textarea cols="80" rows="15" align=left readonly> 
+Microsoft DiskPart version 6.1.7601
+Copyright (C) 1999-2008 Microsoft Corporation.
+On computer: WinFE
+
+DISKPART> list disk
+
+  Disk ###  Status         Size     Free     Dyn  Gpt
+  --------  -------------  -------  -------  ---  ---
+  Disk 0    Online         2048 MB  2048 MB
+
+DISKPART> sel disk 0
+
+Disk 0 is now the selected disk.
+
+DISKPART> detail disk
+
+
+Disk ID: 00000000
+Type   : SATA
+Status : Online
+Path   : 0
+Target : 0
+LUN ID : 0
+Location Path : PCIROOT(0)#PCI(1101)#PCI(0300)#ATA(C00T00L00)
+Current Read-only State : No
+Read-only  : No
+Boot Disk  : No
+Pagefile Disk  : No
+Hibernation File Disk  : No
+Crashdump Disk  : No
+Clustered Disk  : No
+
+There are no volumes
+
+DISKPART> attribute disk
+Current Read-only State : No
+Read-only  : No
+Boot Disk  : No
+Pagefile Disk  : No
+Hibernation File Disk  : No
+Crashdump Disk  : No
+Clustered Disk  : No
+
+DISKPART> attribute disk set readonly
+
+DiskPart failed to set disk attributes.
+
+</textarea> 
+</p> 
+
+
+
+<p class="break3em">
+It is possible to set the <i>READONLY</i> attribute using third party tools including <font class="file">Colin Ramsden's</font> <a class="external" target="_blank" href="http://www.ramsdens.org.uk/">write-protect</a> and <font class="file">Erwan Labalec's</font> <a class="internal" href="diskmgr.htm">DiskMgr</a>, however this cannot prevent the writing of a disk signature as this appears to occur earlier in the boot process.  
+</p>
+
+
+
+<p class="break3em">
+The following screenshot shows output following an attempt to write to LBA sector 0 (using a disk editor) after using <a class="internal" href="diskmgr.htm">DiskMgr</a> to change disk attributes, and demonstrates write protection having been applied - 
+<br/>
+<IMG SRC="img/read_only_message.png" width=50% float=left margin-right=1% margin-bottom=0.5em border=1>
+</p>
+
+
+<p class="break3em">
+Output from using the command-line to attempt to write to the disk (with an existing volume mounted as C:\)
+<textarea cols="80" rows="8" align=left readonly> 
+Microsoft Windows [Version 7.1.7601]
+
+C:\>echo WinFE write protection test > WinFE_Test.txt
+The media is write protected
+
+</textarea> 
+</p> 
+
+
+
+<p class="break3em">
+Results from previous tests indicate that although it is not possible to use Diskpart to change the disk attributes to <i>READONLY</i>, it is possible to change volume attributes. It is well documented that changing volume attributes will perform a write to the disk. 
+</p>
+
+
+<p class="break3em">
+Results from previous tests also indicate that mounting a drive and viewing its contents (e.g. in a file manager or at the command line using the dir command) resulted in the disk image files MD5 checksum changing - indicating that a write had been performed. This change occured when navigating the directory structure, without attempting to carry out any writes to the disk. It is possible to prevent disk writes using third party tools to set disk attributes as read-only prior to running any applications.
+</p>
+
+
+<p class="break3em">
+To summarise, when using WinFE versions 2.*/3.* there is no way to prevent these versions of WinFE from writing to a disk if it does not already contain a disk signature. The abscence of the bytes 55 AA (the "magic number" at offset 0x1FE to 0x1FF in the last two bytes of the MBR) appears to mitigate against a disk signature being written in WinFE 2.1/3.*, however it is unlikely that these bytes will be missing on any disks containing a partition irrespective of the operating system used to prepare/partition the disk. 
+</p>
+
+
+
+
+
+
+
+
+
+<a name="pe4x"></a><br>
+<h2 class="breaktop"><u>Analysis - WinFE 4.0</u></h2><br />
+
+
+<p>
+WinFE 4.0 is the only version of WinFE that passed all tests undertaken in this research. Results were consistent across 32-bit and 64-bit versions of WinFE, on systems using BIOS and UEFI firmware. Internal SATA disks were write protected early in the boot process and a disk signature was not written under any of the conditions likely to be encountered in normal operations, including - 
+
+<ul>
+<li>MBR containing 00 bytes</li>
+<li>Magic number (55 AA) present at offset 0x1FE to 0x1FF</li>
+<li>Absence of magic number (55 AA) at offset 0x1FE to 0x1FF</li>
+<li>Entry in MBR partition table</li>
+</ul>
+</p>
+
+
+
+
+
+
+
+<a name="pe5x10x"></a><br>
+<h2 class="breaktop"><u>Analysis - 5.*\10.*</u></h2><br />
+
+
+
+<p>
+These versions of WinFE passed the majority of tests undertaken in this research. Results were consistent across 32-bit and 64-bit versions of WinFE, on systems using BIOS and UEFI firmware. Internal SATA disks were write protected early in the boot process and a disk signature was not written under any of the conditions likely to be encountered in normal operations, including - 
+
+<ul>
+<li>Magic number (55 AA) present at offset 0x1FE to 0x1FF</li>
+<li>Absence of magic number (55 AA) at offset 0x1FE to 0x1FF</li>
+<li>Entry in MBR partition table</li>
+</ul>
+</p>
+
+
+<p class="break3em">
+The only instance in which a disk signature was written was during tests using disk 1, a disk with the MBR containing 00 bytes. It is unlikely that this condition will be encountered on any disks containing a partition irrespective of the operating system used to prepare/partition the disk. 
+</p>
+
+
+
+
+
+
+
+
+<a name="conclusion"></a><br>
+<h2 class="break3em"><u>Conclusion\Recommendations</u></h2><br />
+
+
+<p>
+Disks previously mounted on Windows NT systems will contain an existing disk signature unless it has been manually removed or the MBR has become corrupted. Other operating systems may also write a disk signature. Based on limited anecdotal evidence there appears to be some instances of WinFE writing to disks in Forensic applications, creating a disk signature if this information is missing. Assuming the disk writes are limited to disk signature creation, circumstances in which this will occur appear to be negligible.
+</p>
+
+
+<p class="break3em">
+Based on the results of the tests undertaken during this research, WinPE 4.0, 5.x or 10.x sources with <b>SanPolicy</b> set as <b>3</b> are recommended. Based on the results these versions appears to provide robust write protection, in particular against writes to bytes at offset 0x1B8 to 0x1BB (disk signature). As indicated by the results from the tests, WinFE 5.x and 10.x did write a disk signature when the MBR was empty. This condition is highly unlikely to be met in real use. 
+</p>
+
+
+<p class="break3em">
+Use of earlier versions of WinPE (2.x/3.x) is discouraged. When using these versions there is no way to prevent writing a disk signature. The abscence of the bytes 55 AA (the "magic number" at offset 0x1FE to 0x1FF in the last two bytes of the MBR) appears to mitigate against a disk signature being written in WinFE 2.1/3.*, however it is unlikely that these bytes will be missing on any disks containing a partition irrespective of the operating system used to prepare/partition the disk. If WinFE 2.x/3.x is required, then the disk should be flagged as read-only as early as possible. Without adding write protection the act of mounting a drive and navigating the file\folder structure is likely to write to the disk. 
+</p>
+
+
+
+<p class="break3em">
+Warning - it is possible with all versions of WinFE to manually override protection. Use caution.
+</p>
+
+
+
+
+<a name="limitations"></a><br>
+<h2 class="break3em"><u>Limitations</u></h2><br />
+
+
+<p>
+The tests were limited to a virtual environment and WinFE may function differently on physical hardware. 
+</p>
+
+
+<p class="break3em">
+The majority of test were completed using 64-bit versions of WinFE. A much smaller subset of WinFE versions were used when testing 32-bit systems. 
+</p>
+
+
+<p class="break3em">
+The WinFE versions used in tests were modified <i>boot.wim</i> files from Windows Installation Media with the WinFE registry settings applied. They were not created using the Windows Automated Installation Kit (WAIK) or the Windows Assessment and Deployment Kit (ADK). WAIK or ADK builds of WinFE can contain different combinations of optional <i>"Packages"</i> which <i><u>might</u></i> affect usage. 
+</p>
+
+
+
+
+
+<a name="sources"></a><br>
+<h2 class="breaktop"><u>WinFE Source files</u></h2><br />
+
+<p>
+The tables below shows more detailed information about the sources used in the tests. The <a class="external" target="_blank" href="https://github.com/MistyFromReboot/Mini-WinFE">Mini-WinFE</a> project was used to modify boot.wim from these source files, applying the registry edits documented in the <a class="internal" href="#regedits">Registry Changes</a> section of this page.
+</p>
+
+<p class="break3em">
+64-bit sources -
+<table style="width:100%">
+  <col width="15%">
+  <col width="15%">
+  <col width="70%">
+  <tr>
+    <th>Source</th>
+    <th>WinPE version</th> 
+    <th>ISO name<br/>SHA1</th>
+  </tr>
+  <tr>
+    <td><a name="source1">source 1</a><br/>Vista SP1</td>
+    <td>2.1</td>
+    <td class="iso">en_windows_vista_with_service_pack_1_x64_dvd_x14-29595.iso<br/>SHA1: bdadc46a263a7bf67eb38609770e4fdbd05247cb</td>
+  </tr>
+  <tr>
+    <td><a name="source2">source 2</a><br/>Win 7</td>
+    <td>3.0</td>
+    <td class="iso">en_windows_7_home_premium_x64_dvd_x15-65733.iso<br/>SHA1: 336779ea6b65f63e11a609b4d021439c47ab315b</td>
+  </tr>
+  <tr>
+    <td><a name="source3">source 3</a><br/>Win 7 SP1</td>
+    <td>3.1</td>
+    <td class="iso">en_windows_7_enterprise_with_sp1_x64_dvd_u_677651.iso<br/>SHA1: a491f985dccfb5863f31b728dddbedb2ff4df8d1</td>
+  </tr>
+  <tr>
+    <td><a name="source4">source 4</a><br/>Win 8</td>
+    <td>5.0</td>
+    <td class="iso">en_windows_8_x64_dvd_915440.iso<br/>SHA1: 1ce53ad5f60419cf04a715cf3233f247e48beec4</td>
+  </tr>
+  <tr>
+    <td><a name="source5">source 5</a><br/>Win 8.1</td>
+    <td>5.0</td>
+    <td class="iso">en_windows_8_1_x64_dvd_2707217.iso<br/>SHA1: bc2f7ff5c91c9f0f8676e39e703085c65072139b</td>
+  </tr>
+  <tr>
+    <td><a name="source6">source 6</a><br/>8.1 Update</td>
+    <td>5.1</td>
+    <td class="iso">en_windows_8.1_enterprise_with_update_x64_dvd_6054382.iso<br/>SHA1: b7dd748446d89b9449a160cdc24bd282989bbd96</td>
+  </tr>
+  <tr>
+    <td><a name="source7">source 7</a><br/>1507</td>
+    <td>10.0.10240</td>
+    <td class="iso">en-gb_windows_10_enterprise_2015_ltsb_x64_dvd_6848456.iso<br/>SHA1: 6476e33d7f50e66a53b347db7a3aa953516ac8a0</td>
+  </tr>
+  <tr>
+    <td><a name="source8">source 8</a><br/>1511</td>
+    <td>10.0.10586</td>
+    <td class="iso">en_windows_10_multiple_editions_version_1511_updated_apr_2016_x64_dvd_8705583.iso<br/>SHA1: 1b247b5b348e78c9bc3afd3c1cbe10cee3d1b9d5</td>
+  </tr>
+  <tr>
+    <td><a name="source9">source 9</a><br/>1607</td>
+    <td>10.0.14393</td>
+    <td class="iso">en_windows_10_enterprise_2016_ltsb_x64_dvd_9059483.iso<br/>SHA1: 031ed6acdc47b8f582c781b039f501d83997a1cf</td>
+  </tr>
+  <tr>
+    <td><a name="source10">source 10</a><br/>1703</td>
+    <td>10.0.15063</td>
+    <td class="iso">en_windows_10_multiple_editions_version_1703_updated_march_2017_x64_dvd_10189288.iso<br/>SHA1: ce8005a659e8df7fe9b080352cb1c313c3e9adce</td>
+  </tr>
+  <tr>
+    <td><a name="source11">source 11</a><br/>1709</td>
+    <td>10.0.16299</td>
+    <td class="iso">en_windows_10_multi-edition_vl_version_1709_updated_dec_2017_x64_dvd_100406172.iso<br/>SHA1: 1851a0007321fa084145ea24b8d30bf7a72bf1c6</td>
+  </tr>
+  <tr>
+    <td><a name="source12">source 12</a><br/>1803</td>
+    <td>10.0.17134</td>
+    <td class="iso">en_windows_10_consumer_editions_version_1803_updated_march_2018_x64_dvd_12063379.iso<br/>SHA1: 08fbb24627fa768f869c09f44c5d6c1e53a57a6f</td>
+  </tr>
+  <tr>
+    <td><a name="source13">source 13</a><br/>1809</td>
+    <td>10.0.17763</td>
+    <td class="iso">en_windows_10_enterprise_ltsc_2019_x64_dvd_be3c8ffb.iso<br/>SHA1: d5b2f95e3dd658517fe7c14df4f36de633ca4845</td>
+  </tr>
+  <tr>
+    <td><a name="source14">source 14</a><br/>1909</td>
+    <td>10.0.18362</td>
+    <td class="iso">en_windows_10_business_editions_version_1909_updated_aug_2020_x64_dvd_f291e1db.iso<br/>SHA1: d2a857f5950f173f651334d6a5aae2e7f4a76b06</td>
+  </tr>
+  <tr>
+    <td><a name="source15">source 15</a><br/>21H2</td>
+    <td>10.0.19041</td>
+    <td class="iso">us_windows_10_enterprise_ltsc_2021_x64_dvd_d289cf96.iso<br/>SHA1: 2fb2897373c4f71b06f4490943b3d564b0f0fd6d</td>
+  </tr>
+</table>
+</p>
+
+
+<p class="break3em">
+32-bit sources -
+<table style="width:100%">
+  <col width="15%">
+  <col width="15%">
+  <col width="70%">
+  <tr>
+    <th>Source</th>
+    <th>WinPE version</th> 
+    <th>ISO name<br/>SHA1</th>
+  </tr>
+  <tr>
+    <td><a name="source16">source 16</a><br/>Win 7 SP1</td>
+    <td>3.1</td>
+    <td class="iso">en_windows_7_enterprise_with_sp1_x86_dvd_u_677710.iso<br/>SHA1: 4e0450ac73ab6f9f755eb422990cd9c7a1f3509c</td>
+  </tr>
+  <tr>
+    <td><a name="source17">source 17</a><br/>Win 8</td>
+    <td>4.0</td>
+    <td class="iso">en_windows_8_enterprise_x86_dvd_917587.iso<br/>
+SHA1: fefce3e64fb9ec1cc7977165328890ccc9a10656
+</td>
+  </tr>
+  <tr>
+    <td><a name="source18">source 18</a><br/>8.1 Update</td>
+    <td>5.1</td>
+    <td class="iso">en_windows_8.1_enterprise_with_update_x86_dvd_6050710.iso<br/>SHA1: 584a9ad7e2bb3d7e189adcfba44a497cc9155937</td>
+  </tr>
+  <tr>
+    <td><a name="source19">source 19</a><br/>21H2</td>
+    <td>10.0.19041</td>
+    <td class="iso">en-us_windows_10_enterprise_ltsc_2021_x86_dvd_9f4aa95f.iso<br/>SHA1: 3f7f38802043aa55ebe930655ee35be876213e4d</td>
+  </tr>
+</table>
+</p>
+
+
+
+<p class="breaktop"><font class="file">Document date - 5<sup>th</sup> June 2022</font></p></font></body></html> 

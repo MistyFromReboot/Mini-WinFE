@@ -26,6 +26,7 @@
 <option value="quick_pebakery.htm">Quick Start - Build...</option>  
 <option value="usage.htm">Quick Start - Run...</option>  
 <option value="diskmgr.htm">DiskMgr</option>  
+<option value="winfe_tests.htm">WinFE Tests</option>  
 <option value="links.htm">Download\Links</option>  
 <option value="acknowledgements.htm">Acknowledgements</option>  
 <option value="" disabled></option> 
@@ -56,7 +57,7 @@ When a computer is running (booted from) a full version of Windows certain files
 
 
 <p class="break3em">
-There are two distinct methods for booting <font class="file">WinPE</font> - RAM Boot and Flat Boot. RAM Boot is the most common method and anyone who has installed Windows Vista/7/8/8.1 will already (perhaps unknowingly) have used it. Microsoft recommend a minimum of 512 MB RAM in order to run a RAM booted version of <font class="file">WinPE</font> - in own tests it was possible to boot some versions of <font class="file">WinPE</font> with 256 MB RAM. For more details about RAM and Flat boot <font class="file">WinPE</font> and RAM requirements, please see <a class="external" target="_blank" href="http://mistyprojects.co.uk/documents/WinPE.RAM/winpe.ram.usage.htm">here</a>.
+There are two distinct methods for booting <font class="file">WinPE</font> - RAM Boot and Flat Boot. RAM Boot is the most common method and anyone who has installed Windows Vista/7/8/8.1 will already (perhaps unknowingly) have used it. Microsoft recommend a minimum of 512 MB RAM in order to run a RAM booted version of <font class="file">WinPE</font> - in tests it was possible to boot some versions of <font class="file">WinPE</font> with 256 MB RAM. For more details about RAM and Flat boot <font class="file">WinPE</font> and RAM requirements, please see <a class="external" target="_blank" href="http://mistyprojects.co.uk/documents/WinPE.RAM/winpe.ram.usage.htm">here</a>.
 </p>
 
 
@@ -108,15 +109,14 @@ Windows Operating Systems use a numbering format for identification purposes - t
 <p class="break3em">
 <font class="file">WinPE</font> versions include -
 
-<p>
 <table style="width:90%">
   <col width="15%">
-  <col width="30%">
-  <col width="55%">
-  <tr>
+  <col width="25%">
+  <col width="60%">
+  <tr style="background-color:#E2A9F3;color:black;">
     <th>WinPE</th>
     <th>Major.Minor.Build</th> 
-    <th>OS</th> 
+    <th>Windows Operating System source</th> 
   </tr>
   <tr>
     <td>2.0</td>
@@ -161,16 +161,36 @@ Windows Operating Systems use a numbering format for identification purposes - t
 
 
 <p class="break3em">
-Following the release of Windows 10, <font class="file">WinPE</font> versions are also identifed by MajorVersion.MinorVersion.Build numbers that correspond with the Windows 10 build from which they were compiled. WinPE 10.0.16299 for example corresponds with Windows 10.0.16299 (aka Version 1709 / Fall Creators Update) -
+Following the release of Windows 10, <font class="file">WinPE</font> versions are identifed by MajorVersion.MinorVersion.Build numbers that generally correspond with the Windows 10 build from which they were compiled. WinPE 10.0.16299 for example corresponds with Windows 10.0.16299 (aka Version 1709 / Fall Creators Update). 
+</p>
+
+
+<p class="break3em">
+There are some exceptions to this rule as the <font class="file">WinPE</font> included in Windows 10.0.18362 (May 2019 Update (1903)) and 10.0.18363 (November 2019 Update (1909)) sources are both based on <font class="file">WinPE</font> 10.0.18362. 
+</p>
+
+<p class="break3em">
+Another example of the same <font class="file">WinPE</font> version being included in multiple Windows sources is <font class="file">WinPE</font> 10.0.19041. The following Windows 10 sources all include/use <font class="file">WinPE</font> 10.0.19041 - 
+    <ul>
+	<li>May 2020 Update (10.0.19041 / 2004)</li>
+        <li>October 2020 Update (10.0.19042 / 20H2)</li>
+        <li>May 2021 Update (10.0.19043 / 21H1)</li> 
+        <li>November 2021 Update (10.0.19044 / 21H2)</li>
+    </ul>
+</p>
+
+
+<p class="break3em">
+<font class="file">WinPE</font> 10.* versions include -
 
 <table style="width:90%">
-  <col width="15%">
-  <col width="30%">
-  <col width="55%">
-  <tr>
-    <th>Build</th>
-    <th>Version</th> 
-    <th>Name</th> 
+  <col width="20%">
+  <col width="20%">
+  <col width="60%">
+  <tr style="background-color:#E2A9F3;color:black;">
+    <th>WinPE Build</th>
+    <th>WinPE Version</th> 
+    <th>Windows Operating System source</th> 
   </tr>
   <tr>
     <td>10.0.10240</td>
@@ -210,34 +230,16 @@ Following the release of Windows 10, <font class="file">WinPE</font> versions ar
   <tr>
     <td>10.0.18362</td>
     <td>1903</td>
-    <td>May 2019 Update</td> 
-  </tr>  
-  <tr>
-    <td>10.0.18363</td>
-    <td>1909</td>
-    <td>November 2019 Update</td> 
+    <td>May 2019 Update (Windows 10.0.18362 / 1903)<br/>November 2019 Update (10.0.18363 / 1909)</td> 
   </tr>  
   <tr>
     <td>10.0.19041</td>
     <td>2004</td>
-    <td>May 2020 Update</td> 
+    <td>May 2020 Update (10.0.19041 / 2004)
+        <br/>October 2020 Update (10.0.19042 / 20H2)
+        <br/>May 2021 Update (10.0.19043 / 21H1) 
+        <br/>November 2021 Update (10.0.19044 / 21H2)</td>
   </tr>  
-  <tr>
-    <td>10.0.19042</td>
-    <td>20H2</td>
-    <td>October 2020 Update</td> 
-  </tr>  
-  <tr>
-    <td>10.0.19043</td>
-    <td>21H1</td>
-    <td>May 2021 Update</td> 
-  </tr>  
-  <tr>
-    <td>10.0.19044</td>
-    <td>21H2</td>
-    <td>November 2021 Update</td> 
-  </tr>  
-
 </table>
 </p>
 
@@ -249,4 +251,4 @@ There are 32 bit and 64 bit versions of all of the above <font class="file">WinP
 
 
 
-<p class="breaktop"><font class="file">Document date - 28<sup>th</sup> May 2022</font></p></font></body></html> 
+<p class="breaktop"><font class="file">Document date - 5<sup>th</sup> June 2022</font></p></font></body></html> 
