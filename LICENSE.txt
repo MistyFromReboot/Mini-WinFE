@@ -1,6 +1,6 @@
-The ChrisPE Project includes a range of third party software that is subject to different licenses. All software remains the property of its authors. The licenses for third party software are listed below. 
+The Mini-WinFE Project includes a range of third party software that is subject to different licenses. All software remains the property of its authors. The licenses for third party software are listed below. 
 
-The files developed by the PEBakery Team are subject to the MIT license. 
+The files developed by the PEBakery Team and Misty/MistyFromReboot are subject to the MIT license. 
 
 --------------------------------------------------------
 Mini-WinFE License
@@ -14,9 +14,9 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
---------------------------------------------------------
-Third Party Software included with the ChrisPE project
---------------------------------------------------------
+---------------------------------------------------------
+Third Party Software included with the Mini-WinFE project
+---------------------------------------------------------
 
 PEBakery
 ========
