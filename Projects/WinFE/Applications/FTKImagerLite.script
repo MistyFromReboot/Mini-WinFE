@@ -4,8 +4,8 @@ Description=Forensic tool that can create a physical or logical image of any dri
 Selected=False
 Level=5
 Author=Misty
-Version=20220524
-Date=2022-05-24
+Version=20220614
+Date=2022-06-14
 Interface=Interface1
 
 [Interface1]
@@ -135,15 +135,16 @@ If,%PROGRAMS.IN.WIM%,Equal,YES,Run,%ScriptFile%,IN.WIM
 [CHECKS]
 If,%ARCH%,Equal,x86,Run,%ScriptFile%,CHECKS-x86
 If,%ARCH%,Equal,x64,Run,%ScriptFile%,CHECKS-x64
-//If,%ARCH%,Equal,x64Run,%ScriptFile%,vcredist_x64
+If,%ARCH%,Equal,x64,Run,%ScriptFile%,vcredist_x64
 
 
 [CHECKS-x86]
 If,Not,ExistFile,"%Programs%\FTKImagerLite\x86\FTK Imager.exe",Begin
-Set,%CONTINUE%,NO
-Message,"FTK Imager 32-bit is missing."
-Exit
+  Set,%CONTINUE%,NO
+  Message,"FTK Imager 32-bit is missing."
+  Exit
 End
+WimExtractBulk,%Install.wim%,%Install.wim.Image.number%,%Programs%\FTKImagerLite\dll.dependencies.txt,%TargetDir%,NOACL,NOERR
 
 [CHECKS-x64]
 If,Not,ExistFile,"%Programs%\FTKImagerLite\x64\FTK Imager.exe",Begin

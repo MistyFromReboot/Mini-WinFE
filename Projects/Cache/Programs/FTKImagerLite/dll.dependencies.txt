@@ -1,0 +1,3 @@
+\windows\system32\avifil32.dll
+\Windows\system32\msacm32.dll
+\Windows\system32\msvfw32.dll
