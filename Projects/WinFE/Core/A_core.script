@@ -5,19 +5,15 @@ Selected=True
 Locked=True
 Mandatory=True
 Level=2
-Author=ThePEBakeryTeam
-Version=20220528
-Date=2022-05-28
+Author=Misty
+Version=20220618
+Date=2022-06-18
 Interface=Interface
 NoWarning=False
 
 [Interface]
 
 [process]
-If,Not,%PEBakery%,Equal,True,Begin
-  message,"This project is not compatible with WinBuilder. ABORTING..."
-  Halt
-End
 Set,%FullProjectRun%,YES,GLOBAL
 If,%SourceDir%,Equal,,Begin
   message,Error - you have not set a source directory. ABORTING...
@@ -54,8 +50,10 @@ End
 If,Not,ExistDir,%ProjectTemp%,DirMake,%ProjectTemp%
 Run,"%ProjectDir%\Core\verify.script",Tools.Check
 Run,"%ProjectDir%\Core\verify.script",SOURCE.CHECK
-Run,"%ProjectDir%\Core\verify.script",boot.wim
-Run,"%ProjectDir%\Core\verify.script",install.wim.v2
+If,%Builder%,Equal,WinBuilder,Run,"%ProjectDir%\Core\verify.script",boot.wim_winbuilder
+Else,Run,"%ProjectDir%\Core\verify.script",boot.wim
+If,%Builder%,Equal,WinBuilder,Run,"%ProjectDir%\Core\verify.script",install.wim_winbuilder
+Else,Run,"%ProjectDir%\Core\verify.script",install.wim.v2
 Run,"%ProjectDir%\Core\verify.script",Officially.Supported.OS.Check
 If,Not,%LANG%,equal,%LANG3%,If,Not,%LANG2%,equal,%LANG3%,Set,%USE.LANG3%,YES
 If,Not,%LANG%,equal,%LANG2%,Set,%USE.LANG2%,YES
@@ -125,6 +123,7 @@ If,ExistDir,"%ProjectTemp%",Begin
   End
 End
 //now restore boot.wim.info.ini
+If,Not,ExistDir,%ProjectTemp%,DirMake,%ProjectTemp%
 If,ExistFile,%Cache%\boot.wim.info.ini,FileCopy,%Cache%\boot.wim.info.ini,%ProjectTemp%\boot.wim.info.ini
 
 
@@ -146,18 +145,24 @@ If,Not,ExistDir,%ProjectTemp%,DirMake,%ProjectTemp%
 Echo,"Copying boot.wim#$c removing read-only flag and extracting required files..."
 FileCopy,"%boot.wim%","%OutputDir%\sources\boot.wim"
 ShellExecute,Hide,"attrib.exe","-r #$q%Outputdir%\Sources\boot.wim#$q"
-WimExtractBulk,%OutputDir%\sources\boot.wim,%boot.wim.Image.number%,%Tools%\wimlib.file.lists\boot.wim.registry.txt,%TargetDir%,NOACL,NOERR
+If,%Builder%,Equal,PEBakery,WimExtractBulk,%OutputDir%\sources\boot.wim,%boot.wim.Image.number%,%Tools%\wimlib.file.lists\boot.wim.registry.txt,%TargetDir%,NOACL,NOERR
+Else,ShellExecute,Hide,"%Tools%\wimlib\wimlib-imagex.exe","extract #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% @#$q%Tools%\wimlib.file.lists\boot.wim.registry.txt#$q --dest-dir=#$q%TargetDir%#$q --nullglob --no-acls"
 IniRead,"%ProjectDir%\Drivers\Drivers.script",MAIN,Selected,%Drivers%
 If,%Drivers%,Equal,True,Begin
-  ReadInterface,Value,"%ProjectDir%\Drivers\Drivers.script",Interface,pScrollBox_A1,%DriversMethod%
-  If,%DriversMethod%,Equal,EXTRACT,Begin  
+  If,%Builder%,Equal,PEBakery,ReadInterface,Value,"%ProjectDir%\Drivers\Drivers.script",Interface,pScrollBox_A1,%DriversMethod%
+  Else,Begin
+    AddInterface,"%ProjectDir%\Drivers\Drivers.script",Interface,""
+	Set,%DriversMethod%,%pScrollBox_A1%
+  End
+  If,%DriversMethod%,Equal,EXTRACT,Begin
     Set,%CONTINUE%,NO
     If,Question,"The Driver script has been selected in this build. The settings selected in the driver script will require the full extraction of boot.wim.#$x#$xSelect YES to fully EXTRACT boot.wim now#$c or NO to continue as normal and extract later.",Set,%CONTINUE%,YES
     If,%CONTINUE%,Equal,YES,Begin
-	  WimApply,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,NOACL
+      If,%Builder%,Equal,PEBakery,WimApply,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,NOACL
+	  Else,ShellExecute,Hide,"%Tools%\wimlib\wimlib-imagex.exe","apply #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% #$q%TargetDir%#$q --no-acls"
       FileCreateBlank,"%Target_System32%\wim_applied.txt"
       TXTaddLine,"%Target_System32%\wim_applied.txt","Dummy file added to confirm that boot.wim has been fully extracted during the project build process (required for Driver integration - EXTRACT method).",APPEND
-	End
+    End
   End
 End
 
@@ -166,7 +171,8 @@ Echo,"Copying boot.wim#$c removing read-only flag and extracting required files.
 FileCopy,"%boot.wim%","%OutputDir%\sources\boot.wim"
 ShellExecute,Hide,"attrib.exe","-r #$q%Outputdir%\Sources\boot.wim#$q"
 Echo,"Applying (Extracting) image %Boot.wim.Image.number% from  boot.wim..."
-WimApply,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,NOACL
+If,%Builder%,Equal,PEBakery,WimApply,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,NOACL
+Else,ShellExecute,Hide,"%Tools%\wimlib\wimlib-imagex.exe","apply #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% #$q%TargetDir%#$q --no-acls"
 FileCreateBlank,"%Target_System32%\wim_applied.txt"
 TXTaddLine,"%Target_System32%\wim_applied.txt","Dummy file added to confirm that boot.wim has been fully extracted during the project build process (required for Driver integration - EXTRACT method).",APPEND
 

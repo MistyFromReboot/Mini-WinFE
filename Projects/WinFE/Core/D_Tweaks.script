@@ -3,9 +3,9 @@ Title=Tweaks
 Description=
 Selected=True
 Level=2
-Author=ThePEBakeryTeam
-Version=20190506
-Date=2019-05-06
+Author=Misty
+Version=20220618
+Date=2022-06-18
 Interface=Interface
 NoWarning=False
 
@@ -114,21 +114,24 @@ If,Not,ExistFile,"%Target_System32%\%MY_FILE%",Begin
 If,ExistFile,"%ProjectTemp%\File.and.Dependencies.txt",FileDelete,"%ProjectTemp%\File.and.Dependencies.txt"
 FileCopy,"%Tools%\wimlib.file.lists\File.and.Dependencies.txt","%ProjectTemp%\File.and.Dependencies.txt"
 TXTReplace,"%ProjectTemp%\File.and.Dependencies.txt",myfile.ext,%MY_FILE%
-WimExtractBulk,%Install.wim%,%Install.wim.Image.number%,%ProjectTemp%\File.and.Dependencies.txt,%TargetDir%,NOACL,NOERR
+If,%Builder%,Equal,PEBakery,WimExtractBulk,%Install.wim%,%Install.wim.Image.number%,%ProjectTemp%\File.and.Dependencies.txt,%TargetDir%,NOACL,NOERR
+Else,ShellExecute,Hide,"%Tools%\wimlib\wimlib-imagex.exe","extract #$q%Install.wim%#$q %Install.wim.Image.number% @#$q%ProjectTemp%\File.and.Dependencies.txt#$q --dest-dir=#$q%TargetDir%#$q --nullglob --no-acls"
 End
 Set,%MY_FILE%,chartv.dll
 If,Not,ExistFile,"%Target_System32%\%MY_FILE%",Begin
 If,ExistFile,"%ProjectTemp%\File.and.Dependencies.txt",FileDelete,"%ProjectTemp%\File.and.Dependencies.txt"
 FileCopy,"%Tools%\wimlib.file.lists\File.and.Dependencies.txt","%ProjectTemp%\File.and.Dependencies.txt"
 TXTReplace,"%ProjectTemp%\File.and.Dependencies.txt",myfile.ext,%MY_FILE%
-WimExtractBulk,%Install.wim%,%Install.wim.Image.number%,%ProjectTemp%\File.and.Dependencies.txt,%TargetDir%,NOACL,NOERR
+If,%Builder%,Equal,PEBakery,WimExtractBulk,%Install.wim%,%Install.wim.Image.number%,%ProjectTemp%\File.and.Dependencies.txt,%TargetDir%,NOACL,NOERR
+Else,ShellExecute,Hide,"%Tools%\wimlib\wimlib-imagex.exe","extract #$q%Install.wim%#$q %Install.wim.Image.number% @#$q%ProjectTemp%\File.and.Dependencies.txt#$q --dest-dir=#$q%TargetDir%#$q --nullglob --no-acls"
 End
 Set,%MY_FILE%,OneCoreUAPCommonProxyStub.dll
 If,Not,ExistFile,"%Target_System32%\%MY_FILE%",Begin
 If,ExistFile,"%ProjectTemp%\File.and.Dependencies.txt",FileDelete,"%ProjectTemp%\File.and.Dependencies.txt"
 FileCopy,"%Tools%\wimlib.file.lists\File.and.Dependencies.txt","%ProjectTemp%\File.and.Dependencies.txt"
 TXTReplace,"%ProjectTemp%\File.and.Dependencies.txt",myfile.ext,%MY_FILE%
-WimExtractBulk,%Install.wim%,%Install.wim.Image.number%,%ProjectTemp%\File.and.Dependencies.txt,%TargetDir%,NOACL,NOERR
+If,%Builder%,Equal,PEBakery,WimExtractBulk,%Install.wim%,%Install.wim.Image.number%,%ProjectTemp%\File.and.Dependencies.txt,%TargetDir%,NOACL,NOERR
+Else,ShellExecute,Hide,"%Tools%\wimlib\wimlib-imagex.exe","extract #$q%Install.wim%#$q %Install.wim.Image.number% @#$q%ProjectTemp%\File.and.Dependencies.txt#$q --dest-dir=#$q%TargetDir%#$q --nullglob --no-acls"
 End
 If,Not,ExistFile,"%Target_System32%\actxprxy.txt",If,ExistFile,"%Target_System32%\actxprxy.dll",Begin
 //OFFLINEREG
@@ -148,22 +151,21 @@ FileCreateBlank,"%Target_System32%\FileCopyProgress.txt"
 TXTAddLine,"%Target_System32%\FileCopyProgress.txt","Dummy file added to confirm that FileCopy Progress has already been applied.",APPEND
 
 [DragNDrop]
-WimExtractBulk,%Install.wim%,%Install.wim.Image.number%,%Tools%\wimlib.file.lists\DragDrop.Dependencies.txt,%TargetDir%,NOACL,NOERR
+If,%Builder%,Equal,PEBakery,WimExtractBulk,%Install.wim%,%Install.wim.Image.number%,%Tools%\wimlib.file.lists\DragDrop.Dependencies.txt,%TargetDir%,NOACL,NOERR
+Else,ShellExecute,Hide,"%Tools%\wimlib\wimlib-imagex.exe","extract #$q%Install.wim%#$q %Install.wim.Image.number% @#$q%Tools%\wimlib.file.lists\DragDrop.Dependencies.txt#$q --dest-dir=#$q%TargetDir%#$q --nullglob --no-acls"
 ShellExecute,Hide,"%Tools%\offlinereg\offlinereg-win32.exe","#$q%Target_config%\software#$q #$q #$q run #$q%Tools%\offlinereg.file.lists\dataexchange.txt#$q"
 
 [WallpaperHost]
-echo,"Clearing read-only attributes from boot.wim"
-If,WimExistFile,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,Windows/System32/WallpaperHost.exe,WimPathDelete,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,Windows/System32/WallpaperHost.exe
-//ShellExecute,Hide,"%Tools%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qdelete '/Windows/System32/WallpaperHost.exe'#$q"
+If,%Builder%,Equal,PEBakery,If,WimExistFile,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,Windows/System32/WallpaperHost.exe,WimPathDelete,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,Windows/System32/WallpaperHost.exe
+If,%Builder%,Equal,winbuilder,ShellExecute,Hide,"%Tools%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qdelete '/Windows/System32/WallpaperHost.exe'#$q"
 
 [Fonts]
-If,WimExistFile,%Install.wim%,%Install.wim.Image.number%,Windows\Fonts\segoeui.ttf,Begin
-  If,Not,ExistDir,"%TargetDir%\Windows\Fonts",DirMake,"%TargetDir%\Windows\Fonts"
-  WimExtract,%Install.wim%,%Install.wim.Image.number%,Windows\Fonts\segoeui.ttf,"%TargetDir%\Windows\Fonts",NOACL
-  If,Not,ExistRegSection,HKLM,_WinPE_SOFTWARE,RegHiveLoad,_WinPE_SOFTWARE,"%Target_config%\software"
-  RegWrite,HKLM,0x1,"_WinPE_SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts","Segoe UI (TrueType)","segoeui.ttf"
-  If,ExistRegSection,HKLM,_WinPE_SOFTWARE,RegHiveUnload,_WinPE_SOFTWARE
-End
+If,Not,ExistDir,"%TargetDir%\Windows\Fonts",DirMake,"%TargetDir%\Windows\Fonts"
+If,%Builder%,Equal,PEBakery,If,WimExistFile,%Install.wim%,%Install.wim.Image.number%,Windows\Fonts\segoeui.ttf,WimExtract,%Install.wim%,%Install.wim.Image.number%,Windows\Fonts\segoeui.ttf,"%TargetDir%\Windows\Fonts",NOACL
+Else,ShellExecute,Hide,"%Tools%\wimlib\wimlib-imagex.exe","extract #$q%Install.wim%#$q %Install.wim.Image.number% \Windows\Fonts\segoeui.ttf --dest-dir=#$q%TargetDir%\Windows\Fonts#$q --nullglob --no-acls"
+If,Not,ExistRegSection,HKLM,_WinPE_SOFTWARE,RegHiveLoad,_WinPE_SOFTWARE,"%Target_config%\software"
+RegWrite,HKLM,0x1,"_WinPE_SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts","Segoe UI (TrueType)","segoeui.ttf"
+If,ExistRegSection,HKLM,_WinPE_SOFTWARE,RegHiveUnload,_WinPE_SOFTWARE
 
 [AuthorEncoded]
 Logo=settings.ico
@@ -172,16 +174,4 @@ settings.ico=653,871
 [EncodedFile-AuthorEncoded-settings.ico]
 lines=0
 0=eJztlzFLI0EYht9gEawCFnJdplAQLfQHBEW4H3KttaWosfIHWIr9tXbhuCLhOMLdXwjIcvcDXEE0Rcj6ffPNormN3sxmJ7ML+4Q3LyyZ7DMLuzsDNOiztwf6Vvi6CawD2KLQIXyBHNdsoKbGhjZlSHmkXAZ2cUVRIkryJlcBfVxQyLpXZQ4K77uXfQ4K/3cv6xwU7N3TlOWeVnB35zwuXzWDQj53znDptrMo5Hfnce0l+75FYTF3tVzdGRRq9xAo1O4hUKjdQ6BQuxfNDuWE0qPcUR4oMWVEuaUcUzoldN+nDHI6hXRfpVx79vblvkb5VVF3vu6/K+rO3FTY/bDC7szPCrvvenbndDy5MxcW55+a5PU/9uj/3cL9yCTvHG49+v+1cE/JO4eRR/9nS/dF5hB79H9ycE9xncODJ3fmD9zcU1zmcFe49Svf4O6eYjuHXoG+/3KKfO6Avf9JUbJz2IZf98ScwyefHX/v4j4oTrMQXJ89+2E05+Lqfh1Gcy6u7ryPWw1imsXVnfdxa0FMs7i68z6uLNedn0u27rwHOgyj+SH87OZ3HL+nea3B6yVe8/G6ldfevH/YDWZXE4REM9vjc+n4QDpqS/db0t2mNFZ0T01PTI9Nx5DfRZBxfcj/dCH/C+jzTPVdw8Mbumm4bhrO3QdaidxYbfqaUB9Qj6nPE9lQJNIN7gg0XLrJrYfP60+mO6bPTCfSg6Sr+4fpoTl+PyUN9pmYHpMOd2w6Ii3xluvZXZHutzLXmfsFmCR9knic4ylOLSnJzEsv1stMzmcYBSMN7FOF0I5M2OUtLh+2Y2ACAJzcCBstMDmuAQAAAAIAAAAoAAAAQQIAAAAAAAABAAAAAAAAAAAAAAA
-
-
-
-
-
-
-
-
-
-
-
-
 

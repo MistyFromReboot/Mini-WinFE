@@ -4,10 +4,9 @@ Description=Scan the Windows Registry to find product keys of Windows and other 
 Selected=False
 Level=5
 Author=Misty
-Version=20220524
-Date=2022-05-24
+Version=20220618
+Date=2022-06-18
 Interface=Interface1
-Mandatory=False
 
 [Interface1]
 pTextLabelMenu1="1",1,1,35,3,70,18,10,Bold
@@ -70,29 +69,29 @@ If,%PROGRAMS.IN.WIM%,Equal,YES,Run,%ScriptFile%,IN.WIM
 
 [CHECKS]
 If,Not,ExistFile,"%Programs%\ProductKeyScanner\%ARCH%\ProductKeyScanner.exe",Begin
-  Message,ProductKeyScanner is missing - exiting script...,Error,5
-  Exit,ProductKeyScanner is missing - exiting script...,WARN
+Message,ProductKeyScanner is missing - exiting script...,Error,5
+Exit,ProductKeyScanner is missing - exiting script...,WARN
 End
 
 [MENU]
 If,%PROGRAMS.IN.WIM%,Equal,NO,Begin
-  If,Not,ExistFile,"%OutputDir%\Programs\ShortcutsNotInWim.txt",Run,"%ProjectDir%\Core\common.script",NotInWim
-  TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$p~dp0ProductKeyScanner\ProductKeyScanner.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qProductKeyScanner#$q",Append
-End 
+If,Not,ExistFile,"%OutputDir%\Programs\ShortcutsNotInWim.txt",Run,"%ProjectDir%\Core\common.script",NotInWim
+TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$p~dp0ProductKeyScanner\ProductKeyScanner.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qProductKeyScanner#$q",Append
+End
 If,%PROGRAMS.IN.WIM%,Equal,YES,Begin
-  ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\ProductKeyScanner\ProductKeyScanner.exe#$q /F:#$q%ProjectTemp%\ProductKeyScanner.lnk#$q /I:#$q#$pSystemDrive#$p\Programs\ProductKeyScanner\ProductKeyScanner.exe#$c0#$q"
-  If,ExistFile,"%ProjectTemp%\ProductKeyScanner.lnk",Begin
-    Set,%MyShortcut%,ProductKeyScanner.lnk
-    If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
-    If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
-    If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
-      Set,%ProgramMenuPath%,%pTextBox1%
-      Run,"%ProjectDir%\Core\common.script",StartMenu
-    End
-    If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
-    If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
-    FileDelete,"%ProjectTemp%\%MyShortcut%"
-  End
+ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\ProductKeyScanner\ProductKeyScanner.exe#$q /F:#$q%ProjectTemp%\ProductKeyScanner.lnk#$q /I:#$q#$pSystemDrive#$p\Programs\ProductKeyScanner\ProductKeyScanner.exe#$c0#$q"
+If,ExistFile,"%ProjectTemp%\ProductKeyScanner.lnk",Begin
+Set,%MyShortcut%,ProductKeyScanner.lnk
+If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
+If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
+If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
+Set,%ProgramMenuPath%,%pTextBox1%
+Run,"%ProjectDir%\Core\common.script",StartMenu
+End
+If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
+If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
+FileDelete,"%ProjectTemp%\%MyShortcut%"
+End
 End
 
 [COMMON]
@@ -105,8 +104,9 @@ IniWrite,"%OutputDir%\Project.Settings.ini",PROGRAMS,ProductKeyScanner,YES
 
 [IN.WIM]
 If,%FullProjectRun%,Equal,NO,Begin
-  IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
-  WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
+If,%Builder%,Equal,PEBakery,WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qadd '%TargetDir%' '\'#$q"
 End
 //Wait,1
 
@@ -121,3 +121,4 @@ Logo=ProductKeyScanner.ico
 [EncodedFile-AuthorEncoded-ProductKeyScanner.ico]
 lines=0
 0=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
+

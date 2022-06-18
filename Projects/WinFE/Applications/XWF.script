@@ -4,8 +4,8 @@ Description=
 Selected=False
 Level=5
 Author=Misty
-Version=20220524
-Date=2022-05-24
+Version=20220618
+Date=2022-06-18
 Interface=Interface1
 
 [Interface1]
@@ -22,7 +22,7 @@ pFileBox_B2=,1,13,150,140,230,20,file
 pButton_B2="ADD TO CACHE",1,8,404,140,96,20,B2.RUN,0,True,_B2.RUN_,True
 pWebLabel1=http://www.x-ways.net/forensics/,1,10,120,43,180,18,http://www.x-ways.net/forensics/
 pTextLabel5="X-Ways Website",1,1,10,45,150,18,10,Bold
-pCheckBoxInWim="Include Program in boot.wim",1,3,10,265,180,18,True
+pCheckBoxInWim="Include Program in boot.wim",1,3,51,265,180,18,True
 
 [Interface2]
 pButtonMenu1="1",1,8,5,0,70,20,pButtonMenu1,0,True,_pButtonMenu1_,True
@@ -85,10 +85,10 @@ If,Not,ExistDir,"%Programs%\XWF\x86",DirMake,"%Programs%\XWF\x86"
 Echo,"Copying files to cache"
 DirCopy,"%XWF.PATH%\*.*","%Programs%\XWF\x86"
 If,Not,ExistFile,"%Programs%\XWF\x86\xwforensics.exe",Begin
-Message,"There appears to have been an error copying W-Ways Forensics to the cache. Exiting..."
+Message,"There appears to have been an error copying X-Ways Forensics to the cache. Exiting..."
 Exit,"There appears to have been an error copying X-Ways Forensics to the cache. Exiting..."
 End
-Else,Message,"W-Ways Forensics added to the following path -#$x#$x#$s#$s#$s#$q%Programs%\XWF\x86#$q"
+Else,Message,"X-Ways Forensics added to the following path -#$x#$x#$s#$s#$s#$q%Programs%\XWF\x86#$q"
 End
 
 [B2.RUN]
@@ -113,14 +113,15 @@ If,Not,ExistDir,"%Programs%\XWF\x64",DirMake,"%Programs%\XWF\x64"
 Echo,"Copying files to cache"
 DirCopy,"%XWF.PATH%\*.*","%Programs%\XWF\x64"
 If,Not,ExistFile,"%Programs%\XWF\x64\xwforensics64.exe",Begin
-Message,"There appears to have been an error copying W-Ways Forensics to the cache. Exiting..."
+Message,"There appears to have been an error copying X-Ways Forensics to the cache. Exiting..."
 Exit,"There appears to have been an error copying X-Ways Forensics to the cache. Exiting..."
 End
-Else,Message,"W-Ways Forensics added to the following path -#$x#$x#$s#$s#$s#$q%Programs%\XWF\x64#$q"
+Else,Message,"X-Ways Forensics added to the following path -#$x#$x#$s#$s#$s#$q%Programs%\XWF\x64#$q"
 End
 
 [process]
-If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRun
+If,%Builder%,Equal,PEBakery,If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunV2
+If,%Builder%,Equal,WinBuilder,If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunV2_winbuilder
 AddInterface,%ScriptFile%,Interface1,""
 AddInterface,%ScriptFile%,Interface2,""
 If,%pCheckBoxInWim%,Equal,True,Set,%PROGRAMS.IN.WIM%,YES
@@ -145,14 +146,14 @@ End
 [CHECKS-x64]
 If,Not,ExistFile,"%Programs%\XWF\x64\xwforensics64.exe",Begin
 Set,%CONTINUE%,No
-  IniRead,"%ProjectDir%\Core\G_WoW64.script",main,Selected,%WoW64YesOrNo%
-  If,%WoW64YesOrNo%,Equal,False,Run,%ScriptFile%,Exit
-  If,Question,ERROR - could not find 64-bit X-Ways Forensics. Select YES to attempt to use 32-bit source files (SysWoW Support required) - or NO to Exit,Set,%CONTINUE%,YES
-  If,%CONTINUE%,Equal,No,Run,%ScriptFile%,Exit
-  If,%CONTINUE%,Equal,YES,Begin
-    Set,%XWF_SYSWOW64%,yes
-    Run,%ScriptFile%,CHECKS-x86
-  End
+IniRead,"%ProjectDir%\Core\G_WoW64.script",main,Selected,%WoW64YesOrNo%
+If,%WoW64YesOrNo%,Equal,False,Run,%ScriptFile%,Exit
+If,Question,ERROR - could not find 64-bit X-Ways Forensics. Select YES to attempt to use 32-bit source files (SysWoW Support required) - or NO to Exit,Set,%CONTINUE%,YES
+If,%CONTINUE%,Equal,No,Run,%ScriptFile%,Exit
+If,%CONTINUE%,Equal,YES,Begin
+Set,%XWF_SYSWOW64%,yes
+Run,%ScriptFile%,CHECKS-x86
+End
 End
 
 [Exit]
@@ -163,23 +164,23 @@ If,%ARCH%,Equal,x86,Set,%XWF.EXE%,xwforensics.exe
 If,%ARCH%,Equal,x64,Set,%XWF.EXE%,xwforensics64.exe
 If,%XWF_SYSWOW64%,Equal,yes,Set,%XWF.EXE%,xwforensics.exe
 If,%PROGRAMS.IN.WIM%,Equal,NO,Begin
-  If,Not,ExistFile,"%OutputDir%\Programs\ShortcutsNotInWim.txt",Run,"%ProjectDir%\Core\common.script",NotInWim
-  TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$p~dp0XWF\%XWF.EXE%#$q #$q#$pTemp#$p\ShortCuts#$q #$qXWF#$q",Append
-End 
+If,Not,ExistFile,"%OutputDir%\Programs\ShortcutsNotInWim.txt",Run,"%ProjectDir%\Core\common.script",NotInWim
+TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$p~dp0XWF\%XWF.EXE%#$q #$q#$pTemp#$p\ShortCuts#$q #$qXWF#$q",Append
+End
 If,%PROGRAMS.IN.WIM%,Equal,YES,Begin
-  ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\XWF\%XWF.EXE%#$q /F:#$q%ProjectTemp%\X-Ways.lnk#$q /I:#$q#$pSystemDrive#$p\Programs\XWF\%XWF.EXE%#$c0#$q"
-  If,ExistFile,"%ProjectTemp%\X-Ways.lnk",Begin
-    Set,%MyShortcut%,X-Ways.lnk
-    If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
-    If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
-    If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
-      Set,%ProgramMenuPath%,%pTextBox1%
-      Run,"%ProjectDir%\Core\common.script",StartMenu
-    End
-    If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
-    If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
-    FileDelete,"%ProjectTemp%\%MyShortcut%"
-  End
+ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\XWF\%XWF.EXE%#$q /F:#$q%ProjectTemp%\X-Ways.lnk#$q /I:#$q#$pSystemDrive#$p\Programs\XWF\%XWF.EXE%#$c0#$q"
+If,ExistFile,"%ProjectTemp%\X-Ways.lnk",Begin
+Set,%MyShortcut%,X-Ways.lnk
+If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
+If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
+If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
+Set,%ProgramMenuPath%,%pTextBox1%
+Run,"%ProjectDir%\Core\common.script",StartMenu
+End
+If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
+If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
+FileDelete,"%ProjectTemp%\%MyShortcut%"
+End
 End
 
 [COMMON]
@@ -189,15 +190,20 @@ If,Not,ExistDir,"%PATH%\Programs",DirMake,"%PATH%\Programs"
 DirMake,"%PATH%\Programs\XWF"
 If,%ARCH%,Equal,x86,DirCopy,"%Programs%\XWF\x86\*.*","%PATH%\Programs\XWF"
 If,%ARCH%,Equal,x64,Begin
-  If,%XWF_SYSWOW64%,Equal,yes,DirCopy,"%Programs%\XWF\x86\*.*","%PATH%\Programs\XWF"
-  Else,DirCopy,"%Programs%\XWF\x64\*.*","%PATH%\Programs\XWF"
+If,%XWF_SYSWOW64%,Equal,yes,Begin
+DirCopy,"%Programs%\XWF\x86\*.*","%PATH%\Programs\XWF"
+If,%Builder%,Equal,PEBakery,If,WimExistFile,%Install.wim%,%Install.wim.Image.number%,Windows\SysWOW64\hid.dll,WimExtract,%Install.wim%,%Install.wim.Image.number%,Windows\SysWOW64\hid.dll,%Target_system32%,NOACL
+Else,ShellExecute,Hide,"%Tools%\wimlib\wimlib-imagex.exe","extract #$q%Install.wim%#$q %Install.wim.Image.number% \Windows\SysWOW64\hid.dll --dest-dir=#$q%TargetDir%\Windows\SysWOW64#$q --no-acls"
+End
+Else,DirCopy,"%Programs%\XWF\x64\*.*","%PATH%\Programs\XWF"
 End
 IniWrite,"%OutputDir%\Project.Settings.ini",PROGRAMS,X-Ways,YES
 
 [IN.WIM]
 If,%FullProjectRun%,Equal,NO,Begin
-  IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
-  WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
+If,%Builder%,Equal,PEBakery,WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qadd '%TargetDir%' '\'#$q"
 End
 //Wait,1
 
