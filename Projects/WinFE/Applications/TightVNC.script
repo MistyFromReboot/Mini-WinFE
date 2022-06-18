@@ -3,9 +3,9 @@ Title=TightVNC Server
 Description=TightVNC for Windows version 2.8.8.0
 Selected=False
 Level=5
-Author=ThePEBakeryTeam
-Version=20190426
-Date=2019-04-26
+Author=Misty
+Version=20220618
+Date=2022-06-18
 Interface=Interface1
 
 [Interface1]
@@ -22,8 +22,6 @@ If,%pCheckBoxInWim%,Equal,False,If,%pCheckBoxAuto%,Equal,True,WriteInterface,Val
 
 [pCheckBoxInWim]
 If,%pCheckBoxAuto%,Equal,True,If,%pCheckBoxInWim%,Equal,False,WriteInterface,Value,%ScriptFile%,Interface1,pCheckBoxAuto,False
-
-
 
 [Interface2]
 pButtonMenu1="1",1,8,5,0,70,20,pButtonMenu1,0,True,_pButtonMenu1_,True
@@ -66,11 +64,11 @@ message,"This setting does not apply to any LaunchBar instance running as the Wi
 
 [process]
 If,%FullProjectRun%,Equal,NO,Begin
-  If,%pCheckBoxAuto%,Equal,True,Begin
-    message,"You are running this script Post Build with the 'Run at boot' option enabled. Unfortunately this is not supported as a post processing option. Please disable this option or complete a full project build. #$x#$xAborting..." 
-	Exit
-  End
-  Else,Run,"%ProjectDir%\Core\common.script",PostConfigRun
+If,%pCheckBoxAuto%,Equal,True,Begin
+message,"You are running this script Post Build with the 'Run at boot' option enabled. Unfortunately this is not supported as a post processing option. Please disable this option or complete a full project build. #$x#$xAborting..."
+Exit
+End
+Else,Run,"%ProjectDir%\Core\common.script",PostConfigRun
 End
 AddInterface,%ScriptFile%,Interface1,""
 AddInterface,%ScriptFile%,Interface2,""
@@ -84,45 +82,45 @@ If,%PROGRAMS.IN.WIM%,Equal,YES,Run,%ScriptFile%,IN.WIM
 
 [CHECKS]
 If,Not,ExistFile,"%Programs%\TightVNC\%ARCH%\tvnserver.exe",Begin
-  Message,TightVNC Server is missing - exiting script...,Error,5
-  Exit,TightVNC Server is missing - exiting script...,WARN
+Message,TightVNC Server is missing - exiting script...,Error,5
+Exit,TightVNC Server is missing - exiting script...,WARN
 End
 
 [MENU]
 If,%PROGRAMS.IN.WIM%,Equal,NO,Begin
-  If,Not,ExistFile,"%OutputDir%\Programs\ShortcutsNotInWim.txt",Run,"%ProjectDir%\Core\common.script",NotInWim
-  TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$p~dp0TightVNC\tvnserver.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qTightVNC#$q",Append
-  If,%Shell%,Equal,LaunchBar,TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$p~dp0TightVNC\tvnserver.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qTVNC Config#$q #$q-configservice#$q",Append
-End 
+If,Not,ExistFile,"%OutputDir%\Programs\ShortcutsNotInWim.txt",Run,"%ProjectDir%\Core\common.script",NotInWim
+TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$p~dp0TightVNC\tvnserver.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qTightVNC#$q",Append
+If,%Shell%,Equal,LaunchBar,TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$p~dp0TightVNC\tvnserver.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qTVNC Config#$q #$q-configservice#$q",Append
+End
 If,%PROGRAMS.IN.WIM%,Equal,YES,Begin
-  ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\TightVNC\tvnserver.exe#$q /F:#$q%ProjectTemp%\TightVNC.lnk#$q /I:#$q#$pSystemDrive#$p\Programs\TightVNC\tvnserver.exe#$c0#$q"
-  If,ExistFile,"%ProjectTemp%\TightVNC.lnk",Begin
-    Set,%MyShortcut%,TightVNC.lnk
-    If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
-    If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
-    If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
-      Set,%ProgramMenuPath%,%pTextBox1%
-      Run,"%ProjectDir%\Core\common.script",StartMenu
-    End
-    If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
-    If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
-    FileDelete,"%ProjectTemp%\%MyShortcut%"
-  End
-  If,%Shell%,Equal,LaunchBar,Begin
-    ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\TightVNC\tvnserver.exe#$q /F:#$q%ProjectTemp%\TVNC Config.lnk#$q /P:-configservice /I:#$q#$pSystemDrive#$p\Programs\TightVNC\tvnserver.exe#$c0#$q"
-    If,ExistFile,"%ProjectTemp%\TVNC Config.lnk",Begin
-      Set,%MyShortcut%,TVNC Config.lnk
-      If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
-      If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
-      If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
-        Set,%ProgramMenuPath%,%pTextBox1%
-        Run,"%ProjectDir%\Core\common.script",StartMenu
-      End
-      If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
-      If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
-      FileDelete,"%ProjectTemp%\%MyShortcut%"
-    End
-  End 
+ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\TightVNC\tvnserver.exe#$q /F:#$q%ProjectTemp%\TightVNC.lnk#$q /I:#$q#$pSystemDrive#$p\Programs\TightVNC\tvnserver.exe#$c0#$q"
+If,ExistFile,"%ProjectTemp%\TightVNC.lnk",Begin
+Set,%MyShortcut%,TightVNC.lnk
+If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
+If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
+If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
+Set,%ProgramMenuPath%,%pTextBox1%
+Run,"%ProjectDir%\Core\common.script",StartMenu
+End
+If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
+If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
+FileDelete,"%ProjectTemp%\%MyShortcut%"
+End
+If,%Shell%,Equal,LaunchBar,Begin
+ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\TightVNC\tvnserver.exe#$q /F:#$q%ProjectTemp%\TVNC Config.lnk#$q /P:-configservice /I:#$q#$pSystemDrive#$p\Programs\TightVNC\tvnserver.exe#$c0#$q"
+If,ExistFile,"%ProjectTemp%\TVNC Config.lnk",Begin
+Set,%MyShortcut%,TVNC Config.lnk
+If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
+If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
+If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
+Set,%ProgramMenuPath%,%pTextBox1%
+Run,"%ProjectDir%\Core\common.script",StartMenu
+End
+If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
+If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
+FileDelete,"%ProjectTemp%\%MyShortcut%"
+End
+End
 End
 
 [COMMON]
@@ -140,18 +138,19 @@ ShellExecute,hide,regedit.exe,"/s #$q%Programs%\TightVNC\TVNC.reg#$q"
 Echo,"Unmounting registry hives..."
 RegHiveUnload,_WinPE_DEFAULT
 If,%pCheckBoxAuto%,Equal,True,Begin
-  If,Not,ExistFile,"%Target_system32%\InitializeNetwork.txt",Run,"%ProjectDir%\Settings\Network.script",InitializeNetwork
-  If,Not,ExistFile,"%Target_system32%\DisableFirewall.txt",Run,"%ProjectDir%\Settings\Network.script",DisableFirewall
-  FileCreateBlank,"%PATH%\Programs\TightVNC\tvnserver.cmd"
-  TXTaddLine,"%PATH%\Programs\TightVNC\tvnserver.cmd",@echo off,Append
-  TXTaddLine,"%PATH%\Programs\TightVNC\tvnserver.cmd",cd #$pSystemDrive#$p\Programs\TightVNC,Append
-  TXTaddLine,"%PATH%\Programs\TightVNC\tvnserver.cmd",start tvnserver.exe -run,Append
-  If,Not,ExistFile,%ProjectTemp%\winpeshl.txt,FileCreateBlank,%ProjectTemp%\winpeshl.txt
-  TXTaddLine,%ProjectTemp%\winpeshl.txt,"#$pSystemDrive#$p\Programs\TightVNC\tvnserver.cmd",Append
+If,Not,ExistFile,"%Target_system32%\InitializeNetwork.txt",Run,"%ProjectDir%\Settings\Network.script",InitializeNetwork
+If,Not,ExistFile,"%Target_system32%\DisableFirewall.txt",Run,"%ProjectDir%\Settings\Network.script",DisableFirewall
+FileCreateBlank,"%PATH%\Programs\TightVNC\tvnserver.cmd"
+TXTaddLine,"%PATH%\Programs\TightVNC\tvnserver.cmd",@echo off,Append
+TXTaddLine,"%PATH%\Programs\TightVNC\tvnserver.cmd",cd #$pSystemDrive#$p\Programs\TightVNC,Append
+TXTaddLine,"%PATH%\Programs\TightVNC\tvnserver.cmd",start tvnserver.exe -run,Append
+If,Not,ExistFile,%ProjectTemp%\winpeshl.txt,FileCreateBlank,%ProjectTemp%\winpeshl.txt
+TXTaddLine,%ProjectTemp%\winpeshl.txt,"#$pSystemDrive#$p\Programs\TightVNC\tvnserver.cmd",Append
 End
 If,%FullProjectRun%,Equal,NO,Begin
-  IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
-  WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
+If,%Builder%,Equal,PEBakery,WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qadd '%TargetDir%' '\'#$q"
 End
 
 [NOT.IN.WIM]
@@ -165,5 +164,4 @@ logo=tvnserver.ico
 [EncodedFile-AuthorEncoded-tvnserver.ico]
 lines=0
 0=eJzFkrFShDAQhn/QmaSSpFIrmCucewwfKXZ2pLPER+JxLOM1pFv3T0DRGSqdcYHLfWH3z7K7QIMWw+B0vcZbCzwAcK7yuQFuroCz7g36POrDfVpscWCx3IixLrz0zzzPunJHyg2RuvDiFn9+WCffLB1wNnI5qQ0rR8hpz8C45wWY9pwBs7H3IgGwlx2XnMt5jZLvmdn4xZk8rfmof9oy965wIJvC9O9LUWzxJN/ybcZIpj/lukzBGk+5aaFgjWf4Ux/NFq9o333Qp9RjqYclzZDxkmsydypYmNlM3qtg9accz1ZBMsMtcw22fE9euQ8qqBzXj194SuqW0iZbZUfl8v5F5Jm7R/365KMJ+i/jnDvUWd/mfD70jr+ec/ZnqnUJOnKD9oSjNzTSo9Sb3R/FNfLKrilH5IYM3BvP+htVdV3SdgbloG1OU+ooHUyyNYvQ/XG9PwB5E0zGeJzjLSnLK04tKkst0stMzmcYBSMMmLFA6EhG7PI33A5xMTABAJJtB+YWabhAAQAAAAIAAAApAAAAWQEAAAAAAAABAAAAAAAAAAAAAAA
-
 

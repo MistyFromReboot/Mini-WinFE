@@ -56,7 +56,6 @@ pButtonShortcut2=?,1,8,10,110,18,18,pButtonShortcut2,0,True,_pButtonShortcut2_,T
 pButtonShortcut3=?,1,8,10,140,18,18,pButtonShortcut3,0,True,_pButtonShortcut3_,True
 pButtonShortcut4=?,1,8,10,170,18,18,pButtonShortcut4,0,True,_pButtonShortcut4_,True
 
-
 [pButtonMenu1]
 IniWrite,%ScriptFile%,Main,Interface,Interface1
 System,REFRESHINTERFACE
@@ -124,15 +123,15 @@ DirCopy,"%Programs%\KeyboardLayout\*.*","%TargetDir%\Programs\KeyboardLayout"
 IniWrite,"%OutputDir%\Project.Settings.ini",ESSENTIAL,KeyBoardLayout,YES
 ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\KeyboardLayout\KeyboardLayout.cmd#$q /F:#$q%ProjectTemp%\Keyboard Layout.lnk#$q /I:#$q#$pSystemDrive#$p\Programs\KeyboardLayout\Keyboard.ico#$c0#$q"
 If,ExistFile,"%ProjectTemp%\Keyboard Layout.lnk",Begin
-  Set,%MyShortcut%,Keyboard Layout.lnk
-  If,%pCheckBoxShortcutDesktop2%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
-  If,%pCheckBoxShortcutQuick2%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
-  If,%pCheckBoxShortcutPrograms2%,Equal,True,Begin
-    Set,%ProgramMenuPath%,%pTextBox2%
-    Run,"%ProjectDir%\Core\common.script",StartMenu
-  End
-  If,%pCheckBoxShortcutLaunchBar2%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
-  FileDelete,"%ProjectTemp%\%MyShortcut%"
+Set,%MyShortcut%,Keyboard Layout.lnk
+If,%pCheckBoxShortcutDesktop2%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
+If,%pCheckBoxShortcutQuick2%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
+If,%pCheckBoxShortcutPrograms2%,Equal,True,Begin
+Set,%ProgramMenuPath%,%pTextBox2%
+Run,"%ProjectDir%\Core\common.script",StartMenu
+End
+If,%pCheckBoxShortcutLaunchBar2%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
+FileDelete,"%ProjectTemp%\%MyShortcut%"
 End
 
 [ScreenRes]
@@ -141,15 +140,15 @@ DirCopy,"%Programs%\ScreenRes\%ARCH%\*.*","%TargetDir%\Programs\ScreenRes"
 IniWrite,"%OutputDir%\Project.Settings.ini",ESSENTIAL,ScreenRes,YES
 ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$pSystemDrive#$p\Programs\ScreenRes\custom.cmd /W:#$pSystemDrive#$p\Programs\ScreenRes /F:#$q%ProjectTemp%\ScreenRes.lnk#$q /I:#$pSystemDrive#$p\Programs\ScreenRes\screen.ico#$c0"
 If,ExistFile,"%ProjectTemp%\ScreenRes.lnk",Begin
-  Set,%MyShortcut%,ScreenRes.lnk
-  If,%pCheckBoxShortcutDesktop3%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
-  If,%pCheckBoxShortcutQuick3%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
-  If,%pCheckBoxShortcutPrograms3%,Equal,True,Begin
-    Set,%ProgramMenuPath%,%pTextBox3%
-    Run,"%ProjectDir%\Core\common.script",StartMenu
-  End
-  If,%pCheckBoxShortcutLaunchBar3%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
-  FileDelete,"%ProjectTemp%\%MyShortcut%"
+Set,%MyShortcut%,ScreenRes.lnk
+If,%pCheckBoxShortcutDesktop3%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
+If,%pCheckBoxShortcutQuick3%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
+If,%pCheckBoxShortcutPrograms3%,Equal,True,Begin
+Set,%ProgramMenuPath%,%pTextBox3%
+Run,"%ProjectDir%\Core\common.script",StartMenu
+End
+If,%pCheckBoxShortcutLaunchBar3%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
+FileDelete,"%ProjectTemp%\%MyShortcut%"
 End
 
 [?option1]

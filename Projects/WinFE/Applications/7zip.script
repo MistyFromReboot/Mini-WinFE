@@ -3,9 +3,9 @@ Title=7-zip
 Description=File archive tool (zip, 7z, rar, etc).
 Selected=False
 Level=5
-Author=ThePEBakeryTeam
-Version=20190426
-Date=2019-04-26
+Author=Misty
+Version=20220618
+Date=2022-06-18
 Interface=Interface1
 
 [Interface1]
@@ -62,8 +62,8 @@ AddInterface,%ScriptFile%,Interface2,""
 If,%pCheckBoxInWim%,Equal,True,Set,%PROGRAMS.IN.WIM%,YES
 Else,Set,%PROGRAMS.IN.WIM%,NO
 If,%Filemanager%,Equal,7-zip,Begin
-  Echo,"7-zip is set as the default FileManager and is already included in the build. Exiting script...."
-  Exit
+Echo,"7-zip is set as the default FileManager and is already included in the build. Exiting script...."
+Exit
 End
 Run,%ScriptFile%,CHECKS
 Run,%ScriptFile%,MENU
@@ -73,29 +73,29 @@ If,%PROGRAMS.IN.WIM%,Equal,YES,Run,%ScriptFile%,IN.WIM
 
 [CHECKS]
 If,Not,ExistFile,"%Programs%\7-zip\%ARCH%\7zFM.exe",Begin
-  Message,7-zip is missing - exiting script...,Error,5
-  Exit,7-zip is missing - exiting script...,WARN
+Message,7-zip is missing - exiting script...,Error,5
+Exit,7-zip is missing - exiting script...,WARN
 End
 
 [MENU]
 If,%PROGRAMS.IN.WIM%,Equal,NO,Begin
-  If,Not,ExistFile,"%OutputDir%\Programs\ShortcutsNotInWim.txt",Run,"%ProjectDir%\Core\common.script",NotInWim
-  TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$p~dp07-zip\7zfm.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$q7-zip#$q",Append
-End 
+If,Not,ExistFile,"%OutputDir%\Programs\ShortcutsNotInWim.txt",Run,"%ProjectDir%\Core\common.script",NotInWim
+TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$p~dp07-zip\7zfm.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$q7-zip#$q",Append
+End
 If,%PROGRAMS.IN.WIM%,Equal,YES,Begin
-  ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\7-zip\7zfm.exe#$q /F:#$q%ProjectTemp%\7-zip.lnk#$q /I:#$q#$pSystemDrive#$p\Programs\7-zip\7zfm.exe#$c0#$q"
-  If,ExistFile,"%ProjectTemp%\7-zip.lnk",Begin
-    Set,%MyShortcut%,7-zip.lnk
-    If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
-    If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
-    If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
-      Set,%ProgramMenuPath%,%pTextBox1%
-      Run,"%ProjectDir%\Core\common.script",StartMenu
-    End
-    If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
-    If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
-    FileDelete,"%ProjectTemp%\%MyShortcut%"
-  End
+ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\7-zip\7zfm.exe#$q /F:#$q%ProjectTemp%\7-zip.lnk#$q /I:#$q#$pSystemDrive#$p\Programs\7-zip\7zfm.exe#$c0#$q"
+If,ExistFile,"%ProjectTemp%\7-zip.lnk",Begin
+Set,%MyShortcut%,7-zip.lnk
+If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
+If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
+If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
+Set,%ProgramMenuPath%,%pTextBox1%
+Run,"%ProjectDir%\Core\common.script",StartMenu
+End
+If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
+If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
+FileDelete,"%ProjectTemp%\%MyShortcut%"
+End
 End
 
 [COMMON]
@@ -105,9 +105,9 @@ If,Not,ExistDir,"%PATH%\Programs",DirMake,"%PATH%\Programs"
 DirMake,"%PATH%\Programs\7-zip"
 DirCopy,"%Programs%\7-zip\%ARCH%\*.*","%PATH%\Programs\7-zip"
 If,Not,ExistFile,"%PATH%\Programs\registry.entries.cmd",Begin
-  FileCreateBlank,"%PATH%\Programs\registry.entries.cmd"
-  TXTaddLine,"%PATH%\Programs\registry.entries.cmd",@Echo off,Append
-  TXTaddLine,"%PATH%\Programs\registry.entries.cmd",,Append
+FileCreateBlank,"%PATH%\Programs\registry.entries.cmd"
+TXTaddLine,"%PATH%\Programs\registry.entries.cmd",@Echo off,Append
+TXTaddLine,"%PATH%\Programs\registry.entries.cmd",,Append
 End
 TXTaddLine,"%PATH%\Programs\registry.entries.cmd",::==========7-ZIP===============,Append
 TXTaddLine,"%PATH%\Programs\registry.entries.cmd",::for file associations,Append
@@ -144,17 +144,18 @@ RegWrite,HKLM,0x2,_WinPE_SOFTWARE\Classes\Applications\7zFM.exe\shell\open\comma
 RegWrite,HKLM,0x2,_WinPE_SOFTWARE\7-zip,Path,"#$psystemdrive#$p\Programs\7-zip"
 RegWrite,HKLM,0x1,_WinPE_SOFTWARE\7-zip,Lang,-
 If,%Openwith.workaround%,Equal,YES,Begin
-  RegRead,HKLM,_WinPE_SOFTWARE\Classes\*\shell\Open with,Subcommands,%Subcommands%
-  Set,%new.subcommand%,%Subcommands%;openwith.7-zip
-  RegWrite,HKLM,0x1,"_WinPE_SOFTWARE\Classes\*\shell\Open with",Subcommands,%new.subcommand%
-  RegWrite,HKLM,0x1,_WinPE_SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CommandStore\shell\openwith.7-zip,,7-zip
-  RegWrite,HKLM,0x2,_WinPE_SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CommandStore\shell\openwith.7-zip\command,,#$q#$psystemdrive#$p\Programs\7-zip\7zFM.exe#$q #$q#$p1#$q
+RegRead,HKLM,_WinPE_SOFTWARE\Classes\*\shell\Open with,Subcommands,%Subcommands%
+Set,%new.subcommand%,%Subcommands%;openwith.7-zip
+RegWrite,HKLM,0x1,"_WinPE_SOFTWARE\Classes\*\shell\Open with",Subcommands,%new.subcommand%
+RegWrite,HKLM,0x1,_WinPE_SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CommandStore\shell\openwith.7-zip,,7-zip
+RegWrite,HKLM,0x2,_WinPE_SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CommandStore\shell\openwith.7-zip\command,,#$q#$psystemdrive#$p\Programs\7-zip\7zFM.exe#$q #$q#$p1#$q
 End
 Echo,"Unmounting registry hives..."
 RegHiveUnload,_WinPE_SOFTWARE
 If,%FullProjectRun%,Equal,NO,Begin
-  IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
-  WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
+If,%Builder%,Equal,PEBakery,WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qadd '%TargetDir%' '\'#$q"
 End
 //Wait,1
 

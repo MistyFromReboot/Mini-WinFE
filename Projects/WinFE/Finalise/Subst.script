@@ -19,7 +19,7 @@ pTextLabel_A2="Fallback Mount Point",1,1,200,131,200,18,10,Bold
 pButton_A2=HELP,1,8,430,130,70,20,HELPA2,0,True,_HELPA2_,True
 
 [HELPA1]
-message,"Run a batch file to search for a unique tag file - locating the media containing Mini-WinFE. The 'subst.exe' utility will then be used to map the media to the virtual drive letter selected in this option.#$x#$xIf the drive letter selected is already in use when WinPE is booted then the fallback option will be used." 
+message,"Run a batch file to search for a unique tag file - locating the media containing Mini-WinFE. The 'subst.exe' utility will then be used to map the media to the virtual drive letter selected in this option.#$x#$xIf the drive letter selected is already in use when WinPE is booted then the fallback option will be used."
 
 [HELPA2]
 message,"Fallback option if the drive letter selected as Preferred Mount Point is already in use when WinPE is booted."
@@ -33,3 +33,4 @@ TXTReplace,"%TargetDir%\Programs\misc\Subst.cmd",MOUNTB,%pScrollBox_A2%
 TXTReplace,"%TargetDir%\Programs\misc\Subst.cmd",MyTagFile,%TagFile%.tag
 If,Not,ExistFile,%ProjectTemp%\winpeshl.txt,FileCreateBlank,%ProjectTemp%\winpeshl.txt
 TXTaddLine,%ProjectTemp%\winpeshl.txt,#$pSystemDrive#$p\Programs\misc\Subst.cmd,Append
+

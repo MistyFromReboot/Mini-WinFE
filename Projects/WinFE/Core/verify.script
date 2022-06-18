@@ -4,8 +4,10 @@ Description=This is set as hidden and will be executed from another project scri
 Selected=False
 Level=-2
 Author=Misty
-Version=20220605
-Date=2022-06-05
+Version=20220618
+Date=2022-06-18
+NoWarning=False
+
 
 [boot.wim]
 Echo,"Checking boot.wim for required information (build number, architecture, etc)..."
@@ -37,13 +39,77 @@ IniWrite,"%ProjectTemp%\boot.wim.info.ini",Main,Architecture,%ARCH%
 IniWrite,"%ProjectTemp%\boot.wim.info.ini",Main,Language,%LANGUAGE%
 IniWrite,"%ProjectTemp%\boot.wim.info.ini",Main,CodeBase,%CodeBase%
 WimInfo,%install.wim%,%install.wim.Image.number%,NAME,%ProductName%
-ReadInterface,Value,"%ProjectDir%\Shell\B_shell.script",Interface,pScrollBox_A1,%Shell%
+IniRead,"%ProjectDir%\Shell\B_shell.script",Main,Interface,%Shell_Interface%
+If,%Shell_Interface%,Equal,Interface1,Set,%Shell%,BBLean
+If,%Shell_Interface%,Equal,Interface2,Set,%Shell%,CMD
+If,%Shell_Interface%,Equal,Interface3,Set,%Shell%,WinXShell
+If,%Shell_Interface%,Equal,Interface4,Set,%Shell%,LaunchBar
 ReadInterface,Value,"%ProjectDir%\Shell\D_filemanager.script",Interface1,pScrollBox_A1,%FileManager%
 Set,%CONTINUE%,No
 If,Question,Detected the following settings from the source files -#$x#$x  - Architecture=%ARCH% #$x  - Language = %LANG% #$x  - Build = %CodeBase% #$x  - Product = %ProductName% #$x#$xThe following settings are user defined - #$x#$x  - boot.wim Image# = %Boot.wim.Image.number% #$x  - install.wim Image# = %Install.wim.Image.number% #$x  - Method = %Method% #$x  - Fallback Language = %LANG2%#$x  - Shell = %Shell%#$x  - FileManager = %FileManager%#$x#$xSelect YES to CONTINUE - or NO to ABORT,Set,%CONTINUE%,YES
 If,Not,%CONTINUE%,Equal,YES,Halt,User aborted due to the settings.
 
 
+[boot.wim_winbuilder]
+Echo,"Checking boot.wim for required information (build number, architecture, etc)..."
+FileCreateBlank,"%ProjectTemp%\boot.wim.info.ini"
+IniAddSection,"%ProjectTemp%\boot.wim.info.ini",Main
+IniWrite,"%ProjectTemp%\boot.wim.info.ini",Main,Image.Number,%Boot.wim.Image.number%
+IniWrite,"%ProjectTemp%\boot.wim.info.ini",Main,Fallback.Language,%LANG2%
+ShellExecute,Hide,"cmd.exe","/C #$q#$q%TOOLS%\wimlib\wimlib-imagex.exe#$q info #$q%boot.wim%#$q %Boot.wim.Image.number% > #$q%ProjectTemp%\boot.wim.info.txt#$q#$q"
+Retrieve,FileSize,%ProjectTemp%\boot.wim.info.txt,%wimcheck%
+If,%wimcheck%,Equal,0,Begin
+  Message,"The image/index selected in the following option in the main menu settings does not exist in the target file - #$x#$x - #$q2] Set 'boot.wim' Image Number#$q #$x#$xPlease change this setting and restart the build process. ABORTING..."
+  Halt
+End
+ShellExecute,Hide,"cmd.exe","/C #$q#$q%TOOLS%\wimlib\wimlib-imagex.exe#$q info #$q%install.wim%#$q %install.wim.Image.number% > #$q%ProjectTemp%\install.wim.info.txt#$q#$q"
+Retrieve,FileSize,%ProjectTemp%\install.wim.info.txt,%wimcheck%
+If,%wimcheck%,Equal,0,Begin
+  Message,"The image/index selected in the following option in the main menu settings does not exist in the target file - #$x#$x - #$q3] Set 'install.wim' Image Number#$q #$x#$xPlease change this setting and restart the build process. ABORTING..."
+  Halt
+End
+ShellExecute,Hide,"cmd.exe","/C FOR /F #$qtokens=3#$q %i in ('FINDSTR /B /C:#$qMajor Version:#$q #$q%ProjectTemp%\boot.wim.info.txt#$q') do echo Major=%i >> #$q%ProjectTemp%\boot.wim.info.ini#$q"
+ShellExecute,Hide,"cmd.exe","/C FOR /F #$qtokens=3#$q %i in ('FINDSTR /B /C:#$qMinor Version:#$q #$q%ProjectTemp%\boot.wim.info.txt#$q') do echo Minor=%i >> #$q%ProjectTemp%\boot.wim.info.ini#$q"
+ShellExecute,Hide,"cmd.exe","/C FOR /F #$qtokens=2#$q %i in ('FINDSTR /B /C:#$qBuild:#$q #$q%ProjectTemp%\boot.wim.info.txt#$q') do echo Build=%i >> #$q%ProjectTemp%\boot.wim.info.ini#$q"
+ShellExecute,Hide,"cmd.exe","/C FOR /F #$qtokens=4#$q %i in ('FINDSTR /B /C:#$qService Pack Build:#$q #$q%ProjectTemp%\boot.wim.info.txt#$q') do echo SPBuild=%i >> #$q%ProjectTemp%\boot.wim.info.ini#$q"
+ShellExecute,Hide,"cmd.exe","/C FOR /F #$qtokens=2#$q %i in ('FINDSTR /B /C:#$qArchitecture:#$q #$q%ProjectTemp%\boot.wim.info.txt#$q') do echo Architecture=%i >> #$q%ProjectTemp%\boot.wim.info.ini#$q"
+ShellExecute,Hide,"cmd.exe","/C FOR /F #$qtokens=3#$q %i in ('FINDSTR /B /C:#$qDefault Language:#$q #$q%ProjectTemp%\boot.wim.info.txt#$q') do echo Language=%i >> #$q%ProjectTemp%\boot.wim.info.ini#$q"
+IniRead,"%ProjectTemp%\boot.wim.info.ini",Main,Major,%Major%
+IniRead,"%ProjectTemp%\boot.wim.info.ini",Main,Minor,%Minor%
+IniRead,"%ProjectTemp%\boot.wim.info.ini",Main,Build,%Build%
+IniRead,"%ProjectTemp%\boot.wim.info.ini",Main,SPBuild,%SPBuild%
+IniRead,"%ProjectTemp%\boot.wim.info.ini",Main,Architecture,%ARCH%
+IniRead,"%ProjectTemp%\boot.wim.info.ini",Main,Language,%LANGUAGE%
+If,%ARCH%,Equal,x86_64,Set,%ARCH%,x64
+If,%ARCH%,Equal,amd64,Set,%ARCH%,x64
+IniWrite,"%ProjectTemp%\boot.wim.info.ini",Main,Architecture,%ARCH%
+Set,%Major%,%Major%,Global
+Set,%Minor%,%Minor%,Global
+Set,%Build%,%Build%,Global
+Set,%SPBuild%,%SPBuild%,Global
+Set,%ARCH%,%ARCH%,Global
+Set,%LANGUAGE%,%LANGUAGE%,Global
+Set,%CodeBase%,%Major%.%Minor%.%Build%,Global
+StrFormat,LEFT,%CodeBase%,4,%CodeBase2%
+Set,%CodeBase2%,%CodeBase2%,Global
+IniWrite,"%ProjectTemp%\boot.wim.info.ini",Main,CodeBase,%CodeBase%
+IniRead,"%ProjectDir%\Shell\B_shell.script",Main,Interface,%Shell_Interface%
+If,%Shell_Interface%,Equal,Interface1,Set,%Shell%,BBLean
+If,%Shell_Interface%,Equal,Interface2,Set,%Shell%,CMD
+If,%Shell_Interface%,Equal,Interface3,Set,%Shell%,WinXShell
+If,%Shell_Interface%,Equal,Interface4,Set,%Shell%,LaunchBar
+AddInterface,"%ProjectDir%\Shell\D_filemanager.script",Interface1,""
+Set,%FileManager%,%pScrollBox_A1%
+//check source verison
+ShellExecute,Hide,"cmd.exe","/C FOR /F #$qtokens=*#$q %i in ('FINDSTR /B /C:#$qName:#$q #$q%ProjectTemp%\install.wim.info.txt#$q') do echo Source=%i >> #$q%ProjectTemp%\boot.wim.info.ini#$q"
+//Remove spaces
+ShellExecute,Hide,"%Tools%\gsar.exe","-i -o -s#$q:x20#$q -r#$q#$q #$q%ProjectTemp%\boot.wim.info.ini#$q"
+IniRead,%ProjectTemp%\boot.wim.info.ini,Main,Source,%Source%
+StrFormat,LTRIM,%Source%,5,%Source%
+IniWrite,"%ProjectTemp%\boot.wim.info.ini",Main,Source,%Source%
+Set,%CONTINUE%,No
+If,Question,Detected the following settings from the source files -#$x#$x  - Architecture=%ARCH% #$x  - Language = %LANG% #$x  - Build = %CodeBase% #$x  - Source = %Source% #$x#$xThe following settings are user defined - #$x#$x  - boot.wim Image# = %Boot.wim.Image.number% #$x  - install.wim Image# = %Install.wim.Image.number% #$x  - Method = %Method% #$x  - Fallback Language = %LANG2%#$x  - Shell = %Shell%#$x  - FileManager = %FileManager%#$x#$xSelect YES to CONTINUE - or NO to ABORT,Set,%CONTINUE%,YES
+If,Not,%CONTINUE%,Equal,YES,Halt,User aborted due to the settings.
 
 [install.wim.v2]
 Echo,"Checking install.wim for required information (build number, architecture, etc)..."
@@ -77,63 +143,43 @@ IniWrite,"%ProjectTemp%\install.wim.info.ini",install.wim.source,CodeBase,%Insta
 IniMerge,"%ProjectTemp%\install.wim.info.ini","%ProjectTemp%\boot.wim.info.ini"
 
 
-
-
-[wim.registry.VERSION]
-If,ExistFile,"%ProjectTemp%\SOFTWARE",FileDelete,"%ProjectTemp%\SOFTWARE"
-If,ExistFile,"%ProjectTemp%\registy.verification.ini",FileDelete,"%ProjectTemp%\registy.verification.ini"
-WimExtract,%Registry.From.wim%,%Registry.From.Image.number%,Windows\System32\config\SOFTWARE,%ProjectTemp%,NOACL
-If,Not,ExistFile,"%ProjectTemp%\SOFTWARE",Begin
-  Message,"Could not locate SOFTWARE registry hive - does the source .wim file contain a valid image?#$x#$x#$s#$s*#$sWIM - %Registry.From.wim%#$x#$s#$s*#$sImage number - %Registry.From.Image.Number%#$x#$xAborting..."
-  Halt
-End
-FileCreateBlank,"%ProjectTemp%\registy.verification.ini"
-IniAddSection,"%ProjectTemp%\registy.verification.ini",Main
-Echo,"Mounting registry hives..."
-If,Not,ExistRegSection,HKLM,_WinPE_SOFTWARE,RegHiveLoad,_WinPE_SOFTWARE,"%ProjectTemp%\software"
-System,Erroroff,2
-RegRead,HKLM,"_WinPE_SOFTWARE\Microsoft\Windows NT\CurrentVersion",CurrentMajorVersionNumber,%Registry.verified.CurrentMajorVersionNumber%
-RegRead,HKLM,"_WinPE_SOFTWARE\Microsoft\Windows NT\CurrentVersion",CurrentMinorVersionNumber,%Registry.verified.CurrentMinorVersionNumber%
-RegRead,HKLM,"_WinPE_SOFTWARE\Microsoft\Windows NT\CurrentVersion",CurrentVersion,%Registry.verified.CurrentVersion%
-RegRead,HKLM,"_WinPE_SOFTWARE\Microsoft\Windows NT\CurrentVersion",CurrentBuild,%Registry.verified.CurrentBuild%
-Echo,"Unmounting registry hives..."
-RegHiveUnload,_WinPE_SOFTWARE
-If,Not,%Registry.verified.CurrentMajorVersionNumber%,Equal,10,Begin
-  //formating string to first three characters (e.g. 6.3) due
-  //to inconsistencies in registry entries across different
-  //Windows versions
-  StrFormat,LEFT,%Registry.verified.CurrentVersion%,3,%Registry.verified.Major.Minor%
-  StrFormat,LEFT,%Registry.verified.Major.Minor%,1,%Registry.verified.Major%
-  StrFormat,RIGHT,%Registry.verified.Major.Minor%,1,%Registry.verified.Minor%
-End
-Else,Begin
-  Set,%Registry.verified.Major%,%Registry.verified.CurrentMajorVersionNumber%
-  Set,%Registry.verified.Minor%,%Registry.verified.CurrentMinorVersionNumber%
-End
-IniWriteTextLine,"%ProjectTemp%\registy.verification.ini","Main","Major=%Registry.verified.Major%"
-IniWriteTextLine,"%ProjectTemp%\registy.verification.ini","Main","Minor=%Registry.verified.Minor%"
-IniWriteTextLine,"%ProjectTemp%\registy.verification.ini","Main","Build=%Registry.verified.CurrentBuild%"
-Set,%CodeBase%,%Registry.verified.Major%.%Registry.verified.Minor%.%Registry.verified.CurrentBuild%,Global
-IniWriteTextLine,"%ProjectTemp%\registy.verification.ini","Main","CodeBase=%CodeBase%"
-IniMerge,"%ProjectTemp%\registy.verification.ini","%ProjectTemp%\%ini.file%"
-StrFormat,LEFT,%CodeBase%,4,%CodeBase2%
-Set,%CodeBase2%,%CodeBase2%,Global
-
-[wim.registry.ARCH]
-If,ExistFile,"%ProjectTemp%\registy.verification.ini",FileDelete,"%ProjectTemp%\registy.verification.ini"
-WimExtract,%boot.wim%,%Boot.wim.Image.number%,Windows\System32\config\SYSTEM,%ProjectTemp%,NOACL
-If,Not,ExistFile,"%ProjectTemp%\system",Begin
-  Message,"Could not locate SYSTEM registry hive - does the source .wim file contain a valid image?#$x#$x#$s#$s*#$sWIM - %boot.wim%#$x#$s#$s*#$sImage number - %boot.wim.Image.number%#$x#$xAborting..."
-  Halt
-End
-Echo,"Mounting registry hives..."
-If,Not,ExistRegSection,HKLM,_WinPE_SYSTEM,RegHiveLoad,_WinPE_SYSTEM,"%ProjectTemp%\system"
-RegRead,HKLM,"_WinPE_SYSTEM\ControlSet001\Control\Session Manager\Environment",PROCESSOR_ARCHITECTURE,%Registry.verified.Architecture%
-Echo,"Unmounting registry hives..."
-RegHiveUnload,_WinPE_SYSTEM
-Set,%Architecture%,%Registry.verified.Architecture%,Global
-IniWrite,"%ProjectTemp%\boot.wim.info.ini",Main,Architecture,%Architecture%
-
+[install.wim_winbuilder]
+Echo,"Checking install.wim for required information (build number, architecture, etc)..."
+FileCreateBlank,"%ProjectTemp%\install.wim.info.ini"
+IniAddSection,"%ProjectTemp%\install.wim.info.ini",install.wim.source
+IniWrite,"%ProjectTemp%\install.wim.info.ini",install.wim.source,Image.Number,%install.wim.Image.number%
+// wim info extracted in [boot.wim_winbuilder] section
+ShellExecute,Hide,"cmd.exe","/C FOR /F #$qtokens=3#$q %i in ('FINDSTR /B /C:#$qMajor Version:#$q #$q%ProjectTemp%\install.wim.info.txt#$q') do echo Major=%i >> #$q%ProjectTemp%\install.wim.info.ini#$q"
+ShellExecute,Hide,"cmd.exe","/C FOR /F #$qtokens=3#$q %i in ('FINDSTR /B /C:#$qMinor Version:#$q #$q%ProjectTemp%\install.wim.info.txt#$q') do echo Minor=%i >> #$q%ProjectTemp%\install.wim.info.ini#$q"
+ShellExecute,Hide,"cmd.exe","/C FOR /F #$qtokens=2#$q %i in ('FINDSTR /B /C:#$qBuild:#$q #$q%ProjectTemp%\install.wim.info.txt#$q') do echo Build=%i >> #$q%ProjectTemp%\install.wim.info.ini#$q"
+ShellExecute,Hide,"cmd.exe","/C FOR /F #$qtokens=4#$q %i in ('FINDSTR /B /C:#$qService Pack Build:#$q #$q%ProjectTemp%\install.wim.info.txt#$q') do echo SPBuild=%i >> #$q%ProjectTemp%\install.wim.info.ini#$q"
+ShellExecute,Hide,"cmd.exe","/C FOR /F #$qtokens=2#$q %i in ('FINDSTR /B /C:#$qArchitecture:#$q #$q%ProjectTemp%\install.wim.info.txt#$q') do echo Architecture=%i >> #$q%ProjectTemp%\install.wim.info.ini#$q"
+ShellExecute,Hide,"cmd.exe","/C FOR /F #$qtokens=3#$q %i in ('FINDSTR /B /C:#$qDefault Language:#$q #$q%ProjectTemp%\install.wim.info.txt#$q') do echo Language=%i >> #$q%ProjectTemp%\install.wim.info.ini#$q"
+IniRead,"%ProjectTemp%\install.wim.info.ini",install.wim.source,Major,%Install.wim.Major%
+IniRead,"%ProjectTemp%\install.wim.info.ini",install.wim.source,Minor,%Install.wim.Minor%
+IniRead,"%ProjectTemp%\install.wim.info.ini",install.wim.source,Build,%Install.wim.Build%
+IniRead,"%ProjectTemp%\install.wim.info.ini",install.wim.source,SPBuild,%Install.wim.SPBuild%
+IniRead,"%ProjectTemp%\install.wim.info.ini",install.wim.source,Architecture,%Install.wim.ARCH%
+IniRead,"%ProjectTemp%\install.wim.info.ini",install.wim.source,Language,%Install.wim.LANGUAGE%
+If,%Install.wim.ARCH%,Equal,x86_64,Set,%Install.wim.ARCH%,x64
+If,%Install.wim.ARCH%,Equal,amd64,Set,%Install.wim.ARCH%,x64
+IniWrite,"%ProjectTemp%\install.wim.info.ini",install.wim.source,Architecture,%Install.wim.ARCH%
+Set,%Install.wim.Major%,%Install.wim.Major%,Global
+Set,%Install.wim.Minor%,%Install.wim.Minor%,Global
+Set,%Install.wim.Build%,%Install.wim.Build%,Global
+Set,%Install.wim.SPBuild%,%Install.wim.SPBuild%,Global
+Set,%Install.wim.LANGUAGE%,%Install.wim.LANGUAGE%,Global
+Set,%Install.wim.ARCH%,%Install.wim.ARCH%,Global
+Set,%Install.wim.CodeBase%,%Install.wim.Major%.%Install.wim.Minor%.%Install.wim.Build%,Global
+IniWrite,"%ProjectTemp%\install.wim.info.ini",install.wim.source,CodeBase,%Install.wim.CodeBase%
+//check source verison
+ShellExecute,Hide,"cmd.exe","/C FOR /F #$qtokens=*#$q %i in ('FINDSTR /B /C:#$qName:#$q #$q%ProjectTemp%\install.wim.info.txt#$q') do echo Source=%i >> #$q%ProjectTemp%\install.wim.info.ini#$q"
+//Remove spaces
+ShellExecute,Hide,"%Tools%\gsar.exe","-i -o -s#$q:x20#$q -r#$q#$q #$q%ProjectTemp%\install.wim.info.ini#$q"
+IniRead,%ProjectTemp%\install.wim.info.ini,install.wim.source,Source,%Install.wim.Source%
+StrFormat,LTRIM,%Install.wim.Source%,5,%Install.wim.Source%
+IniWrite,"%ProjectTemp%\install.wim.info.ini",install.wim.source,Source,%Install.wim.Source%
+IniMerge,"%ProjectTemp%\install.wim.info.ini","%ProjectTemp%\boot.wim.info.ini"
 
 
 [SOURCE.CHECK]
@@ -142,7 +188,6 @@ Set,%install.wim%,0
 If,ExistFile,"%SourceDir%\sources\install.wim",Set,%install.wim%,"%SourceDir%\sources\install.wim",GLOBAL
 If,ExistFile,"%SourceDir%\sources\install.esd",Set,%install.wim%,"%SourceDir%\sources\install.esd",GLOBAL
 If,ExistFile,"%SourceDir%\sources\install.swm",Set,%install.wim%,"%SourceDir%\sources\install.swm",GLOBAL
-End
 Set,%boot.wim%,0
 If,ExistFile,"%SourceDir%\sources\boot.wim",Set,%boot.wim%,"%SourceDir%\sources\boot.wim",GLOBAL
 Set,%ERROR%,0
@@ -173,15 +218,14 @@ If,Not,%boot.wim.Image.number%,Equal,2,Begin
   If,Question,"boot.wim Image\Index number %Boot.wim.image.number% is specified in the project settings. If using Windows RTM source files#$c Image Number 2 should be selected.#$x#$xUse Image Number 2? Click on YES to use Image 2#$c or NO to use Image %Boot.wim.image.number%",Set,%CONTINUE%,YES
   If,%CONTINUE%,Equal,YES,Set,%Boot.wim.image.number%,2,Global
 End
-If,Not,WimExistIndex,%boot.wim%,%boot.wim.Image.number%,Begin
+If,%Builder%,Equal,PEBakery,If,Not,WimExistIndex,%boot.wim%,%boot.wim.Image.number%,Begin
   Message,"The image/index selected in the following option in the main menu settings does not exist in the target file - #$x#$x - #$q2] Set 'boot.wim' Image Number#$q #$x#$xPlease change this setting and restart the build process. ABORTING..."
   Halt
 End
-If,Not,WimExistIndex,%Install.wim%,%Install.wim.Image.number%,Begin
+If,%Builder%,Equal,PEBakery,If,Not,WimExistIndex,%Install.wim%,%Install.wim.Image.number%,Begin
   Message,"The image/index selected in the following option in the main menu settings does not exist in the target file - #$x#$x - #$q3] Set 'install.wim' Image Number#$q #$x#$xPlease change this setting and restart the build process. ABORTING..."
   Halt
 End
-
 
 [Officially.Supported.OS.Check]
 Echo,"Checking against known working builds..."
@@ -236,7 +280,4 @@ If,%ERROR%,Equal,0,Begin
   Message,"A required program is missing.#$x#$xABORTING BUILD...."
   Halt
 End
-
-
-
 

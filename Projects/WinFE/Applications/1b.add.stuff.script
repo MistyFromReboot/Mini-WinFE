@@ -3,9 +3,9 @@ Title=Add Custom Folders\Files
 Description=
 Selected=False
 Level=5
-Author=ThePEBakeryTeam
-Version=20190426
-Date=2019-04-26
+Author=Misty
+Version=20220618
+Date=2022-06-18
 Interface=Interface1
 
 [Interface1]
@@ -16,7 +16,7 @@ pTextLabel1="Add the contents of the folder selected below to the build.",1,1,9,
 pBevel2=pBevel2,1,12,10,100,500,40
 pTextLabel2="PATH",1,1,20,110,166,18,8,Bold
 pFileBox1=,1,13,71,110,428,20,dir
-pCheckBoxInWim="Include Program in boot.wim",1,3,10,265,180,18,True
+pCheckBoxInWim="Include Program in boot.wim",1,3,51,265,180,18,True
 
 [Interface2]
 pButtonMenu1="1",1,8,5,0,70,20,pButtonMenu1,0,True,_pButtonMenu1_,True
@@ -57,7 +57,6 @@ message,"Applies to WinXShell#$c BBLean and LaunchBar Shell(s)#$x#$xSelect this 
 [pButtonShortcut4]
 message,"This setting does not apply to any LaunchBar instance running as the WinPE Shell. This option only applies to a LaunchBar instance when the Applications' > 'LaunchBar' program script is selected in the build.#$x#$xIf the 'Applications' > 'LaunchBar' program script is selected than enable this option to add a program menu entry to the root of the LaunchBar menu bar. #$x#$xPlease note that if option '6] Programs in boot.wim' in the main project script is set as 'NO'#$c then LaunchBar and a number of other applications will not be available at boot. In this case a text based .ini file will be used for LaunchBar menu settings."
 
-
 [process]
 If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRun
 AddInterface,%ScriptFile%,Interface1,""
@@ -72,40 +71,40 @@ If,%PROGRAMS.IN.WIM%,Equal,YES,Run,%ScriptFile%,IN.WIM
 
 [CHECKS]
 If,"%pFileBox1%",Equal,"",Begin
-  Message,"ERROR - Path is not set. Exiting script..."
-  Exit,"ERROR - Path is not set. Exiting script..."
+Message,"ERROR - Path is not set. Exiting script..."
+Exit,"ERROR - Path is not set. Exiting script..."
 End
 set,%PATH.TO.MY.FILES%,"%pFileBox1%"
 If,Not,ExistDir,%PATH.TO.MY.FILES%,Begin
-  Message,"ERROR - The folder does not exist. Exiting script..."
-  Exit,"ERROR - The folder does not exist. Exiting script..."
+Message,"ERROR - The folder does not exist. Exiting script..."
+Exit,"ERROR - The folder does not exist. Exiting script..."
 End
 
 [MENU]
 If,%PROGRAMS.IN.WIM%,Equal,NO,Begin
-  If,Not,ExistFile,"%OutputDir%\Programs\ShortcutsNotInWim.txt",Run,"%ProjectDir%\Core\common.script",NotInWim
-  If,%Filemanager%,Equal,7-zip,TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$pSystemDrive#$p\Programs\7-zip\7zfm.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qUserAdded#$q #$q#$p~dp0User_Added#$q #$q#$p~dp0misc\folder.ico#$q #$q0#$q",Append
-  If,%Filemanager%,Equal,Explorer++,TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$pSystemDrive#$p\Programs\Explorer++\Explorer++.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qUserAdded#$q #$q#$p~dp0User_Added#$q #$q#$p~dp0misc\folder.ico#$q #$q0#$q",Append
-  If,%Filemanager%,Equal,JustManager,TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$pSystemDrive#$p\Programs\JustManager\JustManager.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qUserAdded#$q #$q#$p~dp0User_Added#$q #$q#$p~dp0misc\folder.ico#$q #$q0#$q",Append
-  If,%Filemanager%,Equal,Q-Dir,TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$pSystemDrive#$p\Programs\Q-Dir\Q-Dir.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qUserAdded#$q #$q#$p~dp0User_Added#$q #$q#$p~dp0misc\folder.ico#$q #$q0#$q",Append
-End 
+If,Not,ExistFile,"%OutputDir%\Programs\ShortcutsNotInWim.txt",Run,"%ProjectDir%\Core\common.script",NotInWim
+If,%Filemanager%,Equal,7-zip,TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$pSystemDrive#$p\Programs\7-zip\7zfm.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qUserAdded#$q #$q#$p~dp0User_Added#$q #$q#$p~dp0misc\folder.ico#$q #$q0#$q",Append
+If,%Filemanager%,Equal,Explorer++,TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$pSystemDrive#$p\Programs\Explorer++\Explorer++.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qUserAdded#$q #$q#$p~dp0User_Added#$q #$q#$p~dp0misc\folder.ico#$q #$q0#$q",Append
+If,%Filemanager%,Equal,JustManager,TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$pSystemDrive#$p\Programs\JustManager\JustManager.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qUserAdded#$q #$q#$p~dp0User_Added#$q #$q#$p~dp0misc\folder.ico#$q #$q0#$q",Append
+If,%Filemanager%,Equal,Q-Dir,TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$pSystemDrive#$p\Programs\Q-Dir\Q-Dir.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qUserAdded#$q #$q#$p~dp0User_Added#$q #$q#$p~dp0misc\folder.ico#$q #$q0#$q",Append
+End
 If,%PROGRAMS.IN.WIM%,Equal,YES,Begin
-  If,%Filemanager%,Equal,Q-Dir,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\Q-Dir\Q-Dir.exe#$q /F:#$q%ProjectTemp%\UserAdded.lnk#$q /P:#$q#$pSystemDrive#$p\Programs\User_Added#$q /W:#$q#$pSystemDrive#$p\Programs\User_Added#$q /I:#$q#$pSystemDrive#$p\Programs\misc\folder.ico#$c0#$q"
-  If,%Filemanager%,Equal,Explorer++,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\Explorer++\Explorer++.exe#$q /F:#$q%ProjectTemp%\UserAdded.lnk#$q /P:#$q#$pSystemDrive#$p\Programs\User_Added#$q /W:#$q#$pSystemDrive#$p\Programs\User_Added#$q /I:#$q#$pSystemDrive#$p\Programs\misc\folder.ico#$c0#$q"
-  If,%Filemanager%,Equal,JustManager,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\JustManager\JustManager.exe#$q /F:#$q%ProjectTemp%\UserAdded.lnk#$q /P:#$q#$pSystemDrive#$p\Programs\User_Added#$q /W:#$q#$pSystemDrive#$p\Programs\User_Added#$q /I:#$q#$pSystemDrive#$p\Programs\misc\folder.ico#$c0#$q"
-  If,%Filemanager%,Equal,7-zip,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\7-zip\7zfm.exe#$q /F:#$q%ProjectTemp%\UserAdded.lnk#$q /P:#$q#$pSystemDrive#$p\Programs\User_Added#$q /W:#$q#$pSystemDrive#$p\Programs\User_Added#$q /I:#$q#$pSystemDrive#$p\Programs\misc\folder.ico#$c0#$q"
-  If,ExistFile,"%ProjectTemp%\UserAdded.lnk",Begin
-    Set,%MyShortcut%,UserAdded.lnk
-    If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
-    If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
-    If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
-      Set,%ProgramMenuPath%,%pTextBox1%
-      Run,"%ProjectDir%\Core\common.script",StartMenu
-    End
-    If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
-    If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
-    FileDelete,"%ProjectTemp%\%MyShortcut%"
-  End
+If,%Filemanager%,Equal,Q-Dir,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\Q-Dir\Q-Dir.exe#$q /F:#$q%ProjectTemp%\UserAdded.lnk#$q /P:#$q#$pSystemDrive#$p\Programs\User_Added#$q /W:#$q#$pSystemDrive#$p\Programs\User_Added#$q /I:#$q#$pSystemDrive#$p\Programs\misc\folder.ico#$c0#$q"
+If,%Filemanager%,Equal,Explorer++,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\Explorer++\Explorer++.exe#$q /F:#$q%ProjectTemp%\UserAdded.lnk#$q /P:#$q#$pSystemDrive#$p\Programs\User_Added#$q /W:#$q#$pSystemDrive#$p\Programs\User_Added#$q /I:#$q#$pSystemDrive#$p\Programs\misc\folder.ico#$c0#$q"
+If,%Filemanager%,Equal,JustManager,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\JustManager\JustManager.exe#$q /F:#$q%ProjectTemp%\UserAdded.lnk#$q /P:#$q#$pSystemDrive#$p\Programs\User_Added#$q /W:#$q#$pSystemDrive#$p\Programs\User_Added#$q /I:#$q#$pSystemDrive#$p\Programs\misc\folder.ico#$c0#$q"
+If,%Filemanager%,Equal,7-zip,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\7-zip\7zfm.exe#$q /F:#$q%ProjectTemp%\UserAdded.lnk#$q /P:#$q#$pSystemDrive#$p\Programs\User_Added#$q /W:#$q#$pSystemDrive#$p\Programs\User_Added#$q /I:#$q#$pSystemDrive#$p\Programs\misc\folder.ico#$c0#$q"
+If,ExistFile,"%ProjectTemp%\UserAdded.lnk",Begin
+Set,%MyShortcut%,UserAdded.lnk
+If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
+If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
+If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
+Set,%ProgramMenuPath%,%pTextBox1%
+Run,"%ProjectDir%\Core\common.script",StartMenu
+End
+If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
+If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
+FileDelete,"%ProjectTemp%\%MyShortcut%"
+End
 End
 
 [COMMON]
@@ -121,8 +120,9 @@ IniWrite,"%OutputDir%\Project.Settings.ini",PROGRAMS,ADD.CUSTOM.FILES,YES
 
 [IN.WIM]
 If,%FullProjectRun%,Equal,NO,Begin
-  IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
-  WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
+If,%Builder%,Equal,PEBakery,WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qadd '%TargetDir%' '\'#$q"
 End
 //Wait,1
 

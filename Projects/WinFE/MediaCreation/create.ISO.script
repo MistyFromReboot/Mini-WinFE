@@ -6,8 +6,8 @@ Locked=False
 Mandatory=False
 Level=9
 Author=Misty
-Version=20220524
-Date=2022-05-24
+Version=20220618
+Date=2022-06-18
 Interface=TAB_B_Menu
 
 [TAB_A_Menu]
@@ -192,7 +192,8 @@ FileDelete,"%ISO.Root.Directory%\sources\boot.wim"
 FileCopy,"%Programs%\misc\BIOS-FLATBoot-BCD","%ISO.Root.Directory%\boot\BCD"
 FileCopy,"%Programs%\misc\UEFI-FLATBoot-BCD","%ISO.Root.Directory%\efi\microsoft\boot\BCD"
 Echo,"Extracting files from boot.wim - this may take a while..."
-WimApply,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%ISO.Root.Directory%,NOACL
+If,%Builder%,Equal,PEBakery,WimApply,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%ISO.Root.Directory%,NOACL
+Else,ShellExecute,Hide,"%Tools%\wimlib\wimlib-imagex.exe","apply #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% #$q%ISO.Root.Directory%#$q --no-acls"
 If,%pScrollBoxB3%,Equal,BIOS,Run,%ProjectDir%\MediaCreation\create.ISO.script,BIOS
 If,%pScrollBoxB3%,Equal,UEFI,Run,%ProjectDir%\MediaCreation\create.ISO.script,UEFI
 If,%pScrollBoxB3%,Equal,BOTH,Run,%ProjectDir%\MediaCreation\create.ISO.script,BOTH
@@ -220,7 +221,8 @@ If,ExistFile,"%ISO.Root.Directory%\EFI\Microsoft\Boot\BCD",FileDelete,"%ISO.Root
 FileCopy,"%Programs%\misc\BIOS-FLATandRAM-BCD","%ISO.Root.Directory%\boot\BCD"
 FileCopy,"%Programs%\misc\UEFI-FLATandRAM-BCD","%ISO.Root.Directory%\efi\microsoft\boot\BCD"
 Echo,"Extracting files from boot.wim - this may take a while..."
-WimApply,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%ISO.Root.Directory%,NOACL
+If,%Builder%,Equal,PEBakery,WimApply,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%ISO.Root.Directory%,NOACL
+Else,ShellExecute,Hide,"%Tools%\wimlib\wimlib-imagex.exe","apply #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% #$q%ISO.Root.Directory%#$q --no-acls"
 If,%pScrollBoxB3%,Equal,BIOS,Run,%ProjectDir%\MediaCreation\create.ISO.script,BIOS
 If,%pScrollBoxB3%,Equal,UEFI,Run,%ProjectDir%\MediaCreation\create.ISO.script,UEFI
 If,%pScrollBoxB3%,Equal,BOTH,Run,%ProjectDir%\MediaCreation\create.ISO.script,BOTH
@@ -307,13 +309,13 @@ IniRead,"%OutputDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.num
 
 [oscdimg.Checks]
 If,Not,ExistFile,"%TOOLS%\oscdimg.exe",Begin
-  System,ERROROFF,1
-  WebGetIfNotExist,http://download.microsoft.com/download/3/1/E/31EC1AAF-3501-4BB4-B61C-8BD8A07B4E8A/adk/Installers/5d984200acbde182fd99cbfbe9bad133.cab,%TOOLS%\5d984200acbde182fd99cbfbe9bad133.cab
-  If,ExistFile,"%TOOLS%\5d984200acbde182fd99cbfbe9bad133.cab",Begin
-    ShellExecute,Hide,"%TOOLS%\7z.exe","e #$q%TOOLS%\5d984200acbde182fd99cbfbe9bad133.cab#$q -o#$q%TOOLS%#$q fil720cc132fbb53f3bed2e525eb77bdbc1 -y"
-    If,ExistFile,"%TOOLS%\fil720cc132fbb53f3bed2e525eb77bdbc1",FileRename,"%TOOLS%\fil720cc132fbb53f3bed2e525eb77bdbc1","%TOOLS%\oscdimg.exe"
-  End
-  If,Not,ExistFile,"%TOOLS%\oscdimg.exe",Message,"There appears to have been a problem downloading oscdimg.exe....using mkisofs.exe instead...",INFORMATION,5
+System,ERROROFF,1
+WebGetIfNotExist,http://download.microsoft.com/download/3/1/E/31EC1AAF-3501-4BB4-B61C-8BD8A07B4E8A/adk/Installers/5d984200acbde182fd99cbfbe9bad133.cab,%TOOLS%\5d984200acbde182fd99cbfbe9bad133.cab
+If,ExistFile,"%TOOLS%\5d984200acbde182fd99cbfbe9bad133.cab",Begin
+ShellExecute,Hide,"%TOOLS%\7z.exe","e #$q%TOOLS%\5d984200acbde182fd99cbfbe9bad133.cab#$q -o#$q%TOOLS%#$q fil720cc132fbb53f3bed2e525eb77bdbc1 -y"
+If,ExistFile,"%TOOLS%\fil720cc132fbb53f3bed2e525eb77bdbc1",FileRename,"%TOOLS%\fil720cc132fbb53f3bed2e525eb77bdbc1","%TOOLS%\oscdimg.exe"
+End
+If,Not,ExistFile,"%TOOLS%\oscdimg.exe",Message,"There appears to have been a problem downloading oscdimg.exe....using mkisofs.exe instead...",INFORMATION,5
 End
 
 [efi.check]

@@ -14,8 +14,8 @@ pButtonMenu2="2",1,8,75,0,70,20,pButtonMenu2,0,True,_pButtonMenu2_,True
 pButtonMenu3="?",1,8,145,0,70,20,pButtonMenu3,0,True,_pButtonMenu3_,True
 pCheckBox1="InitializeNetwork (wpeinit)",1,3,40,80,180,18,True
 pCheckBox2="DisableFirewall (wpeinit)",1,3,40,110,180,18,True
-pCheckBox3="Use a fixed computer name",1,3,40,140,180,18,True
-pTextBoxComputerName=,1,0,200,140,150,21,WinFE
+pCheckBox3="Use a fixed computer name",1,3,40,140,153,18,True
+pTextBoxComputerName=,1,0,216,140,134,21,WinFE
 pButton1=?,1,8,10,80,18,18,?option1,0,True,_?option1_,True
 pButton2=?,1,8,10,110,18,18,?option2,0,True,_?option2_,True
 pButton3=?,1,8,10,140,18,18,?option3,0,True,_?option3_,True
@@ -43,7 +43,7 @@ Message,"InitializeNetwork during the boot process. This will initialize network
 Message,"DisableFirewall the firewall started when running the InitializeNetwork command.#$x#$xEnabling this option will automatically run the 'InitializeNetwork' command during the boot process even if the 'InitializeNetwork (wpeinit)' option is not enabled."
 
 [?option3]
-Message,"When the network is initialized in WinPE#$c a random ComputerName is assigned.#$x#$xSelect this option to set the ComputerName and enter a name in the textbox.#$x#$xEnsure that your ComputerName does not contain special characters and is a maximum length of 15 bytes. Do not use spaces or any of the following characters -#$x   { | } ~ [ \ ] ^ ' : ; < = > ? @ ! #$q ## $ % ` ( ) + / . #$c * _ &#$x#$xPlease note that enabling this option will automatically run the 'InitializeNetwork' command during the boot process even if the 'InitializeNetwork (wpeinit)' option is not enabled."
+Message,"When the network is initialized in WinPE#$c a random ComputerName is assigned.#$x#$xSelect this option to set the ComputerName and enter a name in the textbox.#$x#$xEnsure that your ComputerName does not contain special characters and is a maximum length of 15 bytes. Do not use spaces or any of the following characters -#$x   { | } ~ [ \ ] ^ ' : ; <=> ? @ ! #$q ## $ % ` ( ) + / . #$c * _ &#$x#$xPlease note that enabling this option will automatically run the 'InitializeNetwork' command during the boot process even if the 'InitializeNetwork (wpeinit)' option is not enabled."
 
 [pButtonMenu1]
 IniWrite,%ScriptFile%,Main,Interface,Interface1
@@ -101,15 +101,15 @@ DirCopy,"%Programs%\Network\*.*","%TargetDir%\Programs\Network"
 IniWrite,"%OutputDir%\Project.Settings.ini",ESSENTIAL,Network,YES
 ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\Network\Start_Network.cmd#$q /F:#$q%ProjectTemp%\Start Network.lnk#$q /I:#$q#$pSystemDrive#$p\Programs\Network\network.ico#$c0#$q"
 If,ExistFile,"%ProjectTemp%\Start Network.lnk",Begin
-  Set,%MyShortcut%,Start Network.lnk
-  If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
-  If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
-  If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
-    Set,%ProgramMenuPath%,%pTextBox1%
-    Run,"%ProjectDir%\Core\common.script",StartMenu
-  End
-  If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
-  FileDelete,"%ProjectTemp%\%MyShortcut%"
+Set,%MyShortcut%,Start Network.lnk
+If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
+If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
+If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
+Set,%ProgramMenuPath%,%pTextBox1%
+Run,"%ProjectDir%\Core\common.script",StartMenu
+End
+If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
+FileDelete,"%ProjectTemp%\%MyShortcut%"
 End
 
 [AuthorEncoded]
@@ -119,6 +119,4 @@ network.ico=756,1008
 [EncodedFile-AuthorEncoded-network.ico]
 lines=0
 0=eJztmctr1FAUxs84aEAXBRE3Slvw1WVBN6LSnY+diKDiRlHcuND/oJSCIq4V9ypWN/Wx8bFJnZ0KPjaioszOF8jQilapxHNyMzT9cjM3mdyZhHK/8s0Hc87N/Ca99yZNiWr8MzpK/DpMU1uI1hPRCJvfohOk3g+1mZycnJyqqEDjX9DjQf1Pznra52TxHHuavTUH/3PoGYb6Z6ivg/p3i/xt/0j5Drrec9BzGOpPob4d6m97wC+eznDc1+xV0HMDei5B/TjU7/WIf85w3DfsDVDfSGo+x/v2QM81qF/QfE63wu+Amme/YJ8ntQ5Rd2D8e5Jbk6X6BD17bYBHMvF30lnN+JPQswvqv9mrC/CiuuUX9n8w9hl7BfTdgp6pgryovPwy/3HOtNcO7l9yu7sAffusUC/KxL+SPcg+xL5Oaj3gmL8pXE+g76VldtKwmOq6865jP6PpPWiZXcdnqsct12HdNW8HqXUa731oGzyFz1QXf2CfouRaFW1jf4P+WfYm2+ApfCiZ21/YDfZl9hgl9/e25D7hq+aYR+wiL1GR/T+u06TuS/F4k0UBDSrKL/PlkeY44iuWGDupW/6d7JuU3N/7dd7bMvHLveZaUo9djrGvsj9qxsXX6tGeUy+q6P4f92Pq3T6TJhv8r0hdn8tQt/xyfbrN3t8fzFRl2f/lb8t37Afsi+wD7DX9AjTI1v5flhx/uVru/FX/fo6/XDn+crXc+Wc1PVW17vnt3QpwZbXuubY8Q2tVgM3kVsSq00j0e6jiXPrJvt+B3cnJyamvCkJlT7/ZbMl/98KsJ3PGbwZBg6gRZTDhq6zNhLlQnwjT9yZVDtRVDnoqd0c5P6DGtYZU+mMqaVzVhUiyFqUX5VCU4ypD7A7ZyJm+nLR6MpuSXv7z+R96iDv/eJzjzkstKc8vytbLTM5nGAUjDuxThdArmbDLe/4/uZOBCQDRAAjZBqLRiQEAAAACAAAAJwAAAKkCAAAAAAAAAQAAAAAAAAAAAAAA
-
-
 
