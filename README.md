@@ -33,4 +33,6 @@ WinBuilder and PEBakery version 0.9.5.1 beta5 are included in the download - ple
 
 The Mini-WinFE project has also been tested using PEBakery version 1.0.0 (Standalone (x64): PEBakery-v1.0.0-sc_x64.7z). 
 
-![Alt text](/Projects/Cache/mini-winfe.png?raw=true "Mini-WinFE")
+![Alt text](/Projects/Cache/mini-winfe.png?raw=true "BBLean shell")
+
+![Alt text](/Projects/Cache/launchbar.png?raw=true "LaunchBar shell")
