@@ -4,8 +4,8 @@ Description=Program launcher developed by Peter Lerup.
 Selected=False
 Level=5
 Author=Misty
-Version=20220618
-Date=2022-06-18
+Version=20220619
+Date=2022-06-19
 Interface=Interface1
 
 [Interface1]
@@ -121,13 +121,26 @@ If,%pScrollBox3%,Equal,RIGHT,Set,%MenuPosition%,3
 If,%pScrollBox3%,Equal,TOP,Set,%MenuPosition%,2
 If,%pScrollBox3%,Equal,BOTTOM,Set,%MenuPosition%,4
 If,%Shell%,Equal,LaunchBar,Begin
-AddInterface,"%ProjectDir%\Shell\B_shell.script",Interface4,""
-Set,%LaunchBarShellPosition%,%pScrollBox_LaunchBar4%
-If,%LaunchBarShellPosition%,Equal,TOP,If,%MenuPosition%,Equal,2,Set,%MenuPosition%,3
-If,%LaunchBarShellPosition%,Equal,BOTTOM,If,%MenuPosition%,Equal,4,Set,%MenuPosition%,2
-If,%LaunchBarShellPosition%,Equal,LEFT,If,%MenuPosition%,Equal,1,Set,%MenuPosition%,2
-If,%LaunchBarShellPosition%,Equal,RIGHT,If,%MenuPosition%,Equal,3,Set,%MenuPosition%,2
-Message,"LaunchBar is set as Shell and has the same screen position as this second instance of LaunchBar. The screen position of this instance of LaunchBar will be changed."
+  AddInterface,"%ProjectDir%\Shell\B_shell.script",Interface4,""
+  Set,%LaunchBarShellPosition%,%pScrollBox_LaunchBar4%
+  Set,%LaunchBarError1%,0
+  If,%LaunchBarShellPosition%,Equal,TOP,If,%MenuPosition%,Equal,2,Begin
+    Set,%LaunchBarError1%,1
+    Set,%MenuPosition%,3
+  End
+  If,%LaunchBarShellPosition%,Equal,BOTTOM,If,%MenuPosition%,Equal,4,Begin
+    Set,%LaunchBarError1%,1
+    Set,%MenuPosition%,2
+  End
+  If,%LaunchBarShellPosition%,Equal,LEFT,If,%MenuPosition%,Equal,1,Begin
+    Set,%LaunchBarError1%,1
+    Set,%MenuPosition%,2
+  End
+  If,%LaunchBarShellPosition%,Equal,RIGHT,If,%MenuPosition%,Equal,3,Begin
+    Set,%LaunchBarError1%,1
+    Set,%MenuPosition%,2
+  End
+  If,%LaunchBarError1%,Equal,1,Message,"LaunchBar is set as Shell and has the same screen position as this second instance of LaunchBar. The screen position of this instance of LaunchBar will be changed."
 End
 Set,%LaunchBarMenuStyle%,%pScrollBox4%,Global
 If,%PROGRAMS.IN.WIM%,Equal,YES,Begin
