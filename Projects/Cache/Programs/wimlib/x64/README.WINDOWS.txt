@@ -94,7 +94,7 @@ from source, potentially with customizations.  Although wimlib's build system is
 designed for UNIX-like systems and is easiest to use on Linux, it's possible to
 build Windows binaries on Windows using Cygwin with MinGW.  To do this, follow
 the instructions below.  For the sake of example, I'll assume you are building a
-64-bit version of wimlib v1.13.0.
+64-bit version of wimlib v1.13.5.
 
 Run the Cygwin installer, available from https://www.cygwin.com/setup-x86.exe.
 When you get to the package selection screen, choose the following additional
@@ -104,16 +104,16 @@ packages from category "Devel":
     - mingw64-x86_64-binutils
     - mingw64-x86_64-gcc-g++
     - mingw64-x86_64-libxml2
-    - mingw64-x86_64-pkg-config
     - mingw64-x86_64-winpthreads
+    - pkg-config
 
-Download wimlib's source code from https://wimlib.net/downloads/wimlib-1.13.0.tar.gz.
+Download wimlib's source code from https://wimlib.net/downloads/wimlib-1.13.5.tar.gz.
 
 Start a Cygwin terminal and run the following commands:
 
     cd /cygdrive/c/Users/example/Downloads # (or wherever you downloaded the source to)
-    tar xf wimlib-1.13.0.tar.gz
-    cd wimlib-1.13.0
+    tar xf wimlib-1.13.5.tar.gz
+    cd wimlib-1.13.5
     ./configure --host=x86_64-w64-mingw32
     make
 
@@ -147,27 +147,27 @@ libraries are linked in statically rather than dynamically, so it does not
 depend on any DLLs other than standard Windows DLLs.  If you want to do this,
 install the following additional Cygwin packages:
 
-    - p7zip         (category "Archiver")
+    - p7zip         (category "Archive")
     - autoconf      (category "Devel")
     - automake      (category "Devel")
     - git           (category "Devel")
     - libtool       (category "Devel")
     - nasm          (category "Devel")
-    - pkg-config    (category "Devel")
     - ghostscript   (category "Graphics")
     - wget          (category "Web")
 
 Then, in a Cygwin terminal, clone the git repository, checkout the wimlib
-version you want, bootstrap the repository, and run the Windows release script:
+version you want (if you don't want to build the latest master branch),
+bootstrap the repository, and run the Windows release script:
 
     git clone git://wimlib.net/wimlib
     cd wimlib
-    git checkout v1.13.0
+    git checkout v1.13.5  # example only; omit if building the master branch
     ./bootstrap
     ./tools/make-windows-release x86_64
 
 The release script will download and build libxml2 and winpthreads as static
 libraries, then build wimlib, then do some final tasks and bundle the resulting
 files up into a ZIP archive.  If successful you'll end up with a file like
-"wimlib-1.13.0-windows-x86_64-bin.zip", just like the official releases.  For
+"wimlib-1.13.5-windows-x86_64-bin.zip", just like the official releases.  For
 32-bit binaries just use "i686" instead of "x86_64".

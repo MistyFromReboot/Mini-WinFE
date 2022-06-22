@@ -11,7 +11,7 @@
 /**
  * @mainpage
  *
- * This is the documentation for the library interface of wimlib 1.12.0, a C
+ * This is the documentation for the library interface of wimlib 1.13.5, a C
  * library for creating, modifying, extracting, and mounting files in the
  * Windows Imaging (WIM) format.  This documentation is intended for developers
  * only.  If you have installed wimlib and want to know how to use the @b
@@ -408,10 +408,10 @@
 #define WIMLIB_MAJOR_VERSION 1
 
 /** Minor version of the library (for example, the 2 in 1.2.5). */
-#define WIMLIB_MINOR_VERSION 12
+#define WIMLIB_MINOR_VERSION 13
 
 /** Patch version of the library (for example, the 5 in 1.2.5). */
-#define WIMLIB_PATCH_VERSION 0
+#define WIMLIB_PATCH_VERSION 5
 
 #ifdef __cplusplus
 extern "C" {
@@ -649,7 +649,8 @@ enum wimlib_progress_msg {
 	 * to ::wimlib_progress_info.write_streams.  This message may be
 	 * received many times while the WIM file is being written or appended
 	 * to with wimlib_write(), wimlib_overwrite(), or wimlib_write_to_fd().
-	 */
+	 * Since wimlib v1.13.4 it will also be received when a split WIM part
+	 * is being written by wimlib_split().  */
 	WIMLIB_PROGRESS_MSG_WRITE_STREAMS = 12,
 
 	/** Per-image metadata is about to be written to the WIM file.  @p info
@@ -825,7 +826,8 @@ union wimlib_progress_info {
 		/** The number of bytes of file data that have been written so
 		 * far.  This starts at 0 and ends at @p total_bytes.  This
 		 * number is the uncompressed size; the actual size may be lower
-		 * due to compression.  */
+		 * due to compression.  See @p completed_compressed_bytes for
+		 * the compressed size.  */
 		uint64_t completed_bytes;
 
 		/** The number of distinct file data "blobs" that have been
@@ -848,6 +850,10 @@ union wimlib_progress_info {
 
 		/** This is currently broken and will always be 0.  */
 		uint32_t completed_parts;
+
+		/** Since wimlib v1.13.4: Like @p completed_bytes, but counts
+		 * the compressed size.  */
+		uint64_t completed_compressed_bytes;
 	} write_streams;
 
 	/** Valid on messages ::WIMLIB_PROGRESS_MSG_SCAN_BEGIN,
@@ -1922,6 +1928,10 @@ typedef int (*wimlib_iterate_lookup_table_callback_t)(const struct wimlib_resour
  * wimlib_extract_paths() when passed multiple paths.  */
 #define WIMLIB_EXTRACT_FLAG_NTFS			0x00000001
 
+/** Since wimlib v1.13.4: Don't consider corrupted files to be an error.  Just
+ * extract them in whatever form we can.  */
+#define WIMLIB_EXTRACT_FLAG_RECOVER_DATA		0x00000002
+
 /** UNIX-like systems only:  Extract UNIX-specific metadata captured with
  * ::WIMLIB_ADD_FLAG_UNIX_DATA.  */
 #define WIMLIB_EXTRACT_FLAG_UNIX_DATA			0x00000020
@@ -2738,7 +2748,7 @@ wimlib_add_tree(WIMStruct *wim, int image,
  * @param wim_ret
  *	On success, a pointer to the new ::WIMStruct is written to the memory
  *	location pointed to by this parameter.  This ::WIMStruct must be freed
- *	using using wimlib_free() when finished with it.
+ *	using wimlib_free() when finished with it.
  *
  * @return 0 on success; a ::wimlib_error_code value on failure.
  *
@@ -3055,6 +3065,9 @@ wimlib_extract_image_from_pipe_with_progress(int pipe_fd,
  * are otherwise delimited by the newline character.  However, quotes will be
  * stripped if present.
  *
+ * If @p path_list_file is @c NULL, then the pathlist file is read from standard
+ * input.
+ *
  * The error codes are the same as those returned by wimlib_extract_paths(),
  * except that wimlib_extract_pathlist() returns an appropriate error code if it
  * cannot read the path list file (e.g. ::WIMLIB_ERR_OPEN, ::WIMLIB_ERR_STAT,
@@ -3272,6 +3285,16 @@ wimlib_get_image_property(const WIMStruct *wim, int image,
  */
 extern uint32_t
 wimlib_get_version(void);
+
+/**
+ * @ingroup G_general
+ *
+ * Since wimlib v1.13.0: like wimlib_get_version(), but returns the full
+ * PACKAGE_VERSION string that was set at build time.  (This allows a beta
+ * release to be distinguished from an official release.)
+ */
+extern const wimlib_tchar *
+wimlib_get_version_string(void);
 
 /**
  * @ingroup G_wim_information
@@ -3610,8 +3633,8 @@ wimlib_mount_image(WIMStruct *wim,
  * @param wim_ret
  *	On success, a pointer to a new ::WIMStruct backed by the specified
  *	on-disk WIM file is written to the memory location pointed to by this
- *	parameter.  This ::WIMStruct must be freed using using wimlib_free()
- *	when finished with it.
+ *	parameter.  This ::WIMStruct must be freed using wimlib_free() when
+ *	finished with it.
  *
  * @return 0 on success; a ::wimlib_error_code value on failure.
  *
@@ -4292,7 +4315,9 @@ wimlib_set_wim_info(WIMStruct *wim, const struct wimlib_wim_info *info,
  * If a progress function is registered with @p wim, then for each split WIM
  * part that is written it will receive the messages
  * ::WIMLIB_PROGRESS_MSG_SPLIT_BEGIN_PART and
- * ::WIMLIB_PROGRESS_MSG_SPLIT_END_PART.
+ * ::WIMLIB_PROGRESS_MSG_SPLIT_END_PART.  Since wimlib v1.13.4 it will also
+ * receive ::WIMLIB_PROGRESS_MSG_WRITE_STREAMS messages while writing each part;
+ * these messages will report the progress of the current part only.
  */
 extern int
 wimlib_split(WIMStruct *wim,

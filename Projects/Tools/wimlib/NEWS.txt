@@ -1,3 +1,84 @@
+version 1.13.5:
+	Exporting "all" images from a WIM file no longer fails if multiple
+	images in that WIM file have the same name.
+
+	wimlib now warns rather than aborts if two files have the same SHA-1
+	hash but different sizes.
+
+	Fixed build errors with the latest version of Mingw-w64.
+
+Version 1.13.4:
+	wimsplit now prints progress messages regularly rather than just once
+	per WIM part.
+
+	Added support for a data recovery mode which causes files to be
+	extracted even if they are corrupted.  The option is --recover-data for
+	wimapply and wimextract, and WIMLIB_EXTRACT_FLAG_RECOVER_DATA for the
+	library.  Note that this option won't help with all types of corruption;
+	some types of corruption will still cause a fatal error.
+
+Version 1.13.3:
+	On Windows, improved performance of capturing an entire drive in some
+	cases.
+
+	On Windows, fixed leaking a directory handle (or triggering a SEH
+	exception when running under a debugger) when referencing WIM files.
+
+	On Windows, when applying a Windows OS image using the --compact flag,
+	bootloader files can now be compressed with stronger compression
+	algorithms if the version of Windows is recent enough to support it.
+
+	Clarified the license text.
+
+Version 1.13.2:
+	Prevented miscompilation with gcc 10 at -O3
+	(https://gcc.gnu.org/bugzilla/show_bug.cgi?id=94994).
+
+	Avoided some compiler warnings with gcc 9 and later.
+
+	The 'mkwinpeimg' script now also looks for syslinux modules in
+	/usr/share/syslinux, to handle where openSUSE installs them.
+
+	Removed obsolete packaging files from the source tree.
+
+Version 1.13.1:
+	Fixed a crash or incorrect output during LZMS compression with a
+	compression level greater than 50 and a chunk size greater than 64 MiB.
+	This affected wimlib v1.8.0 and later.  In the unlikely event that you
+	used all these non-default compression settings in combination, e.g.
+	'wimcapture --solid --solid-compress=LZMS:100 --solid-chunk-size=128M',
+	run 'wimverify' on your archives to verify your data is intact.
+
+Version 1.13.0:
+	On Windows, wimlib now supports capturing and applying extended
+	attributes (EAs).  It is compatible with DISM with the /EA option,
+	available since Windows 10 version 1607.  wimlib's EA support is on by
+	default and works on older versions of Windows too.
+
+	Partially fixed a bug where [ExclusionException] entries didn't take
+	effect when the containing directory is matched by [ExclusionList].  It
+	now works when the [ExclusionException] patterns are absolute.  For
+	example, listing "/dir/file" in [ExclusionException] now works even if
+	"/dir" is matched by [ExclusionList].
+
+	Added a '--create' option to 'wimappend' which makes it create the WIM
+	file (like 'wimcapture') if it doesn't exist yet.
+
+	Added an '--include-integrity' option to various wimlib-imagex commands.
+	'--include-integrity' is like '--check', but it will just include an
+	integrity table in the output WIM(s), while skipping verification of any
+	existing integrity tables.  This can be useful to avoid unwanted
+	verification of large WIM files, e.g. WIMs given by '--delta-from'.
+
+	'wimextract' now reads a pathlist file from standard input when "@-" is
+	given as an argument.
+
+	wimsplit (API: wimlib_split()) now correctly handles a dot in the path
+	to the first split WIM part, prior to the filename extension.
+
+	'wimlib-imagex --version' now shows the version of the library it is
+	actually using (in case it is different from wimlib-imagex's version).
+
 Version 1.12.0:
 	Fixed a bug that was causing the LZMS decompressor to be miscompiled
 	with GCC 7 (this broke extracting "solid" archives).
