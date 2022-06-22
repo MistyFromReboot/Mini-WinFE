@@ -414,7 +414,7 @@ checks in order to access folders protected by NTFS security permissions or by
 <b>Free Shooter</b> (Version 2.0.7) - "...tool for taking screenshots without bloatware features, simple as life, light as air....". Capture fullscreen, active window, or a selected are of the screen. The following file types can be captured using Free Shooter - BMP, JPG, TIFF, PNG and GIF formats. <a class="external" target="_blank" href="https://www.henrypp.org/product/freeshooter">Free Shooter website</a>
 	<ul>
 	<li>Included in download - YES</li>
-	<li>Processor Architecture - <b>x86 only</b></li>
+	<li>Processor Architecture - x86 and x64</li>
 	</ul>
 </li>
 </ul>
@@ -590,11 +590,13 @@ checks in order to access folders protected by NTFS security permissions or by
 <li>
 <b>sDelete</b> - Secure delete application. "...SDelete is a command line utility that takes a number of options. In any given use, it allows you to delete one or more files and/or directories, or to cleanse the free space on a logical disk...". <a class="external" target="_blank" href="https://docs.microsoft.com/en-us/sysinternals/downloads/sdelete">sDelete website</a>
 	<ul>
-	<li>Included in download - YES</li>
+	<li>Included in download - <b>NO</b></li>
 	<li>Processor Architecture - x86 and x64</li>
 	</ul>
 </li>
 </ul>
+
+
 
 
 
@@ -608,7 +610,6 @@ checks in order to access folders protected by NTFS security permissions or by
 	</ul>
 </li>
 </ul>
-
 
 
 
@@ -712,9 +713,6 @@ checks in order to access folders protected by NTFS security permissions or by
 
 
 
-
-
-
 <a name="finalise"></a><br>
 <h2><u>Finalise</u></h2>
 
@@ -756,15 +754,15 @@ checks in order to access folders protected by NTFS security permissions or by
 Only one script is included in this section -
 
 
-<ul class="break3em"><li>
-<b>Drivers</b> - Use this script to integrate drivers to the build. <font class="file">Get WAIK Tools</font> is used to download <font class="file">DISM</font>. There are two options in the script -
+<ul class="break3em">
+<li><b>Drivers</b> - Use this script to integrate drivers to the build. <font class="file">Get WAIK Tools</font> is used to download <font class="file">DISM</font>. <s>There are two options in the script</s> - </li>
 
 	<ul><li class="break1em"><b>EXTRACT</b> - the contents of the image selected in <font class="file">boot.wim</font> will be fully extracted and <font class="file">DISM</font> will be used to inject the drivers to the offline image. If this method is selected then setting option 4 in the main project script (<b>METHOD</b>) as <font class="file">EXTRACT</font> is recommended - this will fully extract <font class="file">boot.wim</font> early in the build process.</ul>
 
-	<ul><li class="break1em"><b>MOUNT</b> - <font class="file">DISM</font> will be used to mount the image selected in <font class="file">boot.wim</font></li> &gt; inject drivers to the mounted image &gt; unmount the image.</ul>
+	<ul><s><li class="break1em"><b>MOUNT</b> - <font class="file">DISM</font> will be used to mount the image selected in <font class="file">boot.wim</font> &gt; inject drivers to the mounted image &gt; unmount the image.</s> (<b><u>NOTE</u></b> - the MOUNT option has been temporarily removed) </li></ul>
 
-<br />Path - <font class="file">Projects</font> &gt; <font class="file">WinFE</font> &gt; <font class="file">Drivers</font> &gt; <font class="file">drivers.script</font>
-</li></ul>
+<br/>Path - <font class="file">Projects</font> &gt; <font class="file">WinFE</font> &gt; <font class="file">Drivers</font> &gt; <font class="file">drivers.script</font>
+</ul>
 </p>
 
 
@@ -849,10 +847,81 @@ The scripts in this section cannot be executed during the build process and is d
 
 
 
+<a name="notincluded"></a><br>
+<h2><u>Applications not included in the project download</u></h2>
+
+
+<p>
+The majority of applications currently supported in <font class="file">Mini-WinFE</font> are included in the project download. The exceptions are -
+<ul>
+<li><font class="file">FTK Imager</font></li>
+<li><font class="file">sDelete</font></li>
+<li><font class="file">Drive Snapshot</font></li>
+<li><font class="file">WinHex</font></li>
+<li><font class="file">X-Ways Forensic</font></li>
+</ul>
+</p>
+
+
+
+<p class="break3em">
+<b>sDelete</b> - EULA prevents redistribution with the project. This application will be downloaded automatically if selected during the build process and added to a local file cache.
+</p>
+
+
+<p class="break3em">
+<b>Drive SnapShot</b> - evaluation versions can be downloaded to a local file cache prior to building Mini-WinFE by running "Download automatically (RECOMMENDED)". Alternatively, the application can be added by browsing to the file using the folder button in the "PATH to 32-bit" and "PATH to 64-bit" section and then selecting <font class="file">ADD TO CACHE</font>. Adding the application using <font class="file">ADD TO CACHE</font> option is covered in more detail in the <font class="file">FTK Imager</font> section below.
+</p>
+
+
+<p class="break3em">
+<b>FTK Imager</b> - The FTK Imager licence prevents redistribution. FTK Imager files will need to be copied from a local source/installation. The application can be added by browsing to the executable file using the folder button in the "PATH to 32-bit" and "PATH to 64-bit" section and browsing/selecting <font class="file">FTK Imager.exe</font>. Do not try to add the installer, the target is <font class="file">FTK Imager.exe</font> extracted from the installer. 
+</p>
+
+<p>
+<ul>
+Click on the folder icon - <br/>
+<a href="img/NotIncluded1.png"><IMG SRC="img/NotIncluded1.png" float=left width=80% margin-right=1% margin-bottom=0.5em border=1></a>
+</ul>
+</p>
+
+
+<p>
+<ul>
+Browse to the executable - <br/>
+<a href="img/NotIncluded2.png"><IMG SRC="img/NotIncluded2.png" float=left width=80% margin-right=1% margin-bottom=0.5em border=1></a>
+</ul>
+</p>
+
+
+<p>
+<ul>
+Click on the <font class="file">ADD TO CACHE</font> button -<br/>
+<a href="img/NotIncluded3.png"><IMG SRC="img/NotIncluded3.png" float=left width=80% margin-right=1% margin-bottom=0.5em border=1></a>
+</ul>
+</p>
 
 
 
 
-<p class="breaktop"><font class="file">Document date - 18<sup>th</sup> June 2022</font></p></font></body></html>
+
+
+<p class="break3em">
+<b>WinHex</b> - The licence prevents redistribution. An evaluation version can be downloaded by clicking on the <font class="file">Download Evaluation version automatically</font> &gt; <font class="file">ADD TO CACHE</font> button. Alternatively, the application can be added by browsing to the executable file(s) using the folder button in the "PATH to 32-bit" and "PATH to 64-bit" section(s) and browsing/selecting the relevant file (<font class="file">WinHex.exe</font>/<font class="file">WinHex64.exe</font>). Adding the application using the <font class="file">ADD TO CACHE</font> option is covered in more detail in the <font class="file">FTK Imager</font> section above.
+</p>
+
+
+<p class="break3em">
+<b>X-Ways Forensic</b> - The licence prevents redistribution. The application can be added by browsing to the executable file(s) using the folder button in the "PATH to 32-bit" and "PATH to 64-bit" section(s) and browsing/selecting the relevant file (<font class="file">xwforensics.exe</font>/<font class="file">xwforensics64.exe</font>). Adding the application using the <font class="file">ADD TO CACHE</font> option is covered in more detail in the <font class="file">FTK Imager</font> section above.
+</p>
+
+
+
+
+
+
+
+
+<p class="breaktop"><font class="file">Document date - 22<sup>nd</sup> June 2022</font></p></font></body></html>
 
  

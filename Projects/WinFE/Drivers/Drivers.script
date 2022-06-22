@@ -4,13 +4,13 @@ Description=
 Selected=False
 Level=9
 Author=Misty
-Version=20220618
-Date=2022-06-18
+Version=20220622
+Date=2022-06-22
 Interface=Interface
 
 [Interface]
 pBevel_A1=,1,12,10,70,500,40
-pScrollBox_A1=MOUNT,1,4,20,80,100,20,EXTRACT,MOUNT
+pScrollBox_A1=EXTRACT,1,4,20,80,100,20,EXTRACT
 pTextLabel_A1=Method,1,1,230,81,140,18,10,Bold
 pButton_A1=HELP,1,8,430,80,70,20,HELPA1,0,True,_HELPA1_,True
 pBevel_A2=,1,12,10,120,500,40

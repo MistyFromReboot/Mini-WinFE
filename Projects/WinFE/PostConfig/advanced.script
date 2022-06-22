@@ -4,8 +4,8 @@ Description=Post Processing - Load\unload any registry hives created during the 
 Selected=None
 Level=10
 Author=Misty
-Version=20220618
-Date=2022-06-18
+Version=20220622
+Date=2022-06-22
 
 [Interface]
 pButton1="Load Registry Hives",1,8,15,30,130,25,load,0,True,_load_,True
@@ -63,6 +63,7 @@ If,ExistFile,%OutputDir%\sources\boot.wim,If,ExistDir,%TargetDir%,Begin
   IniRead,"%TargetDir%\project.settings.ini",MAIN.SETTINGS,BOOT.WIM.IMAGE.NUMBER,%Boot.wim.Image.number%
   If,%Builder%,Equal,PEBakery,WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
   Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qadd '%TargetDir%' '\'#$q"
+  message,"Finished injecting files",information
 End
 Else,Message,Missing files
 
@@ -73,11 +74,13 @@ If,ExistFile,%OutputDir%\sources\boot.wim,If,ExistDir,%TargetDir%,Begin
     If,ExistFile,%TargetDir%\Windows\System32\config\default,WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%\Windows\System32\config\default,Windows\System32\config\default
     If,ExistFile,%TargetDir%\Windows\System32\config\software,WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%\Windows\System32\config\software,Windows\System32\config\software
     If,ExistFile,%TargetDir%\Windows\System32\config\system,WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%\Windows\System32\config\system,Windows\System32\config\system
+    message,"Finished injecting registry files",information
   End
   If,%Builder%,Equal,WinBuilder,Begin
     If,ExistFile,%TargetDir%\Windows\System32\config\default,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qadd '%TargetDir%\Windows\System32\config\default' '\Windows\System32\config\default'#$q"
     If,ExistFile,%TargetDir%\Windows\System32\config\software,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qadd '%TargetDir%\Windows\System32\config\software' '\Windows\System32\config\software'#$q"
     If,ExistFile,%TargetDir%\Windows\System32\config\system,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qadd '%TargetDir%\Windows\System32\config\system' '\Windows\System32\config\system'#$q"
+    message,"Finished injecting registry files",information
   End
 End
 Else,Message,Missing files
@@ -86,6 +89,7 @@ Else,Message,Missing files
 If,ExistFile,%OutputDir%\sources\boot.wim,Begin
   If,%Builder%,Equal,PEBakery,WimOptimize,%OutputDir%\sources\boot.wim
   Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","optimize #$q%OutputDir%\sources\boot.wim#$q"
+  message,"Optimise boot.wim completed",information
 End
 
 [Capture]
@@ -107,6 +111,7 @@ End
 //WimCapture,%TargetDir%,"%OutputDir%\sources\boot.wim",XPRESS,BOOT,NOACL
 If,%Builder%,Equal,PEBakery,WimCapture,%TargetDir%,"%OutputDir%\sources\boot.wim",LZX,BOOT,NOACL
 Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","capture --boot #$q%TargetDir%#$q #$q%OutputDir%\sources\boot.wim#$q --no-acls"
+message,"Capture files completed",information
 
 [?Capture]
 message,"Running this option will delete the existing boot.wim file (\WinFE.Files\sources\boot.wim). #$x#$xA new boot.wim will be created using the contents of the \WinFE.Files\ROOT\ build directory as source. The new file will contain only one image and may reduce the size of boot.wim - reducing RAM requirements.#$x#$xThe project configuration file '\WinFE\*\project.options.ini' will be updated and any reference to the boot.wim image number will be changed to image\index 1."
@@ -125,6 +130,7 @@ If,Not,ExistFile,"%Target_System32%\wim_applied.txt",Begin
   FileCreateBlank,"%Target_System32%\wim_applied.txt"
   TXTaddLine,"%Target_System32%\wim_applied.txt","Dummy file added to confirm that boot.wim has been fully extracted during the project build process (required for Driver integration - EXTRACT method).",APPEND
 End
+message,"Extract boot.wim completed",information
 
 [?Extract]
 message,"Apply (Extract) the contents of '\WinFE.Files\sources\boot.wim' to '\WinFE.Files\ROOT\'#$x#$xThis will overwrite any files currently in the '\WinFE.Files\ROOT\' directory."
