@@ -3,9 +3,9 @@ Title=LaunchBar
 Description=Program launcher developed by Peter Lerup.
 Selected=False
 Level=5
-Author=ThePEBakeryTeam
-Version=20190426
-Date=2019-04-26
+Author=Misty
+Version=20220619
+Date=2022-06-19
 Interface=Interface1
 
 [Interface1]
@@ -26,7 +26,7 @@ pTextLabel4=Menu Style,1,1,220,181,150,18,10,Bold
 pButton4=HELP,1,8,430,180,70,20,4.HELP,0,True,_4.HELP_,True
 pWebLabel1=http://www.lerup.com/LaunchBar/,1,10,150,43,180,18,http://www.lerup.com/LaunchBar/
 pTextLabel5="LaunchBar Website",1,1,10,45,150,18,10,Bold
-pCheckBoxInWim="Include Program in boot.wim",1,3,10,265,180,18,True
+pCheckBoxInWim="Include Program in boot.wim",1,3,51,265,180,18,True
 
 [2.HELP]
 set,%message2%,"Select the icon size. If all project options are enabled on a low resolution display then they may not be displayed correctly if LARGE icons are selected."
@@ -94,30 +94,22 @@ If,%PROGRAMS.IN.WIM%,Equal,YES,Run,%ScriptFile%,IN.WIM
 [CHECKS]
 If,Not,ExistDir,"%Programs%\LaunchBar",DirMake,"%Programs%\LaunchBar"
 If,%ARCH%,Equal,x86,If,Not,ExistFile,"%Programs%\LaunchBar\LaunchBar.exe",Begin
-  System,ERROROFF,2
-  WebGet,http://www.lerup.com/php/download.php?LaunchBar/LaunchBar.exe,"%Programs%\LaunchBar\LaunchBar.exe"
-  WebGet,http://www.lerup.com/php/download.php?LaunchBar/LaunchBar_x64.exe,"%Programs%\LaunchBar\LaunchBar_x64.exe"
-  If,Not,ExistFile,"%Programs%\LaunchBar\LaunchBar.exe",Begin
-    Message,"Could not find LaunchBar - possible error with download"
-    Exit,"Could not find LaunchBar - possible error with download"
-  End
+System,ERROROFF,2
+WebGet,http://www.lerup.com/php/download.php?LaunchBar/LaunchBar.exe,"%Programs%\LaunchBar\LaunchBar.exe"
+WebGet,http://www.lerup.com/php/download.php?LaunchBar/LaunchBar_x64.exe,"%Programs%\LaunchBar\LaunchBar_x64.exe"
+If,Not,ExistFile,"%Programs%\LaunchBar\LaunchBar.exe",Begin
+Message,"Could not find LaunchBar - possible error with download"
+Exit,"Could not find LaunchBar - possible error with download"
+End
 End
 If,%ARCH%,Equal,x64,If,Not,ExistFile,"%Programs%\LaunchBar\LaunchBar_x64.exe",Begin
-  System,ERROROFF,2
-  WebGet,http://www.lerup.com/php/download.php?LaunchBar/LaunchBar.exe,"%Programs%\LaunchBar\LaunchBar.exe"
-  WebGet,http://www.lerup.com/php/download.php?LaunchBar/LaunchBar_x64.exe,"%Programs%\LaunchBar\LaunchBar_x64.exe"
-  If,Not,ExistFile,"%Programs%\LaunchBar\LaunchBar_x64.exe",Begin
-    Message,"Could not find LaunchBar - possible error with download"
-    Exit,"Could not find LaunchBar - possible error with download"
-  End
+System,ERROROFF,2
+WebGet,http://www.lerup.com/php/download.php?LaunchBar/LaunchBar.exe,"%Programs%\LaunchBar\LaunchBar.exe"
+WebGet,http://www.lerup.com/php/download.php?LaunchBar/LaunchBar_x64.exe,"%Programs%\LaunchBar\LaunchBar_x64.exe"
+If,Not,ExistFile,"%Programs%\LaunchBar\LaunchBar_x64.exe",Begin
+Message,"Could not find LaunchBar - possible error with download"
+Exit,"Could not find LaunchBar - possible error with download"
 End
-If,%Shell%,Equal,LaunchBar,Begin
-  ReadInterface,Value,"%ProjectDir%\Shell\B_shell.script",Interface,pScrollBox_LaunchBar4,%LaunchBarShellPosition%
-  If,%LaunchBarShellPosition%,Equal,%pScrollBox3%,Begin
-    If,%pScrollBox3%,Equal,TOP,Set,%pScrollBox3%,RIGHT
-    Else,Set,%pScrollBox3%,TOP
-    Message,"LaunchBar is set as Shell and has the same screen position as this second instance of LaunchBar. The screen position of this instance of LaunchBar will be changed to the %pScrollBox3% of the screen."
-  End
 End
 
 [MENU]
@@ -128,36 +120,58 @@ If,%pScrollBox3%,Equal,LEFT,Set,%MenuPosition%,1
 If,%pScrollBox3%,Equal,RIGHT,Set,%MenuPosition%,3
 If,%pScrollBox3%,Equal,TOP,Set,%MenuPosition%,2
 If,%pScrollBox3%,Equal,BOTTOM,Set,%MenuPosition%,4
+If,%Shell%,Equal,LaunchBar,Begin
+  AddInterface,"%ProjectDir%\Shell\B_shell.script",Interface4,""
+  Set,%LaunchBarShellPosition%,%pScrollBox_LaunchBar4%
+  Set,%LaunchBarError1%,0
+  If,%LaunchBarShellPosition%,Equal,TOP,If,%MenuPosition%,Equal,2,Begin
+    Set,%LaunchBarError1%,1
+    Set,%MenuPosition%,3
+  End
+  If,%LaunchBarShellPosition%,Equal,BOTTOM,If,%MenuPosition%,Equal,4,Begin
+    Set,%LaunchBarError1%,1
+    Set,%MenuPosition%,2
+  End
+  If,%LaunchBarShellPosition%,Equal,LEFT,If,%MenuPosition%,Equal,1,Begin
+    Set,%LaunchBarError1%,1
+    Set,%MenuPosition%,2
+  End
+  If,%LaunchBarShellPosition%,Equal,RIGHT,If,%MenuPosition%,Equal,3,Begin
+    Set,%LaunchBarError1%,1
+    Set,%MenuPosition%,2
+  End
+  If,%LaunchBarError1%,Equal,1,Message,"LaunchBar is set as Shell and has the same screen position as this second instance of LaunchBar. The screen position of this instance of LaunchBar will be changed."
+End
 Set,%LaunchBarMenuStyle%,%pScrollBox4%,Global
 If,%PROGRAMS.IN.WIM%,Equal,YES,Begin
-  If,%ARCH%,Equal,x86,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\LaunchBar\LaunchBar.exe#$q /F:#$q%ProjectTemp%\LaunchBar.lnk#$q /P:#$qLARGE=%IconSize% POSITION=%MenuPosition% ONTOP=0 CENTER=1 #$pSystemDrive#$p\Programs\LaunchBar\Menu#$q /I:#$q#$pSystemDrive#$p\Programs\LaunchBar\LaunchBar.exe#$c0#$q"
-  If,%ARCH%,Equal,x64,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\LaunchBar\LaunchBar_x64.exe#$q /F:#$q%ProjectTemp%\LaunchBar.lnk#$q /P:#$qLARGE=%IconSize% POSITION=%MenuPosition% ONTOP=0 CENTER=1 #$pSystemDrive#$p\Programs\LaunchBar\Menu#$q /I:#$q#$pSystemDrive#$p\Programs\LaunchBar\LaunchBar_x64.exe#$c0#$q"
-  If,ExistFile,"%ProjectTemp%\LaunchBar.lnk",Begin
-    Set,%MyShortcut%,LaunchBar.lnk
-    If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
-    If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
-    If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
-      Set,%ProgramMenuPath%,%pTextBox1%
-      Run,"%ProjectDir%\Core\common.script",StartMenu
-    End
-    If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
-    FileDelete,"%ProjectTemp%\%MyShortcut%"
-  End
+If,%ARCH%,Equal,x86,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\LaunchBar\LaunchBar.exe#$q /F:#$q%ProjectTemp%\LaunchBar.lnk#$q /P:#$qLARGE=%IconSize% POSITION=%MenuPosition% ONTOP=0 CENTER=1 #$pSystemDrive#$p\Programs\LaunchBar\Menu#$q /I:#$q#$pSystemDrive#$p\Programs\LaunchBar\LaunchBar.exe#$c0#$q"
+If,%ARCH%,Equal,x64,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\LaunchBar\LaunchBar_x64.exe#$q /F:#$q%ProjectTemp%\LaunchBar.lnk#$q /P:#$qLARGE=%IconSize% POSITION=%MenuPosition% ONTOP=0 CENTER=1 #$pSystemDrive#$p\Programs\LaunchBar\Menu#$q /I:#$q#$pSystemDrive#$p\Programs\LaunchBar\LaunchBar_x64.exe#$c0#$q"
+If,ExistFile,"%ProjectTemp%\LaunchBar.lnk",Begin
+Set,%MyShortcut%,LaunchBar.lnk
+If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
+If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
+If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
+Set,%ProgramMenuPath%,%pTextBox1%
+Run,"%ProjectDir%\Core\common.script",StartMenu
+End
+If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
+FileDelete,"%ProjectTemp%\%MyShortcut%"
+End
 End
 If,%PROGRAMS.IN.WIM%,Equal,NO,Begin
-  If,Not,ExistDir,"%OutputDir%\Programs",DirMake,"%OutputDir%\Programs"
-  If,%ARCH%,Equal,x64,Begin
-    FileCreateBlank,"%OutputDir%\Programs\LaunchBarX64.cmd"
-    TXTaddLine,"%OutputDir%\Programs\LaunchBarX64.cmd",@echo off,Append
-    TXTaddLine,"%OutputDir%\Programs\LaunchBarX64.cmd","CD /D #$p~dp0LaunchBar",Append
-    TXTaddLine,"%OutputDir%\Programs\LaunchBarX64.cmd","Start LaunchBar_x64.exe LARGE=%IconSize% POSITION=%MenuPosition% ONTOP=0 CENTER=1 #$pTemp#$p\ShortCuts",Append
-  End
-  If,%ARCH%,Equal,x86,Begin
-    FileCreateBlank,"%OutputDir%\Programs\LaunchBarX86.cmd"
-    TXTaddLine,"%OutputDir%\Programs\LaunchBarX86.cmd",@echo off,Append
-    TXTaddLine,"%OutputDir%\Programs\LaunchBarX86.cmd","CD /D #$p~dp0LaunchBar",Append
-    TXTaddLine,"%OutputDir%\Programs\LaunchBarX86.cmd","Start LaunchBar.exe LARGE=%IconSize% POSITION=%MenuPosition% ONTOP=0 CENTER=1 #$pTemp#$p\ShortCuts",Append
-  End
+If,Not,ExistDir,"%OutputDir%\Programs",DirMake,"%OutputDir%\Programs"
+If,%ARCH%,Equal,x64,Begin
+FileCreateBlank,"%OutputDir%\Programs\LaunchBarX64.cmd"
+TXTaddLine,"%OutputDir%\Programs\LaunchBarX64.cmd",@echo off,Append
+TXTaddLine,"%OutputDir%\Programs\LaunchBarX64.cmd","CD /D #$p~dp0LaunchBar",Append
+TXTaddLine,"%OutputDir%\Programs\LaunchBarX64.cmd","Start LaunchBar_x64.exe LARGE=%IconSize% POSITION=%MenuPosition% ONTOP=0 CENTER=1 #$pTemp#$p\ShortCuts",Append
+End
+If,%ARCH%,Equal,x86,Begin
+FileCreateBlank,"%OutputDir%\Programs\LaunchBarX86.cmd"
+TXTaddLine,"%OutputDir%\Programs\LaunchBarX86.cmd",@echo off,Append
+TXTaddLine,"%OutputDir%\Programs\LaunchBarX86.cmd","CD /D #$p~dp0LaunchBar",Append
+TXTaddLine,"%OutputDir%\Programs\LaunchBarX86.cmd","Start LaunchBar.exe LARGE=%IconSize% POSITION=%MenuPosition% ONTOP=0 CENTER=1 #$pTemp#$p\ShortCuts",Append
+End
 End
 
 [COMMON]
@@ -171,8 +185,9 @@ IniWrite,"%OutputDir%\Project.Settings.ini",PROGRAMS,LaunchBar,YES
 
 [IN.WIM]
 If,%FullProjectRun%,Equal,NO,Begin
-  IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
-  WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
+If,%Builder%,Equal,PEBakery,WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qadd '%TargetDir%' '\'#$q"
 End
 //Wait,1
 
@@ -188,3 +203,4 @@ lines=1
 [AuthorEncoded]
 logo=LaunchBar.ico
 LaunchBar.ico=4324,5766
+

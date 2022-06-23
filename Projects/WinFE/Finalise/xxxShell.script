@@ -6,8 +6,8 @@ Locked=True
 Mandatory=True
 Level=8
 Author=Misty
-Version=20220524
-Date=2022-05-24
+Version=20220618
+Date=2022-06-18
 
 [process]
 If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",ExitScript
@@ -18,7 +18,8 @@ If,%Shell%,Equal,BBLean,Run,%ScriptFile%,BBLEAN
 If,%Shell%,Equal,LaunchBar,Run,%ScriptFile%,LaunchBar
 If,%Shell%,Equal,WinXShell,Run,%ScriptFile%,WinXShell
 Run,%ScriptFile%,WINPESHL
-If,WimExistFile,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,Windows/System32/WinPE.bmp,WimPathDelete,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,Windows/System32/WinPE.bmp
+If,%Builder%,Equal,PEBakery,If,WimExistFile,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,Windows/System32/WinPE.bmp,WimPathDelete,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,Windows/System32/WinPE.bmp
+Else,ShellExecute,Hide,"%Tools%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qdelete '\Windows\System32\WinPE.bmp'#$q"
 Run,%ScriptFile%,MakeWim
 Run,%ScriptFile%,LOGFILE
 
@@ -59,15 +60,36 @@ If,%LaunchBarMenuStyle%,Equal,START,DirCopy,"%ProjectTemp%\ShortCuts\Start\*","%
 
 [LaunchBar]
 If,ExistDir,"%ProjectTemp%\ShortCuts\Start",DirCopy,"%ProjectTemp%\ShortCuts\Start\*","%TargetDir%\Windows\System32\config\systemprofile\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch"
-ReadInterface,Value,"%ProjectDir%\Shell\B_shell.script",Interface,pScrollBox_LaunchBar3,%LaunchBarIconSize%
+If,%Builder%,Equal,PEBakery,Begin
+  ReadInterface,Value,"%ProjectDir%\Shell\B_shell.script",Interface4,pScrollBox_LaunchBar3,%LaunchBarIconSize%
+  ReadInterface,Value,"%ProjectDir%\Shell\B_shell.script",Interface4,pScrollBox_LaunchBar4,%LaunchBarMenuPosition%
+End
+If,%Builder%,Equal,WinBuilder,Begin
+  AddInterface,"%ProjectDir%\Shell\B_shell.script",Interface4,""
+  Set,%LaunchBarIconSize%,%pScrollBox_LaunchBar3%
+  Set,%LaunchBarMenuPosition%,%pScrollBox_LaunchBar4%
+End
 If,%LaunchBarIconSize%,Equal,SMALL,Set,%LaunchBarIconSize%,0
 If,%LaunchBarIconSize%,Equal,LARGE,Set,%LaunchBarIconSize%,1
-ReadInterface,Value,"%ProjectDir%\Shell\B_shell.script",Interface,pScrollBox_LaunchBar4,%LaunchBarMenuPosition%
 If,%LaunchBarMenuPosition%,Equal,LEFT,Set,%LaunchBarMenuPosition%,1
 If,%LaunchBarMenuPosition%,Equal,RIGHT,Set,%LaunchBarMenuPosition%,3
 If,%LaunchBarMenuPosition%,Equal,TOP,Set,%LaunchBarMenuPosition%,2
 If,%LaunchBarMenuPosition%,Equal,BOTTOM,Set,%LaunchBarMenuPosition%,4
 StrFormat,LEFT,%CodeBase%,3,%CodeBase3%
+If,ExistFile,"%Programs%\misc\restart.ico",Begin
+  If,Not,ExistDir,"%TargetDir%\Programs\misc",DirMake,"%TargetDir%\Programs\misc"
+  FileCopy,"%Programs%\misc\restart.ico","%TargetDir%\Programs\misc"
+  ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemRoot#$p\System32\wpeutil.exe#$q /F:#$q%ProjectTemp%\Restart.lnk#$q /P:Reboot /I:#$q#$pSystemDrive#$p\Programs\misc\restart.ico#$c0#$q"
+End
+Else,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemRoot#$p\System32\wpeutil.exe#$q /F:#$q%ProjectTemp%\Restart.lnk#$q /P:Reboot#$q"
+If,ExistFile,"%ProjectTemp%\Restart.lnk",FileCopy,"%ProjectTemp%\Restart.lnk","%TargetDir%\Windows\System32\config\systemprofile\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch"
+If,ExistFile,"%Programs%\misc\shutdown.ico",Begin
+  If,Not,ExistDir,"%TargetDir%\Programs\misc",DirMake,"%TargetDir%\Programs\misc"
+  FileCopy,"%Programs%\misc\shutdown.ico","%TargetDir%\Programs\misc"
+  ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemRoot#$p\System32\wpeutil.exe#$q /F:#$q%ProjectTemp%\Shutdown.lnk#$q /P:Shutdown /I:#$q#$pSystemDrive#$p\Programs\misc\shutdown.ico#$c0#$q"
+End
+Else,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemRoot#$p\System32\wpeutil.exe#$q /F:#$q%ProjectTemp%\Shutdown.lnk#$q /P:Shutdown#$q"
+If,ExistFile,"%ProjectTemp%\Shutdown.lnk",FileCopy,"%ProjectTemp%\Shutdown.lnk","%TargetDir%\Windows\System32\config\systemprofile\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch"
 
 [WinXShell]
 If,ExistFile,"%TargetDir%\Programs\WinXShell\WinXShell.jcfg",FileDelete,"%TargetDir%\Programs\WinXShell\WinXShell.jcfg"
@@ -81,7 +103,11 @@ ShellExecute,Hide,"%Tools%\offlinereg\offlinereg-win32.exe","#$q%Target_config%\
 [BBLEAN]
 DirMake,"%TargetDir%\Programs\bblean"
 DirCopy,"%Programs%\bblean\%ARCH%\*","%TargetDir%\Programs\bblean"
-ReadInterface,Value,"%ProjectDir%\Shell\B_shell.script",Interface,pScrollBox_bblean2,%bbLeanSkinYesNo%
+If,%Builder%,Equal,PEBakery,ReadInterface,Value,"%ProjectDir%\Shell\B_shell.script",Interface1,pScrollBox_bblean2,%bbLeanSkinYesNo%
+Else,Begin
+  AddInterface,"%ProjectDir%\Shell\B_shell.script",Interface1,""
+  Set,%bbLeanSkinYesNo%,%pScrollBox_bblean2%
+End
 If,%bbLeanSkinYesNo%,Equal,NO,TXTReplace,"%TargetDir%\Programs\bblean\plugins.rc","plugins\bbLeanSkin","#plugins\bbLeanSkin"
 Run,%ScriptFile%,BBLEAN_MENU
 Run,%ScriptFile%,BBKEYS_CONFIG
@@ -168,7 +194,7 @@ If,%Shell%,Equal,CMD,TXTaddLine,"%TargetDir%\Windows\System32\winpeshl.ini",%SYS
 If,%Shell%,Equal,LaunchBar,Begin
   If,%ARCH%,Equal,x86,Begin
     If,%CodeBase3%,Smaller,6.3,TXTaddLine,"%TargetDir%\Windows\System32\winpeshl.ini",%SYSTEMDRIVE%\Programs\LaunchBar_Shell\LaunchBar.exe#$c #$qLARGE=%LaunchBarIconSize% POSITION=%LaunchBarMenuPosition% ONTOP=0 CENTER=1#$q,Append
-	Else,TXTaddLine,"%TargetDir%\Windows\System32\winpeshl.ini",%SYSTEMDRIVE%\Programs\LaunchBar_Shell\LaunchBar.exe#$c LARGE=%LaunchBarIconSize% POSITION=%LaunchBarMenuPosition% ONTOP=0 CENTER=1,Append
+    Else,TXTaddLine,"%TargetDir%\Windows\System32\winpeshl.ini",%SYSTEMDRIVE%\Programs\LaunchBar_Shell\LaunchBar.exe#$c LARGE=%LaunchBarIconSize% POSITION=%LaunchBarMenuPosition% ONTOP=0 CENTER=1,Append
   End
   If,%ARCH%,Equal,x64,Begin
     If,%CodeBase3%,Smaller,6.3,TXTaddLine,"%TargetDir%\Windows\System32\winpeshl.ini",%SYSTEMDRIVE%\Programs\LaunchBar_Shell\LaunchBar_x64.exe#$c #$qLARGE=%LaunchBarIconSize% POSITION=%LaunchBarMenuPosition% ONTOP=0 CENTER=1#$q,Append
@@ -191,10 +217,12 @@ ShellExecute,Hide,"attrib.exe","-h -s #$q%TargetDir%#$q"
 If,%Method%,Equal,INJECT,Begin
   Echo,"Injecting files"
   //the empty quotes on the next line are required (to add files at the root of boot.wim)
-  WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+  If,%Builder%,Equal,PEBakery,WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+  Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qadd '%TargetDir%' '\'#$q"
   wait,1
   Echo,"Optimize boot.wim to save space"
-  WimOptimize,%OutputDir%\sources\boot.wim
+  If,%Builder%,Equal,PEBakery,WimOptimize,%OutputDir%\sources\boot.wim
+  Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","optimize #$q%OutputDir%\sources\boot.wim#$q"
 End
 If,%Method%,Equal,EXTRACT,Begin
   Set,%CONTINUE%,NO
@@ -207,15 +235,18 @@ If,%Method%,Equal,EXTRACT,Begin
       IniWrite,"%OutputDir%\project.settings.ini",MAIN.SETTINGS,BOOT.WIM.IMAGE.NUMBER,1
       IniWrite,"%OutputDir%\project.settings.ini",MAIN,Image.Number,1
     End
-    WimCapture,%TargetDir%,"%OutputDir%\sources\boot.wim",LZX,BOOT,NOACL
+    If,%Builder%,Equal,PEBakery,WimCapture,%TargetDir%,"%OutputDir%\sources\boot.wim",LZX,BOOT,NOACL
+    Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","capture --boot #$q%TargetDir%#$q #$q%OutputDir%\sources\boot.wim#$q --no-acls"
   End
   Else,Begin
     Echo,"Injecting files"
     //the empty quotes on the next line are required (to add files at the root of boot.wim)
-    WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+    If,%Builder%,Equal,PEBakery,WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+    Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qadd '%TargetDir%' '\'#$q"
     wait,1
     Echo,"Optimize boot.wim to save space"
-    WimOptimize,%OutputDir%\sources\boot.wim
+    If,%Builder%,Equal,PEBakery,WimOptimize,%OutputDir%\sources\boot.wim
+    Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","optimize #$q%OutputDir%\sources\boot.wim#$q"
   End
 End
 

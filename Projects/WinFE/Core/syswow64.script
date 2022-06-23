@@ -4,8 +4,8 @@ Description=This is set as hidden and will be executed from another project scri
 Selected=False
 Level=-2
 Author=Misty
-Version=20220524
-Date=2022-05-24
+Version=20220618
+Date=2022-06-18
 Credits=The 5-Wow64 script was used as a base to identify file and registry dependencies. Credits therefore go to everyone involved in the 5-Wow64.script (including JFX, Lancelot, 2aCD, ChrisR and "...to everybody on the BootLand forums for helping on the debuggind and improvement of this script.").
 
 
@@ -31,6 +31,42 @@ RegCopy,HKLM,"_InstallWim_SOFTWARE\Microsoft\Windows\CurrentVersion\SideBySide\W
 RegCopy,HKLM,"_InstallWim_SOFTWARE\Microsoft\Windows\CurrentVersion\SideBySide\Winners\x86_microsoft-windows-m..tion-isolationlayer_*",HKLM,"_WinPE_SOFTWARE\Microsoft\Windows\CurrentVersion\SideBySide\Winners",WILDCARD
 If,ExistRegSection,HKLM,_WinPE_SOFTWARE,RegHiveUnload,_WinPE_SOFTWARE
 If,ExistRegSection,HKLM,_InstallWim_SOFTWARE,RegHiveUnload,_InstallWim_SOFTWARE
+
+
+[WoW64-WinPE10-NEW-registry_winbuilder]
+If,Not,ExistRegSection,HKLM,_WinPE_SOFTWARE,RegHiveLoad,_WinPE_SOFTWARE,"%Target_config%\software"
+If,Not,ExistRegSection,HKLM,_InstallWim_SOFTWARE,RegHiveLoad,_InstallWim_SOFTWARE,"%SysWow64_Registry%\software"
+Echo,attempting to copy registry keys
+ShellExecute,Hide,"reg.exe","copy HKLM\_InstallWim_SOFTWARE\Classes\Wow6432Node\CLSID HKLM\_WinPE_SOFTWARE\Classes\Wow6432Node\CLSID /s /f"
+ShellExecute,Hide,"reg.exe","copy HKLM\_InstallWim_SOFTWARE\Classes\Wow6432Node\Interface HKLM\_WinPE_SOFTWARE\Classes\Wow6432Node\Interface /s /f"
+ShellExecute,Hide,"reg.exe","copy HKLM\_InstallWim_SOFTWARE\Classes\Wow6432Node\DirectShow HKLM\_WinPE_SOFTWARE\Classes\Wow6432Node\DirectShow /s /f"
+echo,media type
+ShellExecute,Hide,"reg.exe","copy #$qHKLM\_InstallWim_SOFTWARE\Classes\Wow6432Node\Media Type#$q #$qHKLM\_WinPE_SOFTWARE\Classes\Wow6432Node\Media Type#$q /s /f"
+echo,mediafoundation
+ShellExecute,Hide,"reg.exe","copy HKLM\_InstallWim_SOFTWARE\Classes\Wow6432Node\MediaFoundation HKLM\_WinPE_SOFTWARE\Classes\Wow6432Node\MediaFoundation /s /f"
+Wait,1
+Echo,Winners 
+ShellExecute,Hide,"reg.exe","copy HKLM\_InstallWim_SOFTWARE\Microsoft\Windows\CurrentVersion\SideBySide\Winners HKLM\_WinPE_SOFTWARE\Microsoft\Windows\CurrentVersion\SideBySide\Winners /s /f"
+Wait,1
+Echo,SMI
+ShellExecute,Hide,"reg.exe","copy HKLM\_InstallWim_SOFTWARE\Microsoft\Windows\CurrentVersion\SMI HKLM\_WinPE_SOFTWARE\Microsoft\Windows\CurrentVersion\SMI /s /f"
+If,ExistRegSection,HKLM,_WinPE_SOFTWARE,RegHiveUnload,_WinPE_SOFTWARE
+If,ExistRegSection,HKLM,_InstallWim_SOFTWARE,RegHiveUnload,_InstallWim_SOFTWARE
+
+
+
+[kind of working]
+If,ExistFile,%ProjectTemp%\*.reg,FileDelete,%ProjectTemp%\*.reg
+ShellExecute,Hide,"reg.exe","EXPORT HKLM\_InstallWim_SOFTWARE\Classes\Wow6432Node\CLSID #$q%ProjectTemp%\a.reg#$q"
+ShellExecute,Hide,"reg.exe","EXPORT HKLM\_InstallWim_SOFTWARE\Classes\Wow6432Node\Interface #$q%ProjectTemp%\b.reg#$q"
+ShellExecute,Hide,"reg.exe","EXPORT HKLM\_InstallWim_SOFTWARE\Classes\Wow6432Node\Interface #$q%ProjectTemp%\c.reg#$q"
+ShellExecute,Hide,"reg.exe","EXPORT #$qHKLM\_InstallWim_SOFTWARE\Microsoft\Windows\CurrentVersion\SideBySide\Winners\x86_microsoft.windows.c..-controls.resources_*#$q #$q%ProjectTemp%\test.reg#$q"
+ShellExecute,Hide,"%Tools%\gsar.exe","-i -o -s#$q_:x00I:x00n:x00s:x00t:x00a:x00l:x00l:x00W:x00i:x00m:x00_#$q -r#$q_:x00W:x00i:x00n:x00P:x00E:x00_#$q #$q%ProjectTemp%\*.reg#$q"
+ShellExecute,Hide,"reg.exe","IMPORT #$q%ProjectTemp%\*.reg#$q"
+message,syswow64.script line 46 - check *.reg and mounted reg hives
+If,ExistRegSection,HKLM,_WinPE_SOFTWARE,RegHiveUnload,_WinPE_SOFTWARE
+If,ExistRegSection,HKLM,_InstallWim_SOFTWARE,RegHiveUnload,_InstallWim_SOFTWARE
+halt
 
 
 [WoW64-WinPE10-registry]

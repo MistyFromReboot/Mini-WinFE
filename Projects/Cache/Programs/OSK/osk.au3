@@ -1,4 +1,4 @@
-; By RichMinichiello - https://www.autoitscript.com/forum/topic/159626-on-screen-keyboard/
+; By RichMinichiello - https://www.autoitscript.com/forum/topic/159626-on-screen-keyboard/ - start position (in line 14) modified - original vales changed from "587, 203, 564, 614" to "587, 203, 100, 100"
 #include <GUIConstantsEx.au3>
 #include <WindowsConstants.au3>
 #include <WinAPI.au3>
@@ -11,7 +11,7 @@ $MA_NOACTIVATEANDEAT = 4
 
 
 ; Create "keyboard" GUI
-$hGUI = GUICreate("On Screen Keyboard - v. 14.3.17", 587, 203, 564, 614, -1, BitOR($WS_EX_TOOLWINDOW, $WS_EX_TOPMOST, $WS_EX_NOACTIVATE))
+$hGUI = GUICreate("On Screen Keyboard - v. 14.3.17", 587, 203, 100, 100, -1, BitOR($WS_EX_TOOLWINDOW, $WS_EX_TOPMOST, $WS_EX_NOACTIVATE))
 
 $dummy1 = GUICtrlCreateDummy()
 

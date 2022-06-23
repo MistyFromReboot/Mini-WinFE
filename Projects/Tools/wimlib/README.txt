@@ -1,6 +1,6 @@
                                   INTRODUCTION
 
-This is wimlib version 1.12.0 (July 2017).  wimlib is a C library for
+This is wimlib version 1.13.5 (December 2021).  wimlib is a C library for
 creating, modifying, extracting, and mounting files in the Windows Imaging
 Format (WIM files).  wimlib and its command-line frontend 'wimlib-imagex'
 provide a free and cross-platform alternative to Microsoft's WIMGAPI, ImageX,
@@ -10,8 +10,7 @@ and DISM.
 
 To install wimlib and wimlib-imagex on UNIX-like systems, you can compile from
 source (e.g. './configure && make && sudo make install').  Alternatively, check
-if a package has already been prepared for your operating system.  Example files
-for Debian and RPM packaging are in the debian/ and rpm/ directories.
+if a package has already been prepared for your operating system.
 
 To install wimlib and wimlib-imagex on Windows, just download and extract the
 ZIP file containing the latest binaries.  See README.WINDOWS for more details.
@@ -268,7 +267,7 @@ wimlib is free software that comes with NO WARRANTY, to the extent permitted by
 law.  See the COPYING file for more details.
 
 Bug reports, suggestions, and other contributions are appreciated and may be
-sent via email to ebiggers3@gmail.com or posted to https://wimlib.net/forums.
+posted to https://wimlib.net/forums/.
 
 wimlib is independently developed and does not contain any code, data, or files
 copyrighted by Microsoft.  It is not known to be affected by any patents.

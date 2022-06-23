@@ -10,10 +10,10 @@
 <option value="winfe.htm">Windows FE</option>  
 <option value="winpe.htm">Windows PE</option>  
 <option value="builder.htm" selected="selected">Builder</option>  
-<option value="builder.htm">Builder</option>  
 <option value="options.htm">Project Options</option>  
 <option value="project.htm">Project Scripts</option>  
-<option value="instructions_pebakery.htm">Instructions</option>  
+<option value="instructions_pebakery.htm">Instructions (PEB..</option>  
+<option value="instructions_wb.htm">Instructions (Win..</option>  
 <option value="menu_system.htm">Menu System</option>  
 <option value="not_in_wim.htm">Include...in boot.wim</option>  
 <option value="postconfig.htm">Post Config</option>  
@@ -24,7 +24,8 @@
 <option value="" disabled></option> 
 <option value="" disabled>Appendices</option> 
 <option value="" disabled>=========</option> 
-<option value="quick_pebakery.htm">Quick Start - Build...</option>  
+<option value="quick_pebakery.htm">Quick Start - PEBakery...</option>  
+<option value="quick_wb.htm">Quick Start - WinBuilder...</option>  
 <option value="usage.htm">Quick Start - Run...</option>  
 <option value="diskmgr.htm">DiskMgr</option>  
 <option value="winfe_tests.htm">WinFE Tests</option>  
@@ -41,8 +42,56 @@
  
 
 
+<h2><u>Build Engines</u></h2>
 
-<h2><u>PEBakery Build Engine</u></h2>
+<p>
+The <font class="file">MistyPE</font> project is compatible with two different build engines, both of which are included in the project download -
+<ul>
+<li><a class="internal" href="#winbuilder">WinBuilder</a></li>
+<li><a class="internal" href="#pebakery">PEBakery</a></li>
+</ul>
+</p>
+
+
+
+
+
+<a name="winbuilder"></a><br>
+<h2><u>WinBuilder</u></h2>
+
+
+<p>
+Based upon information in the <font class="file">WinBuilder</font> wiki, <font class="file">WinBuilder</font> was developed by <font class="file">Nuno Brito</font>, <font class="file">Peter Schlang</font> and <font class="file">Robert Kochem</font> between 2005 to 2011. 
+</p>
+
+
+<p>
+<font class="file">MistyPE</font> has been coded to use the <font class="file">WinBuilder</font> scripting language, a language developed specifically for the <font class="file">WinBuilder</font> build engine. <font class="file">WinBuilder.exe</font> version <font class="file">82.0.1.0</font> is included in the project download and the project has been extensively tested in <font class="file">WinBuilder</font>.
+</p>
+
+<p>
+<font class="file">WinBuilder</font> runs on the Windows XP and newer operating systems and does not require any additional dependencies. It has a relatively small footprint and has been around for long enough to have extensive documentation covering supported commands - see <a class="external" target="_blank" href="http://reboot.pro/files/file/13-winbuilder-documentation-in-compiled-help-format/">here</a> for example. 
+</p>
+
+
+<p>
+<font class="file">WinBuilder</font> version <font class="file">82.0.1.0</font> was released around 2011. Whilst there are some bugs these are fairly well known and it's possible to work around them as a consequence. Unfortunately <font class="file">WinBuilder</font> is no longer in development and there do not appear to be any plans to update it in the future. 
+</p>
+
+
+
+<p>
+Screenshot of <font class="file">Mini-WinFE</font> running in <font class="file">WinBuilder</font> -
+<div>
+<a href="img/winbuilder.png"><IMG SRC="img/winbuilder.png" float=left width=90% margin-right=1% margin-bottom=0.5em border=1></a>
+</div>
+</p>
+
+
+
+
+<a name="pebakery"></a><br>
+<h2><u>PEBakery</u></h2>
 
 <p>
 This <font class="file">Mini-WinFE</font> project has been designed for use with <font class="file">PEBakery</font> - the <font class="file">PEBakery</font> 0.9.5.1 beta build is included in the project download. The project has been tested on more recent builds including <font class="file">PEBakery</font> 1.0.0, however tests were limited to running on a Windows 10 host operating system. Build 1.0.0 failed to run during a brief test on Windows 8.1. <u><b>NOTE</b></u> - .Net Framework 4.7.1 and Windows 7 or newer is required to run <font class="file">PEBakery</font> 0.9.5.1 beta. 
@@ -93,5 +142,5 @@ Screenshot of the <font class="file">Mini-WinFE</font> project running in <font 
 
 
 
-<p class="breaktop"><font class="file">Document date - 5<sup>th</sup> June 2022</font></p></font></body></html>
+<p class="breaktop"><font class="file">Document date - 18<sup>th</sup> June 2022</font></p></font></body></html>
  

@@ -3,9 +3,9 @@ Title=Browse for Folder
 Description=This is set as hidden and will be executed from another project script.
 Selected=False
 Level=-2
-Author=ThePEBakeryTeam
-Version=20190426
-Date=2019-04-26
+Author=Misty
+Version=20220618
+Date=2022-06-18
 
 [process]
 If,ExistFile,"%Target_system32%\BrowseForFolder.txt",Begin
@@ -19,9 +19,13 @@ Else,Begin
       If,ExistFile,"%ProjectTemp%\File.and.Dependencies.txt",FileDelete,"%ProjectTemp%\File.and.Dependencies.txt"
       FileCopy,"%Tools%\wimlib.file.lists\File.and.Dependencies.txt","%ProjectTemp%\File.and.Dependencies.txt"
       TXTReplace,"%ProjectTemp%\File.and.Dependencies.txt",myfile.ext,%MY_FILE%
-      WimExtractBulk,%Install.wim%,%Install.wim.Image.number%,%ProjectTemp%\File.and.Dependencies.txt,%TargetDir%,NOACL,NOERR
+      If,%Builder%,Equal,PEBakery,WimExtractBulk,%Install.wim%,%Install.wim.Image.number%,%ProjectTemp%\File.and.Dependencies.txt,%TargetDir%,NOACL,NOERR
+	  Else,ShellExecute,Hide,"%Tools%\wimlib\wimlib-imagex.exe","extract #$q%Install.wim%#$q %Install.wim.Image.number% @#$q%ProjectTemp%\File.and.Dependencies.txt#$q --dest-dir=#$q%TargetDir%#$q --nullglob --no-acls"
 	End
-    If,%CodeBase2%,Equal,10.0,WimExtract,%Install.wim%,%Install.wim.Image.number%,Windows\System32\edputil.dll,%Target_system32%,NOACL
+    If,%CodeBase2%,Equal,10.0,Begin
+	  If,%Builder%,Equal,PEBakery,If,WimExistFile,%Install.wim%,%Install.wim.Image.number%,Windows\System32\edputil.dll,WimExtract,%Install.wim%,%Install.wim.Image.number%,Windows\System32\edputil.dll,%Target_system32%,NOACL
+	  Else,ShellExecute,Hide,"%Tools%\wimlib\wimlib-imagex.exe","extract #$q%Install.wim%#$q %Install.wim.Image.number% \Windows\System32\edputil.dll --dest-dir=#$q%TargetDir%\Windows\System32#$q --no-acls"
+	End  
 	If,Not,ExistDir,"%TargetDir%\Windows\System32\config\systemprofile\Desktop",Begin
       Echo,"Creating folder 'Windows\System32\config\systemprofile\Desktop' to enable Browse for Folders dialog"
       DirMake,"%TargetDir%\Windows\System32\config\systemprofile\Desktop"
