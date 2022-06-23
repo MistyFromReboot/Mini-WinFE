@@ -3,19 +3,19 @@ Title=F.A.U.
 Description=Forensic Acquisitions Utilities by Mr George M. Garner Jr. "This is a collection of utilities and libraries intended for forensic or forensic-related investigative use in a modern Microsoft Windows environment...."
 Selected=False
 Level=5
-Author=ThePEBakeryTeam
-Version=20190426
-Date=2019-04-26
+Author=Misty
+Version=20220618
+Date=2022-06-18
 Interface=Interface1
 
 [Interface1]
 pTextLabelMenu1="1",1,1,35,3,70,18,10,Bold
 pButtonMenu2="2",1,8,75,0,70,20,pButtonMenu2,0,True,_pButtonMenu2_,True
 pButtonMenu3="?",1,8,145,0,70,20,pButtonMenu3,0,True,_pButtonMenu3_,True
-pTextLabel2="FAU is the property of GMG Systems, Inc. The author of the software, Mr George M. Garner sadly passed away in 2017 and development of the software appears to have ended. Mr Garner kindly gave permission under an Open License to redistribute the software -",1,1,51,150,480,50,9,Normal
+pTextLabel2="FAU is the property of GMG Systems, Inc. The author of the software, Mr George M. Garner sadly passed away in 2017 and development of the software appears to have ended. Mr Garner kindly gave permission under an Open License to redistribute the software -",1,1,51,150,480,63,9,Normal
 pWebLabel1=http://www.gmgsystemsinc.com/fau/,1,10,51,100,216,18,http://www.gmgsystemsinc.com/fau/
 pTextLabel1="Forensic Acquisitions Utilities website",1,1,51,77,330,18,10,Bold
-pWebLabel2=FAU_END_USER_LICENSE_AGREEMENT.pdf,1,10,51,200,211,18,http://www.gmgsystemsinc.com/fau/FAU_END_USER_LICENSE_AGREEMENT.pdf
+pWebLabel2=FAU_END_USER_LICENSE_AGREEMENT.pdf,1,10,51,220,211,18,http://www.gmgsystemsinc.com/fau/FAU_END_USER_LICENSE_AGREEMENT.pdf
 pCheckBoxInWim="Include Program in boot.wim",1,3,51,265,180,18,True
 
 [Interface2]
@@ -69,38 +69,37 @@ Run,%ScriptFile%,COMMON
 If,%PROGRAMS.IN.WIM%,Equal,NO,Run,%ScriptFile%,NOT.IN.WIM
 If,%PROGRAMS.IN.WIM%,Equal,YES,Run,%ScriptFile%,IN.WIM
 
-
 [CHECKS]
 If,Not,ExistFile,"%Programs%\FAU\%ARCH%\dd.exe",Begin
-  Message,FAU is missing - exiting script...,Error,5
-  Exit,FAU is missing - exiting script...,WARN
+Message,FAU is missing - exiting script...,Error,5
+Exit,FAU is missing - exiting script...,WARN
 End
 
 [MENU]
 If,%PROGRAMS.IN.WIM%,Equal,NO,Begin
-  If,Not,ExistFile,"%OutputDir%\Programs\ShortcutsNotInWim.txt",Run,"%ProjectDir%\Core\common.script",NotInWim
-  If,%Filemanager%,Equal,7-zip,TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$pSystemDrive#$p\Programs\7-zip\7zfm.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qFAU#$q #$q#$p~dp0FAU#$q #$q#$p~dp0misc\folder.ico#$q #$q0#$q",Append
-  If,%Filemanager%,Equal,Explorer++,TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$pSystemDrive#$p\Programs\Explorer++\Explorer++.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qFAU#$q #$q#$p~dp0FAU#$q #$q#$p~dp0misc\folder.ico#$q #$q0#$q",Append
-  If,%Filemanager%,Equal,JustManager,TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$pSystemDrive#$p\Programs\JustManager\JustManager.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qFAU#$q #$q#$p~dp0FAU#$q #$q#$p~dp0misc\folder.ico#$q #$q0#$q",Append
-  If,%Filemanager%,Equal,Q-Dir,TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$pSystemDrive#$p\Programs\Q-Dir\Q-Dir.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qFAU#$q #$q#$p~dp0FAU#$q #$q#$p~dp0misc\folder.ico#$q #$q0#$q",Append
-End 
+If,Not,ExistFile,"%OutputDir%\Programs\ShortcutsNotInWim.txt",Run,"%ProjectDir%\Core\common.script",NotInWim
+If,%Filemanager%,Equal,7-zip,TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$pSystemDrive#$p\Programs\7-zip\7zfm.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qFAU#$q #$q#$p~dp0FAU#$q #$q#$p~dp0misc\folder.ico#$q #$q0#$q",Append
+If,%Filemanager%,Equal,Explorer++,TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$pSystemDrive#$p\Programs\Explorer++\Explorer++.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qFAU#$q #$q#$p~dp0FAU#$q #$q#$p~dp0misc\folder.ico#$q #$q0#$q",Append
+If,%Filemanager%,Equal,JustManager,TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$pSystemDrive#$p\Programs\JustManager\JustManager.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qFAU#$q #$q#$p~dp0FAU#$q #$q#$p~dp0misc\folder.ico#$q #$q0#$q",Append
+If,%Filemanager%,Equal,Q-Dir,TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$pSystemDrive#$p\Programs\Q-Dir\Q-Dir.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qFAU#$q #$q#$p~dp0FAU#$q #$q#$p~dp0misc\folder.ico#$q #$q0#$q",Append
+End
 If,%PROGRAMS.IN.WIM%,Equal,YES,Begin
-  If,%Filemanager%,Equal,Q-Dir,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\Q-Dir\Q-Dir.exe#$q /F:#$q%ProjectTemp%\FAU.lnk#$q /P:#$q#$pSystemDrive#$p\Programs\FAU#$q /W:#$q#$pSystemDrive#$p\Programs\FAU#$q /I:#$q#$pSystemDrive#$p\Programs\misc\folder.ico#$c0#$q"
-  If,%Filemanager%,Equal,Explorer++,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\Explorer++\Explorer++.exe#$q /F:#$q%ProjectTemp%\FAU.lnk#$q /P:#$q#$pSystemDrive#$p\Programs\FAU#$q /W:#$q#$pSystemDrive#$p\Programs\FAU#$q /I:#$q#$pSystemDrive#$p\Programs\misc\folder.ico#$c0#$q"
-  If,%Filemanager%,Equal,JustManager,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\JustManager\JustManager.exe#$q /F:#$q%ProjectTemp%\FAU.lnk#$q /P:#$q#$pSystemDrive#$p\Programs\FAU#$q /W:#$q#$pSystemDrive#$p\Programs\FAU#$q /I:#$q#$pSystemDrive#$p\Programs\misc\folder.ico#$c0#$q"
-  If,%Filemanager%,Equal,7-zip,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\7-zip\7zfm.exe#$q /F:#$q%ProjectTemp%\FAU.lnk#$q /P:#$q#$pSystemDrive#$p\Programs\FAU#$q /W:#$q#$pSystemDrive#$p\Programs\FAU#$q /I:#$q#$pSystemDrive#$p\Programs\misc\folder.ico#$c0#$q"
-  If,ExistFile,"%ProjectTemp%\FAU.lnk",Begin
-    Set,%MyShortcut%,FAU.lnk
-    If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
-    If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
-    If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
-      Set,%ProgramMenuPath%,%pTextBox1%
-      Run,"%ProjectDir%\Core\common.script",StartMenu
-    End
-    If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
-    If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
-    FileDelete,"%ProjectTemp%\%MyShortcut%"
-  End
+If,%Filemanager%,Equal,Q-Dir,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\Q-Dir\Q-Dir.exe#$q /F:#$q%ProjectTemp%\FAU.lnk#$q /P:#$q#$pSystemDrive#$p\Programs\FAU#$q /W:#$q#$pSystemDrive#$p\Programs\FAU#$q /I:#$q#$pSystemDrive#$p\Programs\misc\folder.ico#$c0#$q"
+If,%Filemanager%,Equal,Explorer++,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\Explorer++\Explorer++.exe#$q /F:#$q%ProjectTemp%\FAU.lnk#$q /P:#$q#$pSystemDrive#$p\Programs\FAU#$q /W:#$q#$pSystemDrive#$p\Programs\FAU#$q /I:#$q#$pSystemDrive#$p\Programs\misc\folder.ico#$c0#$q"
+If,%Filemanager%,Equal,JustManager,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\JustManager\JustManager.exe#$q /F:#$q%ProjectTemp%\FAU.lnk#$q /P:#$q#$pSystemDrive#$p\Programs\FAU#$q /W:#$q#$pSystemDrive#$p\Programs\FAU#$q /I:#$q#$pSystemDrive#$p\Programs\misc\folder.ico#$c0#$q"
+If,%Filemanager%,Equal,7-zip,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\7-zip\7zfm.exe#$q /F:#$q%ProjectTemp%\FAU.lnk#$q /P:#$q#$pSystemDrive#$p\Programs\FAU#$q /W:#$q#$pSystemDrive#$p\Programs\FAU#$q /I:#$q#$pSystemDrive#$p\Programs\misc\folder.ico#$c0#$q"
+If,ExistFile,"%ProjectTemp%\FAU.lnk",Begin
+Set,%MyShortcut%,FAU.lnk
+If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
+If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
+If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
+Set,%ProgramMenuPath%,%pTextBox1%
+Run,"%ProjectDir%\Core\common.script",StartMenu
+End
+If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
+If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
+FileDelete,"%ProjectTemp%\%MyShortcut%"
+End
 End
 
 [COMMON]
@@ -116,8 +115,9 @@ IniWrite,"%OutputDir%\Project.Settings.ini",PROGRAMS,FAU,YES
 
 [IN.WIM]
 If,%FullProjectRun%,Equal,NO,Begin
-  IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
-  WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
+If,%Builder%,Equal,PEBakery,WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qadd '%TargetDir%' '\'#$q"
 End
 //Wait,1
 

@@ -12,7 +12,8 @@
 <option value="builder.htm">Builder</option>  
 <option value="options.htm">Project Options</option>  
 <option value="project.htm">Project Scripts</option>  
-<option value="instructions_pebakery.htm">Instructions</option>  
+<option value="instructions_pebakery.htm">Instructions (PEB..</option>  
+<option value="instructions_wb.htm">Instructions (Win..</option>  
 <option value="menu_system.htm">Menu System</option>  
 <option value="not_in_wim.htm">Include...in boot.wim</option>  
 <option value="postconfig.htm">Post Config</option>  
@@ -23,7 +24,8 @@
 <option value="" disabled></option> 
 <option value="" disabled>Appendices</option> 
 <option value="" disabled>=========</option> 
-<option value="quick_pebakery.htm">Quick Start - Build...</option>  
+<option value="quick_pebakery.htm">Quick Start - PEBakery...</option>  
+<option value="quick_wb.htm">Quick Start - WinBuilder...</option>  
 <option value="usage.htm">Quick Start - Run...</option>  
 <option value="diskmgr.htm">DiskMgr</option>  
 <option value="winfe_tests.htm">WinFE Tests</option>  
@@ -38,7 +40,6 @@
 <hr> 
 <a href="http://winfe.mistyprojects.co.uk/index.html"><img src="img/home.jpg" BORDER=1></a> 
  
-
 
 
 <h2><u>Download/Links</u></h2>
@@ -82,4 +83,141 @@ Detail when selecting the <font class="file">Code</font> button. Click on <font 
 
 
 
-<p class="breaktop"><font class="file">Document date - 5<sup>th</sup> June 2022</font></p></font></body></html> 
+
+
+
+<p class="breaktop">
+<h2><u>Differences between Main and WinPE</u></h2>
+
+
+<p>
+The <a class="external" target="_blank" href="https://github.com/MistyFromReboot/Mini-WinFE/tree/WinPE">WinPE</a> branch has some additions to the <a class="external" target="_blank" href="https://github.com/MistyFromReboot/Mini-WinFE/tree/main">main</a> branch. The following project scripts are included in <a class="external" target="_blank" href="https://github.com/MistyFromReboot/Mini-WinFE/tree/WinPE">WinPE</a> -
+<ul>
+<li><font color="red">Project\WinFE\Applications\</font><font color="blue">Diskmgmt.script</font></li>
+<li><font color="red">Project\WinFE\Applications\</font><font color="blue">JkDefrag.script</font></li>
+<li><font color="red">Project\WinFE\Applications\</font><font color="blue">sDelete.script</font></li>
+<li><font color="red">Project\WinFE\Applications\</font><font color="blue">Snapshot.script</font></li>
+<li><font color="red">Project\WinFE\Applications\</font><font color="blue">Tinyhexer.script</font></li>
+<li><font color="red">Project\WinFE\Finalise</font><font color="blue">Subst.script</font></li>
+</ul>
+</p>
+
+
+<p class="break3em">
+The following folders are included in the <a class="external" target="_blank" href="https://github.com/MistyFromReboot/Mini-WinFE/tree/WinPE">WinPE</a> branch program cache (<font color="red">Projects\Cache\Programs\</font>) - 
+<ul>
+<li><font color="red">\Bootsect</font></li>
+<li><font color="red">\Diskmgmt</font></li>
+<li><font color="red">\JKDefrag</font></li>
+<li><font color="red">\sDelete</font></li>
+<li><font color="red">\Tinyhexer</font></li>
+</ul>
+</p>
+
+
+<p class="break3em">
+Differences in  <font color="red">Project\WinFE\Finalise\</font><font color="blue">winfe.script</font>, which effectively force the use of forensic settings in the <a class="external" target="_blank" href="https://github.com/MistyFromReboot/Mini-WinFE/tree/main">main</a> branch as <font class="file">SANPolicy</font> can only be set as 3 or 4, <font class="file">NoAutoMount</font> cannot be disabled and <font class="file">DiskMgr/Protect.exe</font> running at startup cannot be disabled - 
+</p>
+
+<p>
+<u><a class="external" target="_blank" href="https://github.com/MistyFromReboot/Mini-WinFE/tree/WinPE">WinPE</a> branch</u> (lines 24-32)<br/>
+<ul><font size="1">
+24 pScrollBox3=<b><font color="red">1</font></b>,1,4,20,140,80,20,<b><font color="red">1,3,4</font></b><br/>
+25 pTextLabel3="2] SAN Policy",1,1,213,140,90,18,8,Bold<br/>
+26 pButton3=HELP,1,8,430,140,70,20,HELP.3,0,True,_HELP.3_,True<br/>
+27 pBevel4=,1,12,10,190,500,40<br/>
+28 pScrollBox4<b><font color="red">=,</font></b>1,4,20,200,80,20,<b><font color="red">,ENABLED</font></b><br/>
+29 pTextLabel4="3] NoAutoMount",1,1,205,200,117,21,8,Bold<br/>
+30 pButton4=HELP,1,8,430,200,70,20,HELP.4,0,True,_HELP.4_,True<br/>
+31 pBevel5=,1,12,10,250,500,40<br/>
+32 pScrollBox5=<b><font color="red">NO</font></b>,1,4,20,260,80,20,<b><font color="red">YES,NO</font></b><br/>
+</font></ul>
+</p>
+
+
+
+<p>
+<u><a class="external" target="_blank" href="https://github.com/MistyFromReboot/Mini-WinFE/tree/main">main</a> branch</u> (lines 24-32)<br/>
+<ul><font size="1">
+24 pScrollBox3=<b><font color="red">3</font></b>,1,4,20,140,80,20,<b><font color="red">3,4</font></b><br/>
+25 pTextLabel3="2] SAN Policy",1,1,213,140,90,18,8,Bold<br/>
+26 pButton3=HELP,1,8,430,140,70,20,HELP.3,0,True,_HELP.3_,True<br/>
+27 pBevel4=,1,12,10,190,500,40<br/>
+28 pScrollBox4<b><font color="red">=ENABLED,</font></b>1,4,20,200,80,20,<b><font color="red">ENABLED</font></b><br/>
+29 pTextLabel4="3] NoAutoMount",1,1,205,200,117,21,8,Bold<br/>
+30 pButton4=HELP,1,8,430,200,70,20,HELP.4,0,True,_HELP.4_,True<br/>
+31 pBevel5=,1,12,10,250,500,40<br/>
+32 pScrollBox5=<b><font color="red">YES</font></b>,1,4,20,260,80,20,<b><font color="red">YES</font></b><br/>
+</font></ul>
+</p>
+
+
+
+
+
+
+
+
+
+<p class="break3em">
+Differences in  <font color="red">Project\WinFE\Settings\</font><font color="blue">Recommended.script</font>, which removes BootSect from the <a class="external" target="_blank" href="https://github.com/MistyFromReboot/Mini-WinFE/tree/main">main</a> branch -
+</p>
+
+<p>
+<u><a class="external" target="_blank" href="https://github.com/MistyFromReboot/Mini-WinFE/tree/WinPE">WinPE</a> branch</u> (lines 16-20)<br/>
+<ul><font size="1">
+16 <font color="red">pCheckBox1="1] BootSect",1,3,40,80,180,18,True</font><br/>
+17 pCheckBox2="2] CMD Here",1,3,40,110,180,18,True<br/>
+18 pCheckBox3="3] Keyboard Layout",1,3,40,140,180,18,True<br/>
+19 pCheckBox4="4] ScreenRes",1,3,40,170,180,18,True<br/>
+20 <font color="red">pButton1=?,1,8,10,80,18,18,?option1,0,True,_?option1_,True</font><br/>
+</font></ul>
+</p>
+
+
+<p>
+<u><a class="external" target="_blank" href="https://github.com/MistyFromReboot/Mini-WinFE/tree/main">main</a> branch</u> (lines 16-20)</br>
+<ul><font size="1">
+16 <font color="red">//</font><br/>
+17 pCheckBox2="2] CMD Here",1,3,40,110,180,18,True<br/>
+18 pCheckBox3="3] Keyboard Layout",1,3,40,140,180,18,True<br/>
+19 pCheckBox4="4] ScreenRes",1,3,40,170,180,18,True<br/>
+20 <font color="red">//</font><br/>
+</font></ul>
+</p>
+
+
+
+
+
+<p class="break3em">
+Differences in  <font color="red">Project\WinFE\Settings\</font><font color="blue">wallpaper.script</font>, which changes the default wallpaper - 
+</p>
+
+
+<p>
+<u><a class="external" target="_blank" href="https://github.com/MistyFromReboot/Mini-WinFE/tree/WinPE">WinPE</a> branch</u> (lines 25-27)
+<ul><font size="1">
+25 Filecopy,"%Cache%\Programs\Wallpaper\<b><font color="red">winpe.jpg</font></b>","%TargetDir%\Programs\WinXShell\wallpaper.jpg"<br/>
+26 End<br/>
+27 Else,Filecopy,"%Cache%\Programs\Wallpaper\<b><font color="red">winpe.jpg</font></b>","%Target_System32%\winpe.jpg"<br/>
+</font></ul>
+</p>
+
+
+<p>
+<u><a class="external" target="_blank" href="https://github.com/MistyFromReboot/Mini-WinFE/tree/main">main</a> branch</u> (lines 25-27)</br>
+<ul><font size="1">
+25 Filecopy,"%Cache%\Programs\Wallpaper\<b><font color="red">winfe.jpg</font></b>","%TargetDir%\Programs\WinXShell\wallpaper.jpg"<br/>
+26 End<br/>
+27 Else,Filecopy,"%Cache%\Programs\Wallpaper\<b><font color="red">winfe.jpg</font></b>","%Target_System32%\winpe.jpg"<br/>
+</font></ul>
+</p>
+
+
+
+
+
+
+
+<p class="breaktop"><font class="file">Document date - 22<sup>nd</sup> June 2022</font></p></font></body></html> 

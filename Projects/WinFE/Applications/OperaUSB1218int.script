@@ -3,9 +3,9 @@ Title=Opera 12.18
 Description=Opera (USB) Web browser (Version 12.18).
 Selected=False
 Level=5
-Author=ThePEBakeryTeam
-Version=20190426
-Date=2019-04-26
+Author=Misty
+Version=20220618
+Date=2022-06-18
 Interface=Interface1
 
 [Interface1]
@@ -14,7 +14,7 @@ pButtonMenu2="2",1,8,75,0,70,20,pButtonMenu2,0,True,_pButtonMenu2_,True
 pButtonMenu3="?",1,8,145,0,70,20,pButtonMenu3,0,True,_pButtonMenu3_,True
 pWebLabel1=http://www.opera-usb.com/,1,10,10,100,216,18,http://www.opera-usb.com/
 pTextLabel1="Opera USB Website",1,1,10,77,230,18,10,Bold
-pCheckBoxInWim="Include Program in boot.wim",1,3,10,265,180,18,True
+pCheckBoxInWim="Include Program in boot.wim",1,3,51,265,180,18,True
 pBevel1=,1,12,10,150,500,35
 pScrollBox1=en-GB,1,4,20,158,70,20,af,ar,az,be,bg,bn,cs,da,de,el,en,en-GB,es-ES,es-LA,et,fa,fi,fr,fr-CA,fy,gd,he,hi,hr,hu,id,it,ja,ka,kk,ko,lt,lv,me,mk,ms,nb,nl,nn,pa,pl,pt,pt-BR,ro,ru,sk,sr,sv,sw,ta,te,th,tl,tr,uk,ur,uz,vi,zh-cn,zh-tw,zu
 pButton1=HELP,1,8,430,158,70,20,HELP.1,0,True,_HELP.1_,True
@@ -63,7 +63,6 @@ message,"Applies to WinXShell#$c BBLean and LaunchBar Shell(s)#$x#$xSelect this 
 message,"This setting does not apply to any LaunchBar instance running as the WinPE Shell. This option only applies to a LaunchBar instance when the Applications' > 'LaunchBar' program script is selected in the build.#$x#$xIf the 'Applications' > 'LaunchBar' program script is selected than enable this option to add a program menu entry to the root of the LaunchBar menu bar. #$x#$xPlease note that if option '6] Programs in boot.wim' in the main project script is set as 'NO'#$c then LaunchBar and a number of other applications will not be available at boot. In this case a text based .ini file will be used for LaunchBar menu settings."
 
 [process]
-
 If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRun
 AddInterface,%ScriptFile%,Interface1,""
 AddInterface,%ScriptFile%,Interface2,""
@@ -83,25 +82,24 @@ End
 
 [MENU]
 If,%PROGRAMS.IN.WIM%,Equal,NO,Begin
-  If,Not,ExistFile,"%OutputDir%\Programs\ShortcutsNotInWim.txt",Run,"%ProjectDir%\Core\common.script",NotInWim
-  TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$p~dp0Opera1218\opera.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qOpera#$q",Append
-End 
-If,%PROGRAMS.IN.WIM%,Equal,YES,Begin
-  ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\Opera1218\opera.exe#$q /F:#$q%ProjectTemp%\Opera.lnk#$q /I:#$q#$pSystemDrive#$p\Programs\Opera1218\opera.exe#$c0#$q"
-  If,ExistFile,"%ProjectTemp%\Opera.lnk",Begin
-    Set,%MyShortcut%,Opera.lnk
-    If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
-    If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
-    If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
-      Set,%ProgramMenuPath%,%pTextBox1%
-      Run,"%ProjectDir%\Core\common.script",StartMenu
-    End
-    If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
-    If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
-    FileDelete,"%ProjectTemp%\%MyShortcut%"
-  End
+If,Not,ExistFile,"%OutputDir%\Programs\ShortcutsNotInWim.txt",Run,"%ProjectDir%\Core\common.script",NotInWim
+TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$p~dp0Opera1218\opera.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qOpera#$q",Append
 End
-
+If,%PROGRAMS.IN.WIM%,Equal,YES,Begin
+ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\Opera1218\opera.exe#$q /F:#$q%ProjectTemp%\Opera.lnk#$q /I:#$q#$pSystemDrive#$p\Programs\Opera1218\opera.exe#$c0#$q"
+If,ExistFile,"%ProjectTemp%\Opera.lnk",Begin
+Set,%MyShortcut%,Opera.lnk
+If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
+If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
+If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
+Set,%ProgramMenuPath%,%pTextBox1%
+Run,"%ProjectDir%\Core\common.script",StartMenu
+End
+If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
+If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
+FileDelete,"%ProjectTemp%\%MyShortcut%"
+End
+End
 
 [COMMON]
 If,%PROGRAMS.IN.WIM%,Equal,NO,Set,%PATH%,%OutputDir%
@@ -119,9 +117,9 @@ IniWrite,"%PATH%\Programs\Opera1218\operaprefs_default.ini","User Prefs","Langua
 End
 //
 If,Not,ExistFile,"%PATH%\Programs\registry.entries.cmd",Begin
-  FileCreateBlank,"%PATH%\Programs\registry.entries.cmd"
-  TXTaddLine,"%PATH%\Programs\registry.entries.cmd",@Echo off,Append
-  TXTaddLine,"%PATH%\Programs\registry.entries.cmd",,Append
+FileCreateBlank,"%PATH%\Programs\registry.entries.cmd"
+TXTaddLine,"%PATH%\Programs\registry.entries.cmd",@Echo off,Append
+TXTaddLine,"%PATH%\Programs\registry.entries.cmd",,Append
 End
 TXTaddLine,"%PATH%\Programs\registry.entries.cmd",::==========OPERA===============,Append
 TXTaddLine,"%PATH%\Programs\registry.entries.cmd",::for file associations,Append
@@ -166,8 +164,9 @@ End
 Echo,"Unmounting registry hives..."
 RegHiveUnload,_WinPE_SOFTWARE
 If,%FullProjectRun%,Equal,NO,Begin
-  IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
-  WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
+If,%Builder%,Equal,PEBakery,WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qadd '%TargetDir%' '\'#$q"
 End
 //Wait,1
 

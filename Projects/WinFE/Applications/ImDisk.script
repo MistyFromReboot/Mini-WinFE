@@ -3,9 +3,9 @@ Title=ImDisk
 Description=Virtual Disk Driver - Version 2.0.9.
 Selected=False
 Level=5
-Author=ThePEBakeryTeam
-Version=20190426
-Date=2019-04-26
+Author=Misty
+Version=20220618
+Date=2022-06-18
 Interface=Interface1
 
 [Interface1]
@@ -16,7 +16,6 @@ pWebLabel1=http://www.ltr-data.se/opencode.html/#ImDisk,1,10,51,100,216,18,http:
 pTextLabel1="ImDisk Website",1,1,51,77,230,18,10,Bold
 pCheckBoxInstall="Pre-Install ImDisk",1,3,80,265,180,18,True
 pButtonInstall=?,1,8,51,265,18,18,pButtonInstall,0,True,_pButtonInstall_,True
-
 
 [Interface2]
 pButtonMenu1="1",1,8,5,0,70,20,pButtonMenu1,0,True,_pButtonMenu1_,True
@@ -33,7 +32,6 @@ pButtonShortcut2=?,1,8,10,110,18,18,pButtonShortcut2,0,True,_pButtonShortcut2_,T
 pButtonShortcut3=?,1,8,10,140,18,18,pButtonShortcut3,0,True,_pButtonShortcut3_,True
 pButtonShortcut4=?,1,8,10,170,18,18,pButtonShortcut4,0,True,_pButtonShortcut4_,True
 pTextBox1=,1,0,140,140,150,21,Programs
-
 
 [pButtonMenu1]
 IniWrite,%ScriptFile%,Main,Interface,Interface1
@@ -71,55 +69,56 @@ Run,%ScriptFile%,COMMON
 
 [CHECKS]
 If,Not,ExistFile,"%Programs%\ImDisk\imdisk.inf",Begin
-  Message,ImDisk is missing - exiting script...,Error,5
-  Exit,ImDisk is missing - exiting script...,WARN
+Message,ImDisk is missing - exiting script...,Error,5
+Exit,ImDisk is missing - exiting script...,WARN
 End
 
 [MENU]
 If,%pCheckBoxInstall%,Equal,False,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\ImDisk\install.cmd#$q /F:#$q%ProjectTemp%\ImDisk.lnk#$q /I:#$q#$pSystemDrive#$p\Programs\Imdisk\cpl\i386\imdisk.cpl#$c0#$q"
 If,%pCheckBoxInstall%,Equal,True,ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemRoot#$p\System32\rundll32.exe#$q /F:#$q%ProjectTemp%\ImDisk.lnk#$q /P:#$q#$pSystemRoot#$p\System32\imdisk.cpl#$cRunDLL_MountFile#$q /I:#$q#$pSystemRoot#$p\System32\imdisk.cpl#$c0#$q"
 If,ExistFile,"%ProjectTemp%\ImDisk.lnk",Begin
-  Set,%MyShortcut%,ImDisk.lnk
-  If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
-  If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
-  If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
-    Set,%ProgramMenuPath%,%pTextBox1%
-    Run,"%ProjectDir%\Core\common.script",StartMenu
-  End
-  If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
-    If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
-    FileDelete,"%ProjectTemp%\%MyShortcut%"
+Set,%MyShortcut%,ImDisk.lnk
+If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
+If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
+If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
+Set,%ProgramMenuPath%,%pTextBox1%
+Run,"%ProjectDir%\Core\common.script",StartMenu
+End
+If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
+If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
+FileDelete,"%ProjectTemp%\%MyShortcut%"
 End
 
 [COMMON]
 If,%pCheckBoxInstall%,Equal,True,Begin
-  If,%ARCH%,Equal,x86,Set,%ImDiskArch%,i386
-  If,%ARCH%,Equal,x64,Set,%ImDiskArch%,amd64
-  If,Not,ExistDir,"%TargetDir%\Windows\inf",DirMake,"%TargetDir%\Windows\inf"
-  If,Not,ExistDir,"%TargetDir%\Windows\System32\drivers",DirMake,"%TargetDir%\Windows\System32\drivers"
-  FileCopy,"%Programs%\ImDisk\imdisk.inf","%TargetDir%\Windows\inf"
-  FileCopy,"%Programs%\ImDisk\awealloc\%ImDiskArch%\awealloc.sys","%TargetDir%\Windows\System32\drivers"
-  FileCopy,"%Programs%\ImDisk\cli\%ImDiskArch%\imdisk.exe","%TargetDir%\Windows\System32"
-  FileCopy,"%Programs%\ImDisk\cpl\%ImDiskArch%\imdisk.cpl","%TargetDir%\Windows\System32"
-  FileCopy,"%Programs%\ImDisk\svc\%ImDiskArch%\imdsksvc.exe","%TargetDir%\Windows\System32"
-  FileCopy,"%Programs%\ImDisk\sys\%ImDiskArch%\imdisk.sys","%TargetDir%\Windows\System32\drivers"
-  Echo,"Mounting registry hives..."
-  If,Not,ExistRegSection,HKLM,_WinPE_SOFTWARE,RegHiveLoad,_WinPE_SOFTWARE,"%Target_config%\software"
-  If,Not,ExistRegSection,HKLM,_WinPE_SYSTEM,RegHiveLoad,_WinPE_SYSTEM,"%Target_config%\system"
-  ShellExecute,hide,regedit.exe,"/s #$q%Programs%\ImDisk\RegistrySettings.reg#$q"
-  Echo,"Unmounting registry hives..."
-  RegHiveUnload,_WinPE_SOFTWARE
-  RegHiveUnload,_WinPE_SYSTEM
+If,%ARCH%,Equal,x86,Set,%ImDiskArch%,i386
+If,%ARCH%,Equal,x64,Set,%ImDiskArch%,amd64
+If,Not,ExistDir,"%TargetDir%\Windows\inf",DirMake,"%TargetDir%\Windows\inf"
+If,Not,ExistDir,"%TargetDir%\Windows\System32\drivers",DirMake,"%TargetDir%\Windows\System32\drivers"
+FileCopy,"%Programs%\ImDisk\imdisk.inf","%TargetDir%\Windows\inf"
+FileCopy,"%Programs%\ImDisk\awealloc\%ImDiskArch%\awealloc.sys","%TargetDir%\Windows\System32\drivers"
+FileCopy,"%Programs%\ImDisk\cli\%ImDiskArch%\imdisk.exe","%TargetDir%\Windows\System32"
+FileCopy,"%Programs%\ImDisk\cpl\%ImDiskArch%\imdisk.cpl","%TargetDir%\Windows\System32"
+FileCopy,"%Programs%\ImDisk\svc\%ImDiskArch%\imdsksvc.exe","%TargetDir%\Windows\System32"
+FileCopy,"%Programs%\ImDisk\sys\%ImDiskArch%\imdisk.sys","%TargetDir%\Windows\System32\drivers"
+Echo,"Mounting registry hives..."
+If,Not,ExistRegSection,HKLM,_WinPE_SOFTWARE,RegHiveLoad,_WinPE_SOFTWARE,"%Target_config%\software"
+If,Not,ExistRegSection,HKLM,_WinPE_SYSTEM,RegHiveLoad,_WinPE_SYSTEM,"%Target_config%\system"
+ShellExecute,hide,regedit.exe,"/s #$q%Programs%\ImDisk\RegistrySettings.reg#$q"
+Echo,"Unmounting registry hives..."
+RegHiveUnload,_WinPE_SOFTWARE
+RegHiveUnload,_WinPE_SYSTEM
 End
 If,%pCheckBoxInstall%,Equal,False,Begin
-  If,Not,ExistDir,"%TargetDir%\Programs",DirMake,"%TargetDir%\Programs"
-  DirMake,"%TargetDir%\Programs\ImDisk"
-  DirCopy,"%Programs%\ImDisk\*.*","%TargetDir%\Programs\ImDisk"
+If,Not,ExistDir,"%TargetDir%\Programs",DirMake,"%TargetDir%\Programs"
+DirMake,"%TargetDir%\Programs\ImDisk"
+DirCopy,"%Programs%\ImDisk\*.*","%TargetDir%\Programs\ImDisk"
 End
 IniWrite,"%OutputDir%\Project.Settings.ini",PROGRAMS,ImDisk,YES
 If,%FullProjectRun%,Equal,NO,Begin
-  IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
-  WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
+If,%Builder%,Equal,PEBakery,WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qadd '%TargetDir%' '\'#$q"
 End
 
 [AuthorEncoded]

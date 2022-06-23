@@ -12,7 +12,8 @@
 <option value="builder.htm">Builder</option>  
 <option value="options.htm">Project Options</option>  
 <option value="project.htm" selected="selected">Project Scripts</option>  
-<option value="instructions_pebakery.htm">Instructions</option>  
+<option value="instructions_pebakery.htm">Instructions (PEB..</option>  
+<option value="instructions_wb.htm">Instructions (Win..</option>  
 <option value="menu_system.htm">Menu System</option>  
 <option value="not_in_wim.htm">Include...in boot.wim</option>  
 <option value="postconfig.htm">Post Config</option>  
@@ -23,7 +24,8 @@
 <option value="" disabled></option> 
 <option value="" disabled>Appendices</option> 
 <option value="" disabled>=========</option> 
-<option value="quick_pebakery.htm">Quick Start - Build...</option>  
+<option value="quick_pebakery.htm">Quick Start - PEBakery...</option>  
+<option value="quick_wb.htm">Quick Start - WinBuilder...</option>  
 <option value="usage.htm">Quick Start - Run...</option>  
 <option value="diskmgr.htm">DiskMgr</option>  
 <option value="winfe_tests.htm">WinFE Tests</option>  
@@ -60,7 +62,7 @@
 
 
 <p>
-The <font class="file">ChrisPE</font> project scripts can currently be divided into seven distinct sections -
+The <font class="file">Mini-WinFE</font> project scripts can currently be divided into seven distinct sections -
 <ul>
 <li><a class="internal" href="#core">Core</a></li>
 <li><a class="internal" href="#shell">Shell</a></li>
@@ -102,25 +104,25 @@ Please note that only two of the scripts in this section are actually visible to
 
 
 <ul class="break3em"><li>
-<b>Core Files</b> - This script cannot be disabled. Most of the work is carried out in this script, including error checks, file checks, verifying source language/build/processor architecture, and copying and extracting the required files from the selected source. <br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Core</font> &gt; <font class="file">A_core.script</font>
+<b>Core Files</b> - This script cannot be disabled. Most of the work is carried out in this script, including error checks, file checks, verifying source language/build/processor architecture, and copying and extracting the required files from the selected source. <br />Path - <font class="file">Projects</font> &gt; <font class="file">WinFE</font> &gt; <font class="file">Core</font> &gt; <font class="file">A_core.script</font>
 </li></ul>
 
 
 
 <ul class="break3em">
-<li><b>Browse for Folder</b> - used to add Browse for Folder dialog support. This script is hidden and is executed by other scripts to ensure that Browse for Folder support is added as required for individual applications. <br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Core</font> &gt; <font class="file">Browse.For.Folder.script</font></li>
+<li><b>Browse for Folder</b> - used to add Browse for Folder dialog support. This script is hidden and is executed by other scripts to ensure that Browse for Folder support is added as required for individual applications. <br />Path - <font class="file">Projects</font> &gt; <font class="file">WinFE</font> &gt; <font class="file">Core</font> &gt; <font class="file">Browse.For.Folder.script</font></li>
 </ul>
 
 
 
 <ul class="break3em">
-<li><b>Common Commands</b> - this script is hidden and is executed by other scripts as required. Supported commands include directory delete (following an error) and creating startmenu shortcuts. <br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Core</font> &gt; <font class="file">common.script</font></li>
+<li><b>Common Commands</b> - this script is hidden and is executed by other scripts as required. Supported commands include directory delete (following an error) and creating startmenu shortcuts. <br />Path - <font class="file">Projects</font> &gt; <font class="file">WinFE</font> &gt; <font class="file">Core</font> &gt; <font class="file">common.script</font></li>
 </ul>
 
 
 <ul class="break3em">
 <li><b>Tweaks</b> - includes a range of tweaks. Click on the <font class="file">?</font> buttons for information about the available options. 
-<br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Core</font> &gt; <font class="file">D_Tweaks.script</font></li>
+<br />Path - <font class="file">Projects</font> &gt; <font class="file">WinFE</font> &gt; <font class="file">Core</font> &gt; <font class="file">D_Tweaks.script</font></li>
 	<br />
 	<a href="img/tweaks.png"><IMG SRC="img/tweaks.png" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
 </ul>
@@ -128,20 +130,20 @@ Please note that only two of the scripts in this section are actually visible to
 
 
 <ul class="break3em">
-<li><b>WoW64</b> - Add WoW64 support. <br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Core</font> &gt; <font class="file">G_WoW64.script</font>.</li>
+<li><b>WoW64</b> - Add WoW64 support. <br />Path - <font class="file">Projects</font> &gt; <font class="file">WinFE</font> &gt; <font class="file">Core</font> &gt; <font class="file">G_WoW64.script</font>.</li>
 </ul>
 
 
 
 <ul class="break3em">
-<li><b>SysWOW64</b> - this script is hidden. It contains registry settings required for WoW64 support. <br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Core</font> &gt; <font class="file">syswow64.script</font></li>
+<li><b>SysWOW64</b> - this script is hidden. It contains registry settings required for WoW64 support. <br />Path - <font class="file">Projects</font> &gt; <font class="file">WinFE</font> &gt; <font class="file">Core</font> &gt; <font class="file">syswow64.script</font></li>
 </ul>
 
 
 
 
 <ul class="break3em">
-<li><b>Verification Checks</b> - this script is hidden and is executed by other program scripts for a range of checks including identification of source files. <br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Core</font> &gt; <font class="file">verify.script</font></li>
+<li><b>Verification Checks</b> - this script is hidden and is executed by other program scripts for a range of checks including identification of source files. <br />Path - <font class="file">Projects</font> &gt; <font class="file">WinFE</font> &gt; <font class="file">Core</font> &gt; <font class="file">verify.script</font></li>
 </ul>
 
 
@@ -160,10 +162,10 @@ Please note that only two of the scripts in this section are actually visible to
 
 <p>
 <ul class="break3em">
-<li><b>Shell</b> - select a shell. Current options are <font class="file">WinXShell</font>, <font class="file">bblean</font>, <font class="file">CMD</font> and <font class="file">LaunchBar</font>. The shell script is context sensitive and different options will be visible depending on the selected shell. Click on the <font class="file">HELP</font> buttons for information about the available options. 
+<li><b>Shell</b> - select a shell. Current options are <font class="file">WinXShell</font>, <font class="file">bblean</font>, <font class="file">CMD</font> and <font class="file">LaunchBar</font>. The shell script is context sensitive and different options will be visible depending on the selected shell. Click on the <font class="file">HELP</font> buttons for information about the available options. Select a shell using the available tabs. The displayed/selected shell will be used in the build.
 
 
-<br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Shell</font> &gt; <font class="file">B_shell.script</font></li>
+<br />Path - <font class="file">Projects</font> &gt; <font class="file">WinFE</font> &gt; <font class="file">Shell</font> &gt; <font class="file">B_shell.script</font></li>
 	<br />
 	<ul>
 	<b>WinXShell</b> shell options -
@@ -185,7 +187,7 @@ Please note that only two of the scripts in this section are actually visible to
 
 
 <ul class="break3em">
-<li><b>Default Filemanager</b> - set the default FileExplorer. Either <font class="file">7-zip</font>, <font class="file">Explorer++</font>, <font class="file">Q-Dir</font> or <font class="file">7-zip</font> can be selected.<br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Shell</font> &gt; <font class="file">D_filemanager.script</font></li>
+<li><b>Default Filemanager</b> - set the default FileExplorer. Either <font class="file">7-zip</font>, <font class="file">Explorer++</font>, <font class="file">Q-Dir</font> or <font class="file">JustManager</font> can be selected.<br />Path - <font class="file">Projects</font> &gt; <font class="file">WinFE</font> &gt; <font class="file">Shell</font> &gt; <font class="file">D_filemanager.script</font></li>
 	<br />
 	<ul>
 	<a href="img/filemanager_1.jpg"><IMG SRC="img/filemanager_1.jpg" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
@@ -209,19 +211,19 @@ Please note that only two of the scripts in this section are actually visible to
 <ul class="break3em">
 <li><b>Network</b> - this script can be enabled without selecting any of the script options to give different results - 
 	<ul>
-	<li class="break1em">No options selected - will add a batch file + a menu entry to run it. The batch file runs the command <i>"wpeutil InitializeNetwork"</i> - this will Initialize network components and drivers, and set the computer name to a randomly chosen value. Running the InitializeNetwork command can cause an unnecessary delay when <font class="file">WinPE</font> boots - added it as a menu option ensures that the network can be started <i><u>if required</u></i>.</li>
+	<li class="break1em">No options selected - will add a batch file + a menu entry to run it. The batch file runs the command <i>"wpeutil InitializeNetwork"</i> - this will Initialize network components and drivers, and set the computer name to a randomly chosen value. Running the InitializeNetwork command can cause an unnecessary delay when <font class="file">WinPE</font> boots - adding it as a menu option ensures that the network can be started <i><u>if required</u></i>.</li>
 	</ul>
 	<ul>
 	<li class="break1em">Option(s) selected - selecting any combination of script options will add <font class="file">unattend.xml</font> to the build, with a menu entry added to <font class="file">winpeshl.ini</font> to automatically run <font class="file">wpeinit</font>. This will Initialize the network during the boot process. This is useful if an application requires network access - e.g. TightVNC Server.</li>
 	</ul>
-<br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Settings</font> &gt; <font class="file">Network.script</font></li>
+<br />Path - <font class="file">Projects</font> &gt; <font class="file">WinFE</font> &gt; <font class="file">Settings</font> &gt; <font class="file">Network.script</font></li>
 </ul>
 
 
 
 
 <ul class="break3em">
-<li><b>Recommended</b> - <br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Settings</font> &gt; <font class="file">Recommended.script</font></li>
+<li><b>Recommended</b> - <br />Path - <font class="file">Projects</font> &gt; <font class="file">WinFE</font> &gt; <font class="file">Settings</font> &gt; <font class="file">Recommended.script</font></li>
 	<ul>
 	<li class="break1em"><b>BootSect</b> - tool used to add <font class="file">NTLDR</font> or <font class="file">BOOTMGR</font> code to a Volume Boot Record. This script adds a batch file to the build as the required program is already included. The batch can be executed by right-clicking on a drive in Explorer. 
 	</li>
@@ -241,7 +243,7 @@ Please note that only two of the scripts in this section are actually visible to
 
 
 <ul class="break3em">
-<li><b>Wallpaper</b> - select a custom wallpaper. A project wallpaper can be used. Not working if <font class="file">LaunchBar</font> or <font class="file">CMD</font> are selected as shell. <br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Settings</font> &gt; <font class="file">wallpaper.script</font></li>
+<li><b>Wallpaper</b> - select a custom wallpaper. A project wallpaper can be used. Not working if <font class="file">LaunchBar</font> or <font class="file">CMD</font> are selected as shell. <br />Path - <font class="file">Projects</font> &gt; <font class="file">WinFE</font> &gt; <font class="file">Settings</font> &gt; <font class="file">wallpaper.script</font></li>
 </ul>
 </p>
 
@@ -265,7 +267,7 @@ Please note that only two of the scripts in this section are actually visible to
 <h2><u>Applications Scripts</u></h2>
 
 <p>
-The following lists all of the program/application scripts that are included in the <font class="file">ChrisPE</font> project download.
+The following lists all of the program/application scripts that are included in the <font class="file">Mini-WinFE</font> project download.
 </p>
 
 
@@ -412,7 +414,7 @@ checks in order to access folders protected by NTFS security permissions or by
 <b>Free Shooter</b> (Version 2.0.7) - "...tool for taking screenshots without bloatware features, simple as life, light as air....". Capture fullscreen, active window, or a selected are of the screen. The following file types can be captured using Free Shooter - BMP, JPG, TIFF, PNG and GIF formats. <a class="external" target="_blank" href="https://www.henrypp.org/product/freeshooter">Free Shooter website</a>
 	<ul>
 	<li>Included in download - YES</li>
-	<li>Processor Architecture - <b>x86 only</b></li>
+	<li>Processor Architecture - x86 and x64</li>
 	</ul>
 </li>
 </ul>
@@ -534,6 +536,18 @@ checks in order to access folders protected by NTFS security permissions or by
 
 <ul class="break3em">
 <li>
+<b>Opera</b> - Web Browser. Opera USB Version 12.18 is included in the download. <a class="external" target="_blank" href="http://www.opera-usb.com/">OperaUSB website</a>
+	<ul>
+	<li>Included in download - YES</li>
+	<li>Processor Architecture - x86 and x64</li>
+	</ul>
+</li>
+</ul>
+
+
+
+<ul class="break3em">
+<li>
 <b>OSK</b> - On-Screen Keyboard. autoit executable based on source code by RichMinichiello available in the following forum post - <a class="external" target="_blank" href="https://www.autoitscript.com/forum/topic/159626-on-screen-keyboard/">https://www.autoitscript.com/forum/topic/159626-on-screen-keyboard/</a>
 	<ul>
 	<li>Included in download - YES</li>
@@ -542,18 +556,6 @@ checks in order to access folders protected by NTFS security permissions or by
 </li>
 </ul>
 
-
-
-
-<ul class="break3em">
-<li>
-<b>Opera</b> - Web Browser. Opera USB Version 12.18 is included in the download. <a class="external" target="_blank" href="http://www.opera-usb.com/">OperaUSB website</a>
-	<ul>
-	<li>Included in download - YES</li>
-	<li>Processor Architecture - x86 and x64</li>
-	</ul>
-</li>
-</ul>
 
 
 
@@ -588,11 +590,13 @@ checks in order to access folders protected by NTFS security permissions or by
 <li>
 <b>sDelete</b> - Secure delete application. "...SDelete is a command line utility that takes a number of options. In any given use, it allows you to delete one or more files and/or directories, or to cleanse the free space on a logical disk...". <a class="external" target="_blank" href="https://docs.microsoft.com/en-us/sysinternals/downloads/sdelete">sDelete website</a>
 	<ul>
-	<li>Included in download - YES</li>
+	<li>Included in download - <b>NO</b></li>
 	<li>Processor Architecture - x86 and x64</li>
 	</ul>
 </li>
 </ul>
+
+
 
 
 
@@ -606,7 +610,6 @@ checks in order to access folders protected by NTFS security permissions or by
 	</ul>
 </li>
 </ul>
-
 
 
 
@@ -710,9 +713,6 @@ checks in order to access folders protected by NTFS security permissions or by
 
 
 
-
-
-
 <a name="finalise"></a><br>
 <h2><u>Finalise</u></h2>
 
@@ -721,20 +721,20 @@ checks in order to access folders protected by NTFS security permissions or by
 <p>
 <ul class="break3em"><li>
 <b>Subst</b> - add a batch file to locate the boot media (via a unique tag file created during the boot process) and use the <font class="file">subst.exe</font> utility to assign a virtual drive letter. This is useful if using custom scripts/utilities/shortcuts with a hardcoded path. 
-<br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Finalise</font> &gt; <font class="file">Subst.script</font>
+<br />Path - <font class="file">Projects</font> &gt; <font class="file">WinFE</font> &gt; <font class="file">Finalise</font> &gt; <font class="file">Subst.script</font>
 </li></ul>
 
 
 <ul class="break3em"><li>
 <b>WinFE</b> - Add the registry settings required to create a Windows Forensic Environment. <font class="file">Erwan Labalec</font>'s <font class="file">DiskMgr</font> or <font class="file">Colin Ramsden's</font>'s <font class="file">Protect.exe</font> (Write Protect Tool) will be added to the build - this provides a User Interface for toggling disk attributes. 
-<br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Finalise</font> &gt; <font class="file">winfe.script</font>
+<br />Path - <font class="file">Projects</font> &gt; <font class="file">WinFE</font> &gt; <font class="file">Finalise</font> &gt; <font class="file">winfe.script</font>
 </li>
 </ul>
 
 
 
 <ul class="break3em"><li>
-<b>Shell - Finalise</b> - This script cannot be disabled. Menu entries are configured via this script , <font class="file">winpeshl.ini</font> is created, and files are injected to <font class="file">boot.wim</font>. <br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Finalise</font> &gt; <font class="file">xxxShell.script</font>
+<b>Shell - Finalise</b> - This script cannot be disabled. Menu entries are configured via this script , <font class="file">winpeshl.ini</font> is created, and files are injected to <font class="file">boot.wim</font>. <br />Path - <font class="file">Projects</font> &gt; <font class="file">WinFE</font> &gt; <font class="file">Finalise</font> &gt; <font class="file">xxxShell.script</font>
 </li></ul>
 </p>
 
@@ -754,15 +754,15 @@ checks in order to access folders protected by NTFS security permissions or by
 Only one script is included in this section -
 
 
-<ul class="break3em"><li>
-<b>Drivers</b> - Use this script to integrate drivers to the build. <font class="file">Get WAIK Tools</font> is used to download <font class="file">DISM</font>. There are two options in the script -
+<ul class="break3em">
+<li><b>Drivers</b> - Use this script to integrate drivers to the build. <font class="file">Get WAIK Tools</font> is used to download <font class="file">DISM</font>. <s>There are two options in the script</s> - </li>
 
 	<ul><li class="break1em"><b>EXTRACT</b> - the contents of the image selected in <font class="file">boot.wim</font> will be fully extracted and <font class="file">DISM</font> will be used to inject the drivers to the offline image. If this method is selected then setting option 4 in the main project script (<b>METHOD</b>) as <font class="file">EXTRACT</font> is recommended - this will fully extract <font class="file">boot.wim</font> early in the build process.</ul>
 
-	<ul><li class="break1em"><b>MOUNT</b> - <font class="file">DISM</font> will be used to mount the image selected in <font class="file">boot.wim</font></li> &gt; inject drivers to the mounted image &gt; unmount the image.</ul>
+	<ul><s><li class="break1em"><b>MOUNT</b> - <font class="file">DISM</font> will be used to mount the image selected in <font class="file">boot.wim</font> &gt; inject drivers to the mounted image &gt; unmount the image.</s> (<b><u>NOTE</u></b> - the MOUNT option has been temporarily removed) </li></ul>
 
-<br />Path - <font class="file">Projects</font> &gt; <font class="file">ChrisPE</font> &gt; <font class="file">Drivers</font> &gt; <font class="file">drivers.script</font>
-</li></ul>
+<br/>Path - <font class="file">Projects</font> &gt; <font class="file">WinFE</font> &gt; <font class="file">Drivers</font> &gt; <font class="file">drivers.script</font>
+</ul>
 </p>
 
 
@@ -775,7 +775,7 @@ Only one script is included in this section -
 <h2><u>MediaCreation</u></h2>
 
 <p>
-The script in this section can either be selected during the build process, or can be executed independently afterwards - as long as the build completed successfully. Files in the <font color="red">%BaseDir%</font><font color="blue">\ChrisPE.Files\ISO.ROOT\</font> directory (where <i><font color="red">%BaseDir%</font></i> refers to the directory from which <font class="file">PEBakeryLauncher.exe</font> is running) are added to the .iso file.
+The script in this section can either be selected during the build process, or can be executed independently afterwards - as long as the build completed successfully. Files in the <font color="red">%BaseDir%</font><font color="blue">\WinFE.Files\ISO.ROOT\</font> directory (where <i><font color="red">%BaseDir%</font></i> refers to the directory from which <font class="file">PEBakeryLauncher.exe</font> is running) are added to the .iso file.
 </p>
 
 
@@ -789,9 +789,19 @@ The script in this section can either be selected during the build process, or c
 
 
 <p class="break3em">
-To execute the Create ISO script following a build, simply select the script in the directory tree and click on the <font class="file">Run Script</font> button to the right of the title bar -
+To execute the Create ISO script following a build, simply select the script in the directory tree and click on the <font class="file">Run Script</font> button 
+</p>
+
+<p>
+<font class="file">PEBakery</font> screenshot (the <font class="file">Run Script</font> button is located to the right of the title bar) -
 <br />
 <a href="img/project1.png"><IMG SRC="img/project1.png" float=left width=90% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+<p>
+<font class="file">WinBuilder</font> screenshot (the <font class="file">Run Script</font> button is located to the right of the script icon bar) -
+<br />
+<a href="img/project1_wb.png"><IMG SRC="img/project1_wb.png" float=left width=90% margin-right=1% margin-bottom=0.5em border=1></a>
 </p>
 
 
@@ -814,7 +824,7 @@ The scripts in this section cannot be executed during the build process and is d
 <p>
 <ul class="break3em">
 <li>
-<b>Advanced Options</b> - Can be used to mount/unmount the registry hives created when the <font class="file">ChrisPE</font> project has finished the build process. This script can also be used to inject (add) additional files to <font class="file">boot.wim</font> and carry out some additional tasks. 
+<b>Advanced Options</b> - Can be used to mount/unmount the registry hives created when the <font class="file">WinFE</font> project has finished the build process. This script can also be used to inject (add) additional files to <font class="file">boot.wim</font> and carry out some additional tasks. 
 </li>
 </ul>
 
@@ -826,7 +836,7 @@ The scripts in this section cannot be executed during the build process and is d
 
 <ul class="break3em">
 <li>
-<b>Add Package</b> - Use this script to add a <font class="file">ChrisPE</font> compatible <font class="file">Package</font> to the project (refer to the <a class="internal" href="packages.htm">Packages</a> section for more information) -
+<b>Add Package</b> - Use this script to add a <font class="file">Mini-WinFE</font> compatible <font class="file">Package</font> to the project (refer to the <a class="internal" href="packages.htm">Packages</a> section for more information) -
 </li>
 <a href="img/packages01.png"><IMG SRC="img/packages01.png" float=left width=80% margin-right=1% margin-bottom=0.5em border=1></a>
 </ul>
@@ -837,10 +847,81 @@ The scripts in this section cannot be executed during the build process and is d
 
 
 
+<a name="notincluded"></a><br>
+<h2><u>Applications not included in the project download</u></h2>
+
+
+<p>
+The majority of applications currently supported in <font class="file">Mini-WinFE</font> are included in the project download. The exceptions are -
+<ul>
+<li><font class="file">FTK Imager</font></li>
+<li><font class="file">sDelete</font></li>
+<li><font class="file">Drive Snapshot</font></li>
+<li><font class="file">WinHex</font></li>
+<li><font class="file">X-Ways Forensic</font></li>
+</ul>
+</p>
+
+
+
+<p class="break3em">
+<b>sDelete</b> - EULA prevents redistribution with the project. This application will be downloaded automatically if selected during the build process and added to a local file cache.
+</p>
+
+
+<p class="break3em">
+<b>Drive SnapShot</b> - evaluation versions can be downloaded to a local file cache prior to building Mini-WinFE by running "Download automatically (RECOMMENDED)". Alternatively, the application can be added by browsing to the file using the folder button in the "PATH to 32-bit" and "PATH to 64-bit" section and then selecting <font class="file">ADD TO CACHE</font>. Adding the application using <font class="file">ADD TO CACHE</font> option is covered in more detail in the <font class="file">FTK Imager</font> section below.
+</p>
+
+
+<p class="break3em">
+<b>FTK Imager</b> - The FTK Imager licence prevents redistribution. FTK Imager files will need to be copied from a local source/installation. The application can be added by browsing to the executable file using the folder button in the "PATH to 32-bit" and "PATH to 64-bit" section and browsing/selecting <font class="file">FTK Imager.exe</font>. Do not try to add the installer, the target is <font class="file">FTK Imager.exe</font> extracted from the installer. 
+</p>
+
+<p>
+<ul>
+Click on the folder icon - <br/>
+<a href="img/NotIncluded1.png"><IMG SRC="img/NotIncluded1.png" float=left width=80% margin-right=1% margin-bottom=0.5em border=1></a>
+</ul>
+</p>
+
+
+<p>
+<ul>
+Browse to the executable - <br/>
+<a href="img/NotIncluded2.png"><IMG SRC="img/NotIncluded2.png" float=left width=80% margin-right=1% margin-bottom=0.5em border=1></a>
+</ul>
+</p>
+
+
+<p>
+<ul>
+Click on the <font class="file">ADD TO CACHE</font> button -<br/>
+<a href="img/NotIncluded3.png"><IMG SRC="img/NotIncluded3.png" float=left width=80% margin-right=1% margin-bottom=0.5em border=1></a>
+</ul>
+</p>
 
 
 
 
-<p class="breaktop"><font class="file">Document date - 14<sup>th</sup> June 2022</font></p></font></body></html>
+
+
+<p class="break3em">
+<b>WinHex</b> - The licence prevents redistribution. An evaluation version can be downloaded by clicking on the <font class="file">Download Evaluation version automatically</font> &gt; <font class="file">ADD TO CACHE</font> button. Alternatively, the application can be added by browsing to the executable file(s) using the folder button in the "PATH to 32-bit" and "PATH to 64-bit" section(s) and browsing/selecting the relevant file (<font class="file">WinHex.exe</font>/<font class="file">WinHex64.exe</font>). Adding the application using the <font class="file">ADD TO CACHE</font> option is covered in more detail in the <font class="file">FTK Imager</font> section above.
+</p>
+
+
+<p class="break3em">
+<b>X-Ways Forensic</b> - The licence prevents redistribution. The application can be added by browsing to the executable file(s) using the folder button in the "PATH to 32-bit" and "PATH to 64-bit" section(s) and browsing/selecting the relevant file (<font class="file">xwforensics.exe</font>/<font class="file">xwforensics64.exe</font>). Adding the application using the <font class="file">ADD TO CACHE</font> option is covered in more detail in the <font class="file">FTK Imager</font> section above.
+</p>
+
+
+
+
+
+
+
+
+<p class="breaktop"><font class="file">Document date - 22<sup>nd</sup> June 2022</font></p></font></body></html>
 
  

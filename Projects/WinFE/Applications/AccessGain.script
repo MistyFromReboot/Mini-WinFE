@@ -3,9 +3,9 @@ Title=AccessGain
 Description=AccessGain MiniFilter Driver - bypass NTFS security permissions to access (and delete) restricted files and folders.
 Selected=False
 Level=5
-Author=ThePEBakeryTeam
-Version=20190426
-Date=2019-04-26
+Author=Misty
+Version=20220618
+Date=2022-06-18
 Interface=Interface
 
 [Interface]
@@ -22,8 +22,8 @@ If,%PROGRAMS.IN.WIM%,Equal,YES,Run,%ScriptFile%,IN.WIM
 
 [CHECKS]
 If,Not,ExistFile,"%Programs%\AccessGain\%ARCH%\accgain.sys",Begin
-  Message,AccessGain is missing - exiting script...,Error,5
-  Exit,AccessGain is missing - exiting script...,WARN
+Message,AccessGain is missing - exiting script...,Error,5
+Exit,AccessGain is missing - exiting script...,WARN
 End
 
 [COMMON]
@@ -33,9 +33,9 @@ If,Not,ExistDir,"%PATH%\Programs",DirMake,"%PATH%\Programs"
 DirMake,"%PATH%\Programs\AccessGain"
 DirCopy,"%Programs%\AccessGain\%ARCH%\*.*","%PATH%\Programs\AccessGain"
 If,Not,ExistFile,"%PATH%\Programs\registry.entries.cmd",Begin
-  FileCreateBlank,"%PATH%\Programs\registry.entries.cmd"
-  TXTaddLine,"%PATH%\Programs\registry.entries.cmd",@Echo off,Append
-  TXTaddLine,"%PATH%\Programs\registry.entries.cmd",,Append
+FileCreateBlank,"%PATH%\Programs\registry.entries.cmd"
+TXTaddLine,"%PATH%\Programs\registry.entries.cmd",@Echo off,Append
+TXTaddLine,"%PATH%\Programs\registry.entries.cmd",,Append
 End
 TXTaddLine,"%PATH%\Programs\registry.entries.cmd",::==========AccessGain==========,Append
 TXTaddLine,"%PATH%\Programs\registry.entries.cmd",::for context menu entry,Append
@@ -56,8 +56,9 @@ RegWrite,HKLM,0x2,_WinPE_SOFTWARE\Classes\Drive\shell\AccessGain\command,,#$psys
 Echo,"Unmounting registry hives..."
 RegHiveUnload,_WinPE_SOFTWARE
 If,%FullProjectRun%,Equal,NO,Begin
-  IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
-  WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
+If,%Builder%,Equal,PEBakery,WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qadd '%TargetDir%' '\'#$q"
 End
 
 [NOT.IN.WIM]

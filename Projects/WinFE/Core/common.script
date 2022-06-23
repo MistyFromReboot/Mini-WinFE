@@ -3,9 +3,9 @@ Title=Common Commands
 Description=This is set as hidden and will be executed from another project script.
 Selected=False
 Level=-2
-Author=ThePEBakeryTeam
-Version=20190426
-Date=2019-04-26
+Author=Misty
+Version=20220618
+Date=2022-06-18
 
 [DIRECTORY.DELETE]
 Set,%CONTINUE%,NO
@@ -80,12 +80,14 @@ If,Not,ExistFile,"%TargetDir%\Project.Settings.ini",Begin
   message,"You are attempting to run this script Post Build#$c however the project does not appear to have been run. Aborting..."
   Halt
 End
-IniRead,"%TargetDir%\Project.Settings.ini",Main,Architecture,%ARCH%
-IniRead,"%TargetDir%\Project.Settings.ini",Main,Major,%Major%
-IniRead,"%TargetDir%\Project.Settings.ini",Main,Minor,%Minor%
-IniRead,"%TargetDir%\Project.Settings.ini",Main,Build,%Build%
-IniRead,"%TargetDir%\Project.Settings.ini",Main,SPBuild,%SPBuild%
-IniRead,"%TargetDir%\Project.Settings.ini",Main,CodeBase,%CodeBase%
+IniRead,"%TargetDir%\Project.Settings.ini",Main,Architecture,%ARCH%,GLOBAL
+IniRead,"%TargetDir%\Project.Settings.ini",Main,Major,%Major%,GLOBAL
+IniRead,"%TargetDir%\Project.Settings.ini",Main,Minor,%Minor%,GLOBAL
+IniRead,"%TargetDir%\Project.Settings.ini",Main,Build,%Build%,GLOBAL
+IniRead,"%TargetDir%\Project.Settings.ini",Main,SPBuild,%SPBuild%,GLOBAL
+IniRead,"%TargetDir%\Project.Settings.ini",Main,CodeBase,%CodeBase%,GLOBAL
+StrFormat,LEFT,%CodeBase%,4,%CodeBase2%
+Set,%CodeBase2%,%CodeBase2%,Global
 If,ExistFile,"%SourceDir%sources\install.wim",Set,%install.wim%,"%SourceDir%sources\install.wim",GLOBAL
 If,ExistFile,"%SourceDir%sources\install.esd",Set,%install.wim%,"%SourceDir%sources\install.esd",GLOBAL
 If,ExistFile,"%SourceDir%sources\install.swm",Set,%install.wim%,"%SourceDir%sources\install.swm",GLOBAL
@@ -109,6 +111,55 @@ If,Not,WimExistIndex,%Install.wim%,%Install.wim.Image.number%,Begin
   Message,"The image/index selected in the - #$x#$x - #$q3] Set 'install.wim' Image Number#$q does not exist in the selected source file.#$x#$xPlease change this setting and rerun this script. #$x#$xABORTING..."
   Halt
 End
+
+[PostConfigRunV2_winbuilder]
+If,Not,ExistFile,"%TargetDir%\Project.Settings.ini",Begin
+  message,"You are attempting to run this script Post Build#$c however the project does not appear to have been run. Aborting..."
+  Halt
+End
+IniRead,"%TargetDir%\Project.Settings.ini",Main,Architecture,%ARCH%,GLOBAL
+IniRead,"%TargetDir%\Project.Settings.ini",Main,Major,%Major%,GLOBAL
+IniRead,"%TargetDir%\Project.Settings.ini",Main,Minor,%Minor%,GLOBAL
+IniRead,"%TargetDir%\Project.Settings.ini",Main,Build,%Build%,GLOBAL
+IniRead,"%TargetDir%\Project.Settings.ini",Main,SPBuild,%SPBuild%,GLOBAL
+IniRead,"%TargetDir%\Project.Settings.ini",Main,CodeBase,%CodeBase%,GLOBAL
+StrFormat,LEFT,%CodeBase%,4,%CodeBase2%
+Set,%CodeBase2%,%CodeBase2%,Global
+If,ExistFile,"%SourceDir%sources\install.wim",Set,%install.wim%,"%SourceDir%sources\install.wim",GLOBAL
+If,ExistFile,"%SourceDir%sources\install.esd",Set,%install.wim%,"%SourceDir%sources\install.esd",GLOBAL
+If,ExistFile,"%SourceDir%sources\install.swm",Set,%install.wim%,"%SourceDir%sources\install.swm",GLOBAL
+If,Not,ExistFile,%install.wim%,Begin
+  message,"You are attempting to run this script Post Build. This script requires windows source files#$c however the source files do not appear to be available. Please mount a valid source or edit the path to your source files in the main project script. #$x#$xAborting..."
+  Halt
+End
+If,ExistFile,%ProjectTemp%\install.wim.info.txt,FileDelete,%ProjectTemp%\install.wim.info.txt
+If,ExistFile,%ProjectTemp%\install.wim.info.ini,FileDelete,%ProjectTemp%\install.wim.info.ini
+ShellExecute,Hide,"cmd.exe","/C #$q#$q%TOOLS%\wimlib\wimlib-imagex.exe#$q info #$q%install.wim%#$q %install.wim.Image.number% > #$q%ProjectTemp%\install.wim.info.txt#$q#$q"
+Retrieve,FileSize,%ProjectTemp%\install.wim.info.txt,%wimcheck%
+If,%wimcheck%,Equal,0,Begin
+  Message,"The image/index selected in the following option in the main menu settings does not exist in the target file - #$x#$x - #$q3] Set 'install.wim' Image Number#$q #$x#$xPlease change this setting and restart the build process. ABORTING..."
+  Halt
+End
+FileCreateBlank,"%ProjectTemp%\install.wim.info.ini"
+IniAddSection,"%ProjectTemp%\install.wim.info.ini",install.wim.source
+IniWrite,"%ProjectTemp%\install.wim.info.ini",install.wim.source,Image.Number,%install.wim.Image.number%
+ShellExecute,Hide,"cmd.exe","/C FOR /F #$qtokens=3#$q %i in ('FINDSTR /B /C:#$qMajor Version:#$q #$q%ProjectTemp%\install.wim.info.txt#$q') do echo Major=%i >> #$q%ProjectTemp%\install.wim.info.ini#$q"
+ShellExecute,Hide,"cmd.exe","/C FOR /F #$qtokens=3#$q %i in ('FINDSTR /B /C:#$qMinor Version:#$q #$q%ProjectTemp%\install.wim.info.txt#$q') do echo Minor=%i >> #$q%ProjectTemp%\install.wim.info.ini#$q"
+ShellExecute,Hide,"cmd.exe","/C FOR /F #$qtokens=2#$q %i in ('FINDSTR /B /C:#$qBuild:#$q #$q%ProjectTemp%\install.wim.info.txt#$q') do echo Build=%i >> #$q%ProjectTemp%\install.wim.info.ini#$q"
+ShellExecute,Hide,"cmd.exe","/C FOR /F #$qtokens=4#$q %i in ('FINDSTR /B /C:#$qService Pack Build:#$q #$q%ProjectTemp%\install.wim.info.txt#$q') do echo SPBuild=%i >> #$q%ProjectTemp%\install.wim.info.ini#$q"
+ShellExecute,Hide,"cmd.exe","/C FOR /F #$qtokens=2#$q %i in ('FINDSTR /B /C:#$qArchitecture:#$q #$q%ProjectTemp%\install.wim.info.txt#$q') do echo Architecture=%i >> #$q%ProjectTemp%\install.wim.info.ini#$q"
+IniRead,"%ProjectTemp%\install.wim.info.ini",install.wim.source,Major,%Install.wim.Major%
+If,Not,%Install.wim.Major%,Equal,%Major%,Run,"%ProjectDir%\Core\common.script",PostConfigSourceError
+IniRead,"%ProjectTemp%\install.wim.info.ini",install.wim.source,Minor,%Install.wim.Minor%
+If,Not,%Install.wim.Minor%,Equal,%Minor%,Run,"%ProjectDir%\Core\common.script",PostConfigSourceError
+IniRead,"%ProjectTemp%\install.wim.info.ini",install.wim.source,Build,%Install.wim.Build%
+If,Not,%Install.wim.Build%,Equal,%Build%,Run,"%ProjectDir%\Core\common.script",PostConfigSourceError
+IniRead,"%ProjectTemp%\install.wim.info.ini",install.wim.source,SPBuild,%Install.wim.SPBuild%
+If,Not,%Install.wim.SPBuild%,Equal,%SPBuild%,Run,"%ProjectDir%\Core\common.script",PostConfigSourceError
+IniRead,"%ProjectTemp%\install.wim.info.ini",install.wim.source,Architecture,%Install.wim.ARCH%
+If,%Install.wim.ARCH%,Equal,x86_64,Set,%Install.wim.ARCH%,x64
+If,%Install.wim.ARCH%,Equal,amd64,Set,%Install.wim.ARCH%,x64
+If,Not,%Install.wim.ARCH%,Equal,%ARCH%,Run,"%ProjectDir%\Core\common.script",PostConfigSourceError
 
 [PostConfigSourceError]
 message,ERROR - source files do not match current build. #$x#$xAborting...
@@ -161,19 +212,23 @@ If,Not,ExistFile,"%TargetDir%\Programs\misc\FindPrograms%ARCH%.cmd",Begin
 End
 If,Not,ExistDir,"%TargetDir%\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\ExternalMedia",Begin
   DirMake,"%TargetDir%\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\ExternalMedia"
-  WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+  If,%Builder%,Equal,PEBakery,WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+  Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qadd '%TargetDir%' '\'#$q"
 End
 If,Not,ExistDir,"%TargetDir%\Users\Default\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\ExternalMedia",Begin
   DirMake,"%TargetDir%\Users\Default\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\ExternalMedia"
-  WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+  If,%Builder%,Equal,PEBakery,WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+  Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qadd '%TargetDir%' '\'#$q"
 End
 If,Not,ExistDir,"%Target_System32%\config\systemprofile\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\ExternalMedia",Begin
   DirMake,"%Target_System32%\config\systemprofile\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\ExternalMedia"
-  WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+  If,%Builder%,Equal,PEBakery,WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+  Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qadd '%TargetDir%' '\'#$q"
 End
 If,Not,ExistDir,"%Target_System32%\config\systemprofile\AppData\Roaming\Microsoft\Windows\Start Menu\ExternalMedia",Begin
   DirMake,"%Target_System32%\config\systemprofile\AppData\Roaming\Microsoft\Windows\Start Menu\ExternalMedia"
-  WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+  If,%Builder%,Equal,PEBakery,WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+  Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qadd '%TargetDir%' '\'#$q"
 End
 
 [NotInWim]

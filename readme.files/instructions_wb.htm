@@ -1,0 +1,313 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html><head><link type="text/css" rel="stylesheet" href="WinFE.css" media="screen" /><title>Mini-WinFE</title></head><body><font> 
+ 
+ 
+ 
+<p> 
+<select ONCHANGE="location = this.options[this.selectedIndex].value;"> 
+<option value="" disabled></option> 
+<option value="../readme.html">Contents</option> 
+<option value="" disabled>=======</option> 
+<option value="winfe.htm">Windows FE</option>  
+<option value="winpe.htm">Windows PE</option>  
+<option value="builder.htm">Builder</option>  
+<option value="options.htm">Project Options</option>  
+<option value="project.htm">Project Scripts</option>  
+<option value="instructions_pebakery.htm">Instructions (PEB..</option>  
+<option value="instructions_wb.htm" selected="selected">Instructions (Win..</option>  
+<option value="menu_system.htm">Menu System</option>  
+<option value="not_in_wim.htm">Include...in boot.wim</option>  
+<option value="postconfig.htm">Post Config</option>  
+<option value="packages.htm">Packages</option>  
+<option value="usb.htm">...Bootable USB...</option>  
+<option value="uefi.htm">UEFI, BIOS, GPT...</option>  
+<option value="multiboot.htm">Multiboot WinPE</option>  
+<option value="" disabled></option> 
+<option value="" disabled>Appendices</option> 
+<option value="" disabled>=========</option> 
+<option value="quick_pebakery.htm">Quick Start - PEBakery...</option>  
+<option value="quick_wb.htm">Quick Start - WinBuilder...</option>  
+<option value="usage.htm">Quick Start - Run...</option>  
+<option value="diskmgr.htm">DiskMgr</option>  
+<option value="winfe_tests.htm">WinFE Tests</option>  
+<option value="links.htm">Download\Links</option>  
+<option value="acknowledgements.htm">Acknowledgements</option>  
+<option value="" disabled></option> 
+</select> 
+</p> 
+ 
+ 
+ 
+<hr> 
+<a href="http://winfe.mistyprojects.co.uk/index.html"><img src="img/home.jpg" BORDER=1></a> 
+ 
+
+
+
+<h2><u>Instructions (WinBuilder)</u></h2>
+
+<font class="file"></font>
+
+<p>
+<b>Please note that any screenshots in this documentation may differ from the current release.</b>
+</p>
+
+
+
+<p>
+You will require the following in order to build <font class="file">WinFE</font> -
+
+
+<ul>
+<li>
+<b>Administrator privileges</b> - registry hives will need to be mounted and edited during the build process, and other processes also require administrator privileges.
+</li>
+</ul> 
+ 
+
+<ul>
+<li>Free disk space - 1GB should be more than adequate as Windows source files are not cached during the build process. 
+</li>
+</ul>
+
+<ul>
+<li>
+Windows Installation Media - either a CD/DVD, a mounted disk image or the files copied to an accessible folder. 
+</li>
+</ul>
+</p>
+
+
+
+
+
+<p>
+<font class="file">Mini-WinFE</font> uses the <font class="file">WinBuilder</font> scripting language to automate a number of tasks to create a working <font class="file">WinPE</font>. 
+</p>
+
+
+
+<p>
+Before running <font class="file">WinBuilder</font> please be aware that, <i><u>in the <font class="file">Mini-WinFE</font> project</u></i>, the following project directory (and sub directories)  will, if they exist, be deleted during the start of the build process (<b>Note</b> - <i><font color="red">%BaseDir%</font></i> is a <font class="file">WinBuilder</font> variable for the folder from which the <font class="file">WinBuilder</font> executable <font class="file">WinBuilder.exe</font> is running).
+<ul>
+<li><font color="red">%BaseDir%</font><font color="blue">\WinFE.Files\</font></li>
+<li><font color="red">%BaseDir%</font><font color="blue">\ProjectTemp\</font></li>
+</ul>
+</p>
+
+
+
+<p>
+Sections in this page -
+<ul>
+<li><a class="internal" href="#basics">WinBuilder Basics</a></li>
+<li><a class="internal" href="#options">Project Options</a></li>
+</ul>
+</p>
+
+
+
+
+
+
+
+
+<a name="basics"></a><br>
+<h2><u>WinBuilder Basics</u></h2>
+
+
+
+<p>
+When <font class="file">WinBuilder.exe</font> is first run, you should see a screen similar to the following (the folder tree on the left can be expanded so that individual script options can be selected or disabled as required) - 
+<br />
+<a href="img/instructions1_wb.png"><IMG SRC="img/instructions1_wb.png" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+
+
+<p class=break3em>
+The <b><u>Source</u></b> button to used in other projects to set the path to your Windows Installation Media source files (this option is not used in <font class="file">Mini-WinFE</font>) -  
+<br />
+<a href="img/instructions2_wb.png"><IMG SRC="img/instructions2_wb.png" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+<p>
+<a href="img/instructions3_wb.png"><IMG SRC="img/instructions3_wb.png" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+
+<p class=break3em>
+Use the <b><u>Script</u></b> button to return to the main interface -
+<br />
+<a href="img/instructions4_wb.png"><IMG SRC="img/instructions4_wb.png" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+<p>
+<a href="img/instructions1_wb.png"><IMG SRC="img/instructions1_wb.png" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+
+
+<p class=break3em>
+When <font class="file">WinBuilder.exe</font> is first run, you should see a screen similar to the following (the folder tree on the left can be expanded so that individual script options can be selected or disabled as required) - 
+<br />
+<a href="img/winbuilder.png"><IMG SRC="img/winbuilder.png" float=left width=90% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+<p>
+<a href="img/instructions5_wb.png"><IMG SRC="img/instructions5_wb.png" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+
+
+<p class=break3em>
+Select the main project script in the folder tree and set the path to your source files by either manually entering the path (1) or click on the <font class="file">Folder</font> button (2) to set the path to your Windows Installation Media source files. Please note that if manually entering a path it must end in a backslash (\). E.g. D:\source_files\
+<br />
+<a href="img/main_1_2.jpg"><IMG SRC="img/main_1_2.jpg" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+<p>
+A mounted Windows RTM .iso file is recommended as source. Alternatively extract the contents of a Windows .iso to a local directory. Set the path in this option to the root folder that contains the following files/directories -
+<ul>
+<li class="file">\sources\boot.wim</li>
+<li class="file">\sources\install.wim</li>
+<li class="file">\bootmgr</li>
+<li class="file">\boot\</li>
+<li class="file">\EFI\</li>
+</ul>
+</p>
+
+
+
+
+
+<p class=break3em>
+To start the build process, click on the big blue <i>Play</i> button in the top right of the screen - 
+<br />
+<IMG SRC="img/instructions6_wb.png" BORDER=2>
+</p>
+
+
+
+<p class=break3em>
+A progress bar will be displayed for individual project scripts as they are processed.
+</p>
+
+
+
+
+<p class=break3em>
+If there are any errors during the build process then view the log file for further information by clicking on the <b>Log</b> button (see below). You can close the log by clicking back on the <b>Script</b> button (to the left of the <b>Log</b> button) - 
+<br />
+<a href="img/instructions8_wb.png"><IMG SRC="img/instructions8_wb.png" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+
+
+<p class=break3em>
+The source for project scripts can be viewed by clicking on the scripts icon - 
+<br />
+<a href="img/instructions9_wb.png"><IMG SRC="img/instructions9_wb.png" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+
+<p class=break3em>
+This will open a range of options including the built in text editor which is displayed by clicking on the <b>Source</b> button - 
+<br />
+<a href="img/instructions10_wb.png"><IMG SRC="img/instructions10_wb.png" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+
+<p class=break3em>
+Return to the project by clicking on the <IMG SRC="img/instructions11_wb.png" BORDER=1> button in the top right of the screen. 
+</p>
+
+
+
+
+
+
+<a name="options"></a><br>
+<h2><u>Project Options</u></h2>
+
+
+<p>
+Individual project scripts can contain a range of options. In <font class="file">Mini-WinFE</font> the interface has been kept as simple as possible with options reduced to a minimum. A number of options are set in the main project script and can be viewed by selecting <font class="file">Mini-WinFE</font> at the top of the folder tree in the left panel -
+<br />
+<a href="img/winbuilder.png"><IMG SRC="img/winbuilder.png" float=left width=90% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+
+
+<p class=break3em>
+Multiple scripts, including the main project script, use pick lists with a range of pre-defined options -
+<br />
+<a href="img/pebakery_instructions11.png"><IMG SRC="img/pebakery_instructions11.png" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+
+
+
+
+<p class=break3em>
+A number of scripts in the <font class="file">WinFE</font> project have a tab style interface with additional options -
+<br />
+<a href="img/pebakery_instructions4b.png"><IMG SRC="img/pebakery_instructions4b.png" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+
+<p class=break3em>
+To see more information about any of the available options that can be set/changed in the <font class="file">WinFE</font> project, click on the relevant <b>HELP</b> button -
+<br />
+<a href="img/pebakery_instructions5.png"><IMG SRC="img/pebakery_instructions5.png" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+
+
+<p class=break3em>
+Selecting <b>HELP</b> for this option will display the following information -
+<br />
+<IMG SRC="img/pebakery_instructions6.png" BORDER=1>
+</p>
+
+
+
+<p class=break3em>
+Some scripts use a <b>?</b> help button -
+<br />
+<a href="img/pebakery_instructions5b.png"><IMG SRC="img/pebakery_instructions5b.png" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+<p class=break3em>
+A number of <font class="file">Applications</font> .scripts have an option to <font class="file">Include Program in boot.wim</font>. For more information about this option see <a class="internal" href="not_in_wim.htm">here</a>.
+<br />
+<a href="img/notinwim.png"><IMG SRC="img/notinwim.png" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+
+
+<p class=break3em>
+<font class="file">Mini-WinFE</font> supports custom menus. For more information about this option see <a class="internal" href="menu_system.htm">here</a>.
+<br />
+<a href="img/menu1.png"><IMG SRC="img/menu1.png" float=left width=70% margin-right=1% margin-bottom=0.5em border=1></a>
+</p>
+
+
+
+
+
+<p class="breaktop"><font class="file">Document date - 18<sup>th</sup> June 2022</font></p></font></body></html>
+ 

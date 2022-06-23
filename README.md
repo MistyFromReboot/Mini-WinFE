@@ -1,9 +1,23 @@
 # Mini-WinFE
 
-Windows Forensic Environmnent - based on WinPE.
+Windows Forensic Environmnent - based on WinPE. This project has been developed to create a simplified method for building a Windows Forensic Environmnet (WinFE) for digital forensic acquisitions. Full documentation is included in the project download and on the following website - 
+[http://winfe.mistyprojects.co.uk/](http://winfe.mistyprojects.co.uk/).
 
-This project has evolved from the Winbuilder Mini-WinFE project. A move has been made to the PEBakery build engine. Use this project to create WinFE from a range of 32-bit and 64-bit Windows sources, including -
+All you require to create a WinFE in a matter of minutes is the Mini-WinFE download, a Windows Source DVD (or mounted disc image) and any of the third party applications you want to include in the build - the WAIK or ADK is not required.
 
+Supported applications include -
+- DMDE (included)
+- Forensic Acquisition Utilities (included)
+- FTK Imager (copy from local installation)
+- HWiNFO (included)
+- NT Password Edit (included)
+- Opera (included)
+- Sumatra PDF Reader (included)
+- WinHex (copy from local installation)
+- X-Ways Forensics (copy from local installation)
+- Write Protect Tool (included)
+
+Any of the following 32-bit and 64-bit Windows sources can be used -
 - Windows 7
 - Windows 7 (SP1)
 - Windows Server 2008 R2 SP1
@@ -15,9 +29,17 @@ This project has evolved from the Winbuilder Mini-WinFE project. A move has been
 
 Mini-WinFE is based on Windows Preinstallation Environment, with a digital forensic focus. SysWOW64 is supported in 64-bit builds, allowing the use of some 32-bit Windows applications. 
 
-PEBakery version 0.9.5.1 beta5 is included in the download. The Mini-WinFE project has also been tested using PEBakery version 1.0.0 (Standalone (x64): PEBakery-v1.0.0-sc_x64.7z). 
+WinBuilder and PEBakery version 0.9.5.1 beta5 are included in the download - please note that this version of PEBakery has a .NET 4.7.1 dependency. 
 
-A decision has been made to retain version 0.9.5.1 beta5 in the download due to wider support on older versions of Windows including Windows 7 and 8.1 - please note that this version of the builder has a .NET 4.7.1 dependency.
+The Mini-WinFE project has also been tested using PEBakery version 1.0.0 (Standalone (x64): PEBakery-v1.0.0-sc_x64.7z). 
 
-Additional documentation is available on the following website - 
-[http://winfe.mistyprojects.co.uk/](http://winfe.mistyprojects.co.uk/)
+WinXShell
+![Alt text](/Projects/Cache/winxshell.png?raw=true "WinXShell")
+
+LaunchBar Shell
+![Alt text](/Projects/Cache/launchbar.png?raw=true "LaunchBar shell")
+
+BBLean Shell
+![Alt text](/Projects/Cache/mini-winfe.png?raw=true "BBLean shell")
+
+
