@@ -6,8 +6,8 @@ Locked=True
 Mandatory=True
 Level=8
 Author=Misty
-Version=20220618
-Date=2022-06-18
+Version=20230201
+Date=2023-02-01
 Credits=Colin Ramsden, Karl Morton, Royal Meier
 Interface=Interface1
 
@@ -135,6 +135,7 @@ If,%CODEBASE%,Equal,10.0.17763,Set,%Settings%,3
 If,%CODEBASE%,Equal,10.0.18362,Set,%Settings%,3
 If,%CODEBASE%,Equal,10.0.19041,Set,%Settings%,3
 If,%CODEBASE%,Equal,10.0.22000,Set,%Settings%,3
+If,%CODEBASE%,Equal,10.0.22621,Set,%Settings%,3
 Set,%CONTINUE%,No
 If,%Settings%,Equal,0,Begin
   If,Question,The WinFE Project script is about to run.#$x#$xWARNING - either the build has not been tested in the Mini-WinFE project#$c or the build version could not be verified. It is therefore difficult to know which registry settings to apply for WinFE to work correctly. If you wish to proceed then a SanPolicy value of 3 will be used.#$x#$xIt's possible that a disk signature might be written to any hard disks that do not already have one - some versions of WinFE have also performed accidental writes during testing.#$x#$xPlease use Windows 8#$c 8.1 or 10 source files if possible - in testing these versions did not perform ANY accidental writes.#$x#$xAre you sure you want to run this script? Select YES to CONTINUE (adding WinFE) - or NO to ABORT,Set,%CONTINUE%,YES
