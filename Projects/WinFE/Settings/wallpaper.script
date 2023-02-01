@@ -4,8 +4,8 @@ Description=Change desktop wallpaper
 Selected=True
 Level=4
 Author=Misty
-Version=20220528
-Date=2022-05-28
+Version=20230201
+Date=2023-02-01
 
 [Interface]
 pBevel1=pBevel1,1,12,10,70,500,40
@@ -22,9 +22,9 @@ If,%pScrollBox1%,Equal,DEFAULT,Begin
 Echo,Default wallpaper selected...
 If,%Shell%,Equal,WinXShell,Begin
 FileDelete,"%TargetDir%\Programs\WinXShell\wallpaper.jpg"
-Filecopy,"%Cache%\Programs\Wallpaper\winfe.jpg","%TargetDir%\Programs\WinXShell\wallpaper.jpg"
+Filecopy,"%Cache%\Programs\Wallpaper\winpe.jpg","%TargetDir%\Programs\WinXShell\wallpaper.jpg"
 End
-Else,Filecopy,"%Cache%\Programs\Wallpaper\winfe.jpg","%Target_System32%\winpe.jpg"
+Else,Filecopy,"%Cache%\Programs\Wallpaper\winpe.jpg","%Target_System32%\winpe.jpg"
 IniWrite,"%OutputDir%\Project.Settings.ini",PROGRAMS,Wallpaper,DEFAULT
 //Wait,1
 Exit,Default wallpaper selected...,NOWARN

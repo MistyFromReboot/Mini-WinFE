@@ -21,3 +21,7 @@
 \windows\system32\*\mmcbase.dll.mui 
 \windows\system32\*\mmcndmgr.dll.mui 
 \windows\system32\*\mmcshext.dll.mui 
+\Windows\SystemResources\mmcbase.dll.mun
+\Windows\SystemResources\mmcndmgr.dll.mun
+\Windows\SystemResources\dmdskres.dll.mun
+

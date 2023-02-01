@@ -4,8 +4,8 @@ Description=
 Selected=True
 Level=4
 Author=ThePEBakeryTeam
-Version=20180321
-Date=2018-03-21
+Version=20230201
+Date=2023-02-01
 Interface=Interface1
 
 [Interface1]
@@ -13,11 +13,11 @@ pTextLabelMenu1="1",1,1,35,3,70,18,10,Bold
 pButtonMenu2="2",1,8,75,0,70,20,pButtonMenu2,0,True,_pButtonMenu2_,True
 pButtonMenu3="3",1,8,145,0,70,20,pButtonMenu3,0,True,_pButtonMenu3_,True
 pButtonMenu4="?",1,8,215,0,70,20,pButtonMenu4,0,True,_pButtonMenu4_,True
-//
+pCheckBox1="1] BootSect",1,3,40,80,180,18,True
 pCheckBox2="2] CMD Here",1,3,40,110,180,18,True
 pCheckBox3="3] Keyboard Layout",1,3,40,140,180,18,True
 pCheckBox4="4] ScreenRes",1,3,40,170,180,18,True
-//
+pButton1=?,1,8,10,80,18,18,?option1,0,True,_?option1_,True
 pButton2=?,1,8,10,110,18,18,?option2,0,True,_?option2_,True
 pButton3=?,1,8,10,140,18,18,?option3,0,True,_?option3_,True
 pButton4=?,1,8,10,170,18,18,?option4,0,True,_?option4,True

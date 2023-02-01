@@ -4,9 +4,10 @@ Description=
 Selected=False
 Level=5
 Author=Misty
-Version=20220524
-Date=2022-05-24
+Version=20230201
+Date=2023-02-01
 Interface=Interface1
+Credits=Atari800XL (reboot.pro), IcemanND (msfn)
 
 [Interface1]
 pTextLabelMenu1="1",1,1,35,3,70,18,10,Bold
@@ -62,28 +63,33 @@ Run,%ScriptFile%,COMMON
 Run,%ScriptFile%,IN.WIM
 
 [CHECKS]
-If,%CodeBase2%,Equal,10.0,If,%Build%,Bigger,17763,Begin
-   Message,"The Disk Management console is not supported in this build of Windows (%codebase%)",info,5
-   Exit
+If,Not,ExistFile,"%Programs%\DiskMgmt\DiskMgmt.dependencies.txt",Begin
+Message,"File dependency is missing - exiting script...",Error,5
+Exit,"File dependency is  missing - exiting script..."
+End
+If,Not,ExistFile,"%Programs%\DiskMgmt\mmc.registry.reg",Begin
+Message,"File dependency is missing - exiting script...",Error,5
+Exit,"File dependency is  missing - exiting script..."
 End
 
 [MENU]
 ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemRoot#$p\System32\diskmgmt.msc#$q /F:#$q%ProjectTemp%\DiskMgmt.lnk#$q"
 If,ExistFile,"%ProjectTemp%\DiskMgmt.lnk",Begin
-  Set,%MyShortcut%,DiskMgmt.lnk
-  If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
-  If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
-  If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
-    Set,%ProgramMenuPath%,%pTextBox1%
-    Run,"%ProjectDir%\Core\common.script",StartMenu
-  End
-  If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
-  If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
-  FileDelete,"%ProjectTemp%\%MyShortcut%"
+Set,%MyShortcut%,DiskMgmt.lnk
+If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
+If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
+If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
+Set,%ProgramMenuPath%,%pTextBox1%
+Run,"%ProjectDir%\Core\common.script",StartMenu
+End
+If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
+If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
+FileDelete,"%ProjectTemp%\%MyShortcut%"
 End
 
 [COMMON]
-WimExtractBulk,%Install.wim%,%Install.wim.Image.number%,%Programs%\DiskMgmt\DiskMgmt.dependencies.txt,%TargetDir%,NOACL,NOERR
+If,%Builder%,Equal,PEBakery,WimExtractBulk,%Install.wim%,%Install.wim.Image.number%,%Programs%\DiskMgmt\DiskMgmt.dependencies.txt,%TargetDir%,NOACL,NOERR
+Else,ShellExecute,Hide,"%Tools%\wimlib\wimlib-imagex.exe","extract #$q%Install.wim%#$q %Install.wim.Image.number% @#$q%Programs%\DiskMgmt\DiskMgmt.dependencies.txt#$q --dest-dir=#$q%TargetDir%#$q --nullglob --no-acls"
 Echo,"Mounting registry hives..."
 If,Not,ExistRegSection,HKLM,_WinPE_SOFTWARE,RegHiveLoad,_WinPE_SOFTWARE,"%Target_config%\software"
 ShellExecute,hide,regedit.exe,"/s #$q%Programs%\DiskMgmt\mmc.registry.reg#$q"
@@ -91,8 +97,8 @@ Echo,"Unmounting registry hives..."
 RegHiveUnload,_WinPE_SOFTWARE
 IniWrite,"%OutputDir%\Project.Settings.ini",PROGRAMS,DiskMgmt,YES
 If,%FullProjectRun%,Equal,NO,Begin
-  IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
-  WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
+WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
 End
 
 [IN.WIM]

@@ -6,8 +6,8 @@ Locked=True
 Mandatory=True
 Level=8
 Author=Misty
-Version=20220618
-Date=2022-06-18
+Version=20230201
+Date=2023-02-01
 Credits=Colin Ramsden, Karl Morton, Royal Meier
 Interface=Interface1
 
@@ -21,15 +21,15 @@ pScrollBox2=DISKMGR,1,4,20,80,80,20,DISKMGR,PROTECT
 pTextLabel2="1] Select Application",1,1,190,80,148,18,8,Bold
 pButton2=HELP,1,8,430,80,70,20,HELP.2,0,True,_HELP.2_,True
 pBevel3=,1,12,10,130,500,40
-pScrollBox3=3,1,4,20,140,80,20,3,4
+pScrollBox3=1,1,4,20,140,80,20,1,3,4
 pTextLabel3="2] SAN Policy",1,1,213,140,90,18,8,Bold
 pButton3=HELP,1,8,430,140,70,20,HELP.3,0,True,_HELP.3_,True
 pBevel4=,1,12,10,190,500,40
-pScrollBox4=ENABLED,1,4,20,200,80,20,ENABLED
+pScrollBox4=,1,4,20,200,80,20,,ENABLED
 pTextLabel4="3] NoAutoMount",1,1,205,200,117,21,8,Bold
 pButton4=HELP,1,8,430,200,70,20,HELP.4,0,True,_HELP.4_,True
 pBevel5=,1,12,10,250,500,40
-pScrollBox5=YES,1,4,20,260,80,20,YES
+pScrollBox5=NO,1,4,20,260,80,20,YES,NO
 pTextLabel5="4] Run at startup",1,1,210,260,111,18,8,Bold
 pButton5=HELP,1,8,430,260,70,20,HELP.5,0,True,_HELP.5_,True
 pTextLabel6="This is based on the #$qWinFE Write Protect Tool#$q script (WP.script) by Colin Ramsden and Royal Meier (with credit to Karl Morton) and has been adapted for this project.",1,1,13,35,518,38,9,Normal
@@ -135,6 +135,7 @@ If,%CODEBASE%,Equal,10.0.17763,Set,%Settings%,3
 If,%CODEBASE%,Equal,10.0.18362,Set,%Settings%,3
 If,%CODEBASE%,Equal,10.0.19041,Set,%Settings%,3
 If,%CODEBASE%,Equal,10.0.22000,Set,%Settings%,3
+If,%CODEBASE%,Equal,10.0.22621,Set,%Settings%,3
 Set,%CONTINUE%,No
 If,%Settings%,Equal,0,Begin
   If,Question,The WinFE Project script is about to run.#$x#$xWARNING - either the build has not been tested in the Mini-WinFE project#$c or the build version could not be verified. It is therefore difficult to know which registry settings to apply for WinFE to work correctly. If you wish to proceed then a SanPolicy value of 3 will be used.#$x#$xIt's possible that a disk signature might be written to any hard disks that do not already have one - some versions of WinFE have also performed accidental writes during testing.#$x#$xPlease use Windows 8#$c 8.1 or 10 source files if possible - in testing these versions did not perform ANY accidental writes.#$x#$xAre you sure you want to run this script? Select YES to CONTINUE (adding WinFE) - or NO to ABORT,Set,%CONTINUE%,YES
