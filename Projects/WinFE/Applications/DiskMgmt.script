@@ -4,8 +4,8 @@ Description=
 Selected=False
 Level=5
 Author=Misty
-Version=20230201
-Date=2023-02-01
+Version=20230205
+Date=2023-02-05
 Interface=Interface1
 Credits=Atari800XL (reboot.pro), IcemanND (msfn)
 
@@ -54,7 +54,8 @@ message,"Applies to WinXShell#$c BBLean and LaunchBar Shell(s)#$x#$xSelect this 
 message,"This setting does not apply to any LaunchBar instance running as the WinPE Shell. This option only applies to a LaunchBar instance when the Applications' > 'LaunchBar' program script is selected in the build.#$x#$xIf the 'Applications' > 'LaunchBar' program script is selected than enable this option to add a program menu entry to the root of the LaunchBar menu bar. #$x#$xPlease note that if option '6] Programs in boot.wim' in the main project script is set as 'NO'#$c then LaunchBar and a number of other applications will not be available at boot. In this case a text based .ini file will be used for LaunchBar menu settings."
 
 [process]
-If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunV2
+If,%Builder%,Equal,PEBakery,If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunV2
+If,%Builder%,Equal,WinBuilder,If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunV2_winbuilder
 AddInterface,%ScriptFile%,Interface1,""
 AddInterface,%ScriptFile%,Interface2,""
 Run,%ScriptFile%,CHECKS
@@ -64,27 +65,27 @@ Run,%ScriptFile%,IN.WIM
 
 [CHECKS]
 If,Not,ExistFile,"%Programs%\DiskMgmt\DiskMgmt.dependencies.txt",Begin
-Message,"File dependency is missing - exiting script...",Error,5
-Exit,"File dependency is  missing - exiting script..."
+  Message,"File dependency is missing - exiting script...",Error,5
+  Exit,"File dependency is  missing - exiting script..."
 End
 If,Not,ExistFile,"%Programs%\DiskMgmt\mmc.registry.reg",Begin
-Message,"File dependency is missing - exiting script...",Error,5
-Exit,"File dependency is  missing - exiting script..."
+  Message,"File dependency is missing - exiting script...",Error,5
+  Exit,"File dependency is  missing - exiting script..."
 End
 
 [MENU]
 ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemRoot#$p\System32\diskmgmt.msc#$q /F:#$q%ProjectTemp%\DiskMgmt.lnk#$q"
 If,ExistFile,"%ProjectTemp%\DiskMgmt.lnk",Begin
-Set,%MyShortcut%,DiskMgmt.lnk
-If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
-If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
-If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
-Set,%ProgramMenuPath%,%pTextBox1%
-Run,"%ProjectDir%\Core\common.script",StartMenu
-End
-If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
-If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
-FileDelete,"%ProjectTemp%\%MyShortcut%"
+  Set,%MyShortcut%,DiskMgmt.lnk
+  If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
+  If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
+  If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
+    Set,%ProgramMenuPath%,%pTextBox1%
+    Run,"%ProjectDir%\Core\common.script",StartMenu
+  End
+  If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
+  If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
+  FileDelete,"%ProjectTemp%\%MyShortcut%"
 End
 
 [COMMON]
@@ -97,8 +98,8 @@ Echo,"Unmounting registry hives..."
 RegHiveUnload,_WinPE_SOFTWARE
 IniWrite,"%OutputDir%\Project.Settings.ini",PROGRAMS,DiskMgmt,YES
 If,%FullProjectRun%,Equal,NO,Begin
-IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
-WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+  IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
+  WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
 End
 
 [IN.WIM]
