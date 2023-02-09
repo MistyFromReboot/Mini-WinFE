@@ -1,0 +1,32 @@
+License for CloneDisk
+Author : Erwan Labalec - http://labalec.fr
+=======
+
+This utility is released as freeware, i.e not sold. 
+
+You are allowed to freely use this software for profesionnal and non profesionnal reasons.
+
+You are allowed to freely distribute this utility via Internet, or in any other way. 
+If you distribute this utility, you must include all files in the distribution package, without any modification !
+
+You are NOT allowed to modify the binary.
+
+You are NOT allowed to sell this software for whatever reasons.
+
+The zip package includes other softwares, please refer to the respective web sites to learn more about these softwares licensing.
+
+-Grub4Dos : http://grub4dos.chenall.net/categories/downloads/
+-devio, strarc : http://www.ltr-data.se/opencode.html/
+-offline registry library : http://msdn.microsoft.com/en-us/library/ee210757(v=vs.85).aspx
+-libvmdk,libewf,libvhdi, libqcow : https://github.com/libyal
+-7-Zip : https://www.7-zip.org/
+-lz4 : https://github.com/lz4/lz4
+
+Disclaimer
+==========
+
+The software is provided "AS IS" without any warranty, either expressed
+or implied, including, but not limited to, the implied warranties of
+merchantability and fitness for a particular purpose. The author will not
+be liable for any special, incidental, consequential or indirect damages
+due to loss of data or any other reason.

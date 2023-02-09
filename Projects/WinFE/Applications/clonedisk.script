@@ -1,0 +1,125 @@
+[main]
+Title=Clonedisk
+Description=Main feature is backup/restore to/from an imagefile or clone a disk to another.
+Selected=False
+Level=5
+Author=Misty
+Version=20230209
+Date=2023-02-09
+Interface=Interface1
+
+[Interface1]
+pTextLabelMenu1="1",1,1,35,3,70,18,10,Bold
+pButtonMenu2="2",1,8,75,0,70,20,pButtonMenu2,0,True,_pButtonMenu2_,True
+pButtonMenu3="?",1,8,145,0,70,20,pButtonMenu3,0,True,_pButtonMenu3_,True
+pWebLabel1=http://labalec.fr/erwan/?page_id=42,1,10,51,100,216,18,http://labalec.fr/erwan/?page_id=42
+pTextLabel1="CloneDisk Website",1,1,51,77,230,18,10,Bold
+pCheckBoxInWim="Include Program in boot.wim",1,3,51,265,180,18,True
+
+[Interface2]
+pButtonMenu1="1",1,8,5,0,70,20,pButtonMenu1,0,True,_pButtonMenu1_,True
+pTextLabelMenu2="2",1,1,108,3,70,18,10,Bold
+pButtonMenu3="?",1,8,145,0,70,20,pButtonMenu3,0,True,_pButtonMenu3_,True
+pBevel1=,1,12,10,65,66,2
+pTextLabel="Menu Entries",1,1,10,50,230,18,8,Bold
+pCheckBoxShortcutDesktop="Add to Desktop Menu",1,3,40,80,150,18,True
+pCheckBoxShortcutQuick="Add to Quicklaunch Menu",1,3,40,110,150,18,True
+pCheckBoxShortcutPrograms="Add to #$qStart#$q > ",1,3,40,140,99,18,True
+pCheckBoxShortcutLaunchBar="Add to LaunchBar Menu ",1,3,40,170,150,18,True
+pButtonShortcut1=?,1,8,10,80,18,18,pButtonShortcut1,0,True,_pButtonShortcut1_,True
+pButtonShortcut2=?,1,8,10,110,18,18,pButtonShortcut2,0,True,_pButtonShortcut2_,True
+pButtonShortcut3=?,1,8,10,140,18,18,pButtonShortcut3,0,True,_pButtonShortcut3_,True
+pButtonShortcut4=?,1,8,10,170,18,18,pButtonShortcut4,0,True,_pButtonShortcut4_,True
+pTextBox1=,1,0,140,140,150,21,Programs
+
+[pButtonMenu1]
+IniWrite,%ScriptFile%,Main,Interface,Interface1
+System,REFRESHINTERFACE
+
+[pButtonMenu2]
+IniWrite,%ScriptFile%,Main,Interface,Interface2
+System,REFRESHINTERFACE
+
+[pButtonMenu3]
+message,"Click on the buttons to toggle between tabs 1 and 2. #$x#$xTab 2 contains menu options for use in the selected shell. Click on the ? button for information about the different options."
+
+[pButtonShortcut1]
+message,"WinXShell only#$x#$xSelect this option to add a program shortcut to the Desktop."
+
+[pButtonShortcut2]
+message,"WinXShell only#$x#$xSelect this option to add a program menu option to the Quicklaunch menu - similar in appearence to the 'Pin to Taskbar' option in Windows 7/8/10."
+
+[pButtonShortcut3]
+message,"Applies to WinXShell#$c BBLean and LaunchBar Shell(s)#$x#$xSelect this option to add a program menu option to the Start menu. Leave blank to add to the root of the menu#$c or manually type a path to place in a sub-menu (do not use spaces in the path). E.g. #$x#$s- FileManager#$x#$s- Programs#$x#$s- Programs\FileManager#$x#$xAnd looking at the examples above - #$x#$xLeave this option blank to add a menu entry to the root of the program menu (the 'Start' menu in WinXShell#$c the 'Start' menu in BBLean#$c or the root of the LaunchBar menu bar if LaunchBar is selected as Shell)#$x#$xEnter 'FileManager' to add a menu entry for this application to the 'Start' > 'FileManager' sub-menu (WinXShell and bblean) or the 'FileManager' sub-menu in LaunchBar.#$x#$xEnter 'Programs' to add a menu entry for this application to the 'Start' > 'Programs' sub-menu (WinXShell and bblean) or the 'Programs' sub-menu in LaunchBar.#$x#$xEnter 'Programs\FileManager' to add a menu entry for this application to the 'Start' > 'Programs' > 'FileManager' sub-menu (WinXShell and bblean) or the 'Programs' > 'FileManager' sub-menu in LaunchBar."
+
+[pButtonShortcut4]
+message,"This setting does not apply to any LaunchBar instance running as the WinPE Shell. This option only applies to a LaunchBar instance when the Applications' > 'LaunchBar' program script is selected in the build.#$x#$xIf the 'Applications' > 'LaunchBar' program script is selected than enable this option to add a program menu entry to the root of the LaunchBar menu bar. #$x#$xPlease note that if option '6] Programs in boot.wim' in the main project script is set as 'NO'#$c then LaunchBar and a number of other applications will not be available at boot. In this case a text based .ini file will be used for LaunchBar menu settings."
+
+[process]
+If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRun
+AddInterface,%ScriptFile%,Interface1,""
+AddInterface,%ScriptFile%,Interface2,""
+If,%pCheckBoxInWim%,Equal,True,Set,%PROGRAMS.IN.WIM%,YES
+Else,Set,%PROGRAMS.IN.WIM%,NO
+Run,%ScriptFile%,CHECKS
+Run,%ScriptFile%,MENU
+Run,%ScriptFile%,COMMON
+If,%PROGRAMS.IN.WIM%,Equal,NO,Run,%ScriptFile%,NOT.IN.WIM
+If,%PROGRAMS.IN.WIM%,Equal,YES,Run,%ScriptFile%,IN.WIM
+
+[CHECKS]
+If,Not,ExistFile,"%Programs%\clonedisk\%ARCH%\clonedisk.exe",Begin
+  Message,clonedisk is missing - exiting script...,Error,5
+  Exit,clonedisk is missing - exiting script...,WARN
+End
+
+[MENU]
+If,%PROGRAMS.IN.WIM%,Equal,NO,Begin
+  If,Not,ExistFile,"%OutputDir%\Programs\ShortcutsNotInWim.txt",Run,"%ProjectDir%\Core\common.script",NotInWim
+  TXTaddline,"%OutputDir%\Programs\ShortcutsNotInWim.txt","#$p~dp0nircmd.exe shortcut #$q#$p~dp0clonedisk\clonedisk.exe#$q #$q#$pTemp#$p\ShortCuts#$q #$qclonedisk#$q",Append
+End
+If,%PROGRAMS.IN.WIM%,Equal,YES,Begin
+  ShellExecute,Hide,"%Tools%\Shortcut.exe","/A:C /T:#$q#$pSystemDrive#$p\Programs\clonedisk\clonedisk.exe#$q /F:#$q%ProjectTemp%\clonedisk.lnk#$q /I:#$q#$pSystemDrive#$p\Programs\clonedisk\clonedisk.exe#$c0#$q"
+  If,ExistFile,"%ProjectTemp%\clonedisk.lnk",Begin
+    Set,%MyShortcut%,clonedisk.lnk
+    If,%pCheckBoxShortcutDesktop%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Desktop"
+    If,%pCheckBoxShortcutQuick%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\Quick"
+    If,%pCheckBoxShortcutPrograms%,Equal,True,Begin
+      Set,%ProgramMenuPath%,%pTextBox1%
+      Run,"%ProjectDir%\Core\common.script",StartMenu
+    End
+    If,%pCheckBoxShortcutLaunchBar%,Equal,True,FileCopy,"%ProjectTemp%\%MyShortcut%","%ProjectTemp%\ShortCuts\LaunchBar"
+    If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunShortcuts
+    FileDelete,"%ProjectTemp%\%MyShortcut%"
+  End
+End
+
+[COMMON]
+If,%PROGRAMS.IN.WIM%,Equal,NO,Set,%PATH%,%OutputDir%
+If,%PROGRAMS.IN.WIM%,Equal,YES,Set,%PATH%,%TargetDir%
+If,Not,ExistDir,"%PATH%\Programs",DirMake,"%PATH%\Programs"
+DirMake,"%PATH%\Programs\clonedisk"
+DirCopy,"%Programs%\clonedisk\%ARCH%\*.*","%PATH%\Programs\clonedisk"
+IniWrite,"%OutputDir%\Project.Settings.ini",PROGRAMS,clonedisk,YES
+
+[IN.WIM]
+If,%FullProjectRun%,Equal,NO,Begin
+  IniRead,"%TargetDir%\Project.Settings.ini",Main,Image.Number,%Boot.wim.Image.number%
+  If,%Builder%,Equal,PEBakery,WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+  Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qadd '%TargetDir%' '\'#$q"
+End
+//Wait,1
+
+[NOT.IN.WIM]
+//Wait,1
+If,%FullProjectRun%,Equal,NO,Run,"%ProjectDir%\Core\common.script",PostConfigRunNotInWim
+
+[AuthorEncoded]
+Logo=clonedisk_MAINICON.ico
+clonedisk_MAINICON.ico=3062,4083
+
+[EncodedFile-AuthorEncoded-clonedisk_MAINICON.ico]
+lines=0
+0=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
+
+
