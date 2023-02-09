@@ -1,0 +1,100 @@
+
+20230209
+========
+* Changelog added
+* CloneDisk added
+* Readme files updated
+* README.md updated
+
+
+20230205
+========
+WinPE and main branch - 
+* \Core\common.script - line added to identify correct shell
+  for running scripts post build with NotInWim selected. 
+
+WinPE branch only - 
+* DiskMgmt - update to ensure that correct builder is used
+  when running post build for wimlib file extraction.
+
+
+20230201
+========
+WinPE and main branch - 
+* Edits to add Windows 11 22H2 as source
+
+WinPE branch only - 
+* DiskMgmt - support added for more recent versions including
+  Windows 10 21H2 & Windows 11 22H2
+* Edits to following scripts to convert from forensic only 
+  to WinPE (error in previous upload) - 
+	\Finalise\winfe.script
+	\Settings\Recommended.script
+	\Settings\wallpaper
+
+
+20220623
+========
+* wimlib updated to 13.5 - in program cache
+  and in tools
+* GetWaikTools updated (Tools)
+* Drivers script updated (Mount option 
+  removed)
+* PostConfig script updated (added 
+  messages for end of actions)
+* links.htm and project.htm updated
+* README.md updated
+* Screenshot for README.md added (to 
+  Projects > Cache)
+* Launchbar script updated
+* Readme files updated with WinBuilder 
+  instructions. 
+* Project rewritten to add WinBuilder support
+* OSK updated - start position changed
+* Icons added to Programs\misc
+
+Following project scripts edited - 
+* XWF - added hid.dll for SysWoW
+* WinHex - now downloads 64-bit
+* FTK - removed vcredist but added prompt
+
+
+20220614
+========
+* Updated readme files - project.htm (added 
+  osk).
+* FTK Imager updated
+* Added OSK - autoit build
+* Edited licence - removed references to 
+  ChrisPE
+
+
+20220605.2
+==========
+* Updated readme files - issue with header
+  on previous upload.
+
+
+20220605.1
+==========
+* main branch only - winfe.script to 
+  reflect changes in 20220605. Edited to  
+  force the use of DiskMgr or protect.exe
+  at boot. Also removed SANPolicy 1
+  option and forced NoAutoMount
+
+
+20220605
+========
+* Readme files updated and WinFE tests 
+  included. WinPE versions edited. 
+
+* Minor changes to scripts to edit WinPE
+  versions (e.g. 21H2, 21H1, 20H2, 2004
+  all use WinPE 10.0.19041)
+
+
+20220528
+========
+Initial github release
+

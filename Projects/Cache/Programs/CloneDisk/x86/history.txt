@@ -1,0 +1,383 @@
+1.0
+backup of disk or partition (system or not) to file
+restore from file
+64k aligned buffer
+use of lock/dismount for physical drives
+use of lock/dismount/ALLOW_EXTENDED_DASD_IO for logical drives
+
+1.1
+added:gzip
+
+1.2
+added:can create a vmdk from a disk image
+added:logical removable disks are displayed as well
+added:disk (system or not) to disk
+added:wipe
+added:resize partition (experimental!)
+added:delete drive layout
+added:backup/restore MBR
+
+1.3
+added:backup/restore bs
+added:make sparse files
+
+1.4
+added : big size support (>integer)
+added : forced geometry for vmdk (h=255,s=63)
+added : adaptive geometry for vhd based on image size (16/63,64/32,128/63,255/63)
+added : can turn an image file into a vhd file
+
+1.5
+added : command line
+added : display volume name or product name
+added : can restore parts of mbr
+added : physical drives will also display product id
+modified : disk to disk will check the destination size
+
+1.6
+added : delete from registry hklm\system\mounteddevices to rediscover disks
+added : patch registry to auto start ide mass storage drivers
+added : patch registry to support more ide mass storage drivers
+added : launch cmd as system
+added : create vmx file along with vmdk
+added : filecopy from one logical drive to another (runas system)
+added : patch registy to enable usb boot
+added : dump registry system files (run as system)
+added : offline registry patches
+fixed : use shortfilename for xcopy exclusion file
+added : formatex to format usb pen on ntfs
+added : will propose to skip bad sectors
+//fixed : dismount only if lock fails
+added : backup/restore of used clusters
+added : cancel possible when backup/restoring
+added : create img from fixed & non dynamic vhd
+added : can display info on mbr & bs from raw image
+added : dont backup unpartitioned space option
+added : human error messages
+added : display disk id from mbr
+added : display volumename in disk informations
+
+1.7
+modified : tabs to flat button to avoid dancing tabs
+added : devio support for image<->disk (backup thru network)
+added : extend volume (on top of grow partition)
+added : create disk (next to disk delete layout)
+added : create partition (next to create disk)
+added : speed test (sequential and random) with createfile flags
+added : fix mbr in MBR tab
+added : make sparse file becomes make raw image with 2 options (sparse / vmdk)
+added : can change disk id in MBR
+added : will copy grub4dos files to the 1st logical partition of the physicaldrive
+added : can backup/restore mbr from/to a disk image too
+added : can write grub4dos to a disk image too
+added : can read and write a partition table from/to a physical disk and to a disk image
+fixed : when restoring, we use IOCTL_DISK_GET_LENGTH_INFO to get the destination total capacity (including surplus sectors)
+fixed : use this ioctl as well when backuping and cloning
+
+1.8
+removed : will delete disk layout before restoring image
+added : will lock and dismount logical drives attached to a physical drive when restoring
+removed : will also put the volume offline
+added : will keep the handle open for locked/dismounted volume(s) during restore
+added : dismount drive in disk tab
+added : take online / offline volumes in volume tab
+added : clustersize in format tab
+added : predict failure flag in informations tab
+added : nt6 & plop as mbr
+modified : grub4dos merged with other mbr's
+modified : extend and shrink
+modified : quicker backup/restore of used clusters
+added : gzip for used clusters
+modified : migrated to zlib 1.2.5 (quicker!)
+//fixed : when backup ntfs logical drives, will add 1 sector (mbr backup sector)
+fixed : when backuping/restoring logical drives, will check fat type to get the right total_sectors
+todo : lock volume(s) while backuping in all backup functions
+todo : review all lock/dismount in lib unit (_delete_layout,_Set_Drive_Layout,_create_disk)
+todo : review angle = pure windows api or disk/volume byte manipulation 
+todo : look at ntxxx api (ntcreatefile, ntreafile/ntwritefile, etc)
+todo : add snapshot thru vss
+
+1.9
+fixed : a bug in reading chs values in partition table
+fixed : a bug in restore_drive function
+fixed : a bug in writing CHS values
+
+2.0
+modified : remove some screens/functions for simplicity and focus
+added : can backup/restore to/from a wim file (using MS WIMGAPI)
+added : can mount/unmount a wim file
+added : get information about an image within the .wim file
+fixed : support for drives > 2147483647 sectors, now up to 4294967295 sectors
+fixed : cleaned all pchar to pansichar to prepare a move to unicode (where pchar=pwidechar)
+removed : madsecurity, preparing for a 64bits version
+modified : use ms offlinereg for offline registry rather than mounting the hive (less intrusive on the target hive)
+modified : dropped getlogicaldrives api in favor or querydosdevice (to be able to use vss drives)
+added : set symbolic link
+added : set volume point
+fixed : will properly catch message from wimgapi
+added : will check presence of wimgapi
+added : will exclude files listed in wimscript.ini when capturing to wim
+added : ability to backup and restore to/from devio (from Imdisk / Olof) - devio 9000 c:\disk.img 0 0
+modified : regorganised menus into clone, disk and volume categories
+added : set attributes in a wim image
+added : can append datas to a wim file
+added : support for dynamic VHD's
+added : detach vhd
+modified : moved all virtualdisk functions to a new buttonbar
+added : create differencing vhd (i.e a vhd with a parent)
+added : open vhd in read only mode
+added : expand vhd
+added : merge vhd
+added : reference file for wim capture and wim apply
+
+2.1
+added : G4D as bootloader next to nt5/nt6
+added : manifest to run with requestedExecutionLevel level="highestAvailable" uiAccess="false"
+added : read offline hal/processor details
+added : delete offline currentcontrolset\enum key
+removed : dump registry (should be another software)
+removed : jvdialogs unit
+added : can patch the volume serial number (in boot sector)
+added : can patch the hidden sectors (in boot sector)
+added : can patch heads and secpertrack (in boot sector)
+fixed : writing MBR or BS would not work (ressources not saved to current directory)
+added : refresh drives when on DBT_DEVICEARRIVAL/DBT_DEVICEREMOVECOMPLETE
+added : generate random serial number (to patch boot sector)
+added : create disk will now offer mbr, gpt or raw
+fixed : create partition was adding one sector too much
+fixed : create unique partition was not wiping partitions above 1st partition.
+added : partition editor (using IOCTL_DISK_GET_DRIVE_LAYOUT)
+added : delete partition in partition editor
+added : create partition in partition editor
+added : gpt support in partition editor (using IOCTL_DISK_GET_DRIVE_LAYOUT_ex)
+added : gpt support in create partition (using IOCTL_DISK_GET_DRIVE_LAYOUT_ex)
+added : gpt support delete partition (using IOCTL_DISK_SET_DRIVE_LAYOUT_ex)
+modified : create a GPT partition when there is no partition yet
+
+2.2
+modified : IOCTL_DISK_GET_DRIVE_LAYOUT_ex before IOCTL_DISK_SET_DRIVE_LAYOUT_ex when deleting/creating a part
+added : check disk, next to format using fmifs.dll
+added : change partition type (in partition editor)
+added : change partition boot indicator (in partition editor)
+added : support for wimboot (windows 8.1 update 1 option)
+added : change diskid (in partition editor)
+changed : increased buffersize from 64k to 512k to speed backuping process
+changed : write win8.1u1 mbr and bs
+added : md5 hash for file
+added : hide_advanced boolean param in config.ini (options section)
+added : can take screenshot of the clonedisk window
+added : can remove an outlookbar button or page via the config.ini (outlookbar section)
+added : can inject any MBR boot code (in mbr editor)
+changed : all windows desktopcenter to screencenter
+added : patch bytespersec / sectorsperclus / secreserved (in boot sector editor)
+changed : bootsector patches for MSDOS5.0 (fat/fat32) as well (was only for oemid=NTFS)
+changed : renamed offlinereg unit to uofflinereg
+changed : changed res to 640*480
+changed : one pagecontrol removed in main screen for more space
+changed : disk/partition properties rewiewed (no access to mbr/bs anymore, all windows api)
+added : disk/part properties in a separate window
+changed : one tabsheet removed in advanced screen (disk/part properties)
+added : double click on the main listview will also display the disk/part properties window
+added : change diskid (in mbr editor)
+changed : using IOCTL_DISK_GET_LENGTH_INFO in main screen rather than disk geometry to retrieve (correct) disk size
+added : user confirmation on disk online/offline/rw/ro
+added : display disk serial number (in disk properties)
+added : display disk cache information (in disk properties)
+added : display disk attributes (in disk properties)
+changed : update int13 unit with IOCTL_DISK_GET_DRIVE_GEOMETRY_EX instead of IOCTL_DISK_GET_DRIVE_GEOMETRY
+changed : moved most disk management (GET) functions to a separate unit (http://msdn.microsoft.com/en-us/library/windows/desktop/aa363979(v=vs.85).aspx)
+changed : renamed clone_disk method to clone
+fixed : _GetDiskLength
+added : _GetPartLength
+added : backup_ewf & restore_ewf
+added : zero out unused (ntfs) clusters
+added : CompactVirtualDisk
+added : backup to fixed vhd (raw image+footer)
+
+2.3.x
+changed : use IOCTL_DISK_GET_PARTITION_INFO_EX to retrieve part size when backuping/restoring/cloning
+changed : common code for prep source and prep dest when backuping/restoring
+added : vdh informations
+modified : copyfile uses xcopy only if psexec not in the folder
+added : get_bs work with \\.\PhysicalDrivex syntax
+added : reach boot sector from partition table
+modified : get_bs and set_bs now get an offset optional parameter (to possibly skip asking the user)
+modified : can create more than one gpt partition
+added : can modify a gpt partition type
+added : can modify a gpt partition attributes
+added : can create a virtual disk (raw) in mb/kb/byes
+fixed : taborder in mbr and bs form
+fixed : config called later in formcreate
+added: enable_advanced=1 option in config
+fixed : _restore_bs to work with \\.\PhysicalDrivex syntax
+added : lock & dismount volume(s) when writing BS to physicaldrive
+todo : prep drive before cloning
+modified : getdrive works will all medias
+modified : _get_infos will not crash on GetDriveLayoutEX
+modified : increased getdrivelayoutex buffer size
+added : extra partition types in part editor
+modified : grayed out menus based on gpt/mbr in part editor
+modified : check on total size in wipe
+modified : change backup_drive function signature (mode parameter removed)
+modified : backup_drive function signature now accepts offset parameter
+modified : restore_drive function signature now accepts size & offset parameters
+added : can backup/restore from part editor
+added : disks in gray in main window
+modified : disks and parts are displayed by default
+fixed : libewf_handle_read_buffer_at_offset or libewf_handle_read_random
+fixed : extend/shrink function -> new_total_bytes :=int64(...)*1024*1024;
+added : backup_ewf function -> if (mediasize=0) and (pos(':\',lowercase(src))>0) then mediasize:=_Get_FileSize2(src).QuadPart;
+added : backup_devio function -> if (total_size=0) and (pos(':\',lowercase(source_file))>0) then total_size:=_Get_FileSize2(source_file).QuadPart;
+added : restore_devio function -> if (dst_size=0) and (pos(':\',lowercase(dest_file))>0) then dst_size:=high(int64);
+added : restore_ewf function -> if (total_sizes_dst=0) and (pos(':\',lowercase(dst))>0) then total_size_dst:=high(int64);
+added : options grayed out in backup/restore window (x32)
+added : disk image conversion
+modified : not fliping code for disk s/n in GetDiskProperty
+added : create iso disk image
+fixed : GetDiskProperty media type
+todo : review _getlastbyte for gpt
+
+2.3.6
+added : imapi, copy bootfile to temp folder to avoid file used error
+added : source/target label in convert image form
+added : backup_drive, zeromemory when readfile=false
+added : vdi2raw added in image conversion
+added : vmdk2raw added in image conversion
+added : vhd2raw added in image conversion
+added : backup/restore caption in backup/restore form
+todo : complete code to backup/restore from/to vhd/vmdk/vdi
+added : backup_devio simplified
+modified : backup_drive->Drive2RAW,backup_ewf->Drive2EWF,backup_wim->Drive2WiM
+modified : restore_drive->RAW2Drive,restore_ewf->EWF2Drive,restore_wim->WIM2Drive
+fixed : rename frmmain src & dst to _src and _dst which were creating inconsistencis here and there
+modified : cleanup in raw2drive
+modified : cleanup in ewf2drive
+modified : backup/restore to/from devio renamed to ... network
+modified : unlockvolume in backup_devio
+modified : cleanup in restore_devio
+added : volumes
+removed : mount point from 'symlinks - mount points' tab
+removed : dosdevices in advanced tabs
+removed : symlink in advanced tab
+added : mount_vol and unmount_vol to udiskmgmt
+added : change partition to number one in part editor
+added : extra partition mbr types in part editor
+modified : display disk id and part disk id, part id in updated column='device'
+added : restore any BS boot code
+modified : renamed NT6 to NT6.3 in boot sector and MBR
+modified : boot sector fields editable in white
+added : VolumeNameToDeviceName to lib and removed from ufrmvolume
+added : GetVolumePathNamesForVolumeName to udiskmgmt
+modified : wim/wimboot/skip empty parts grayed out when needed in restore/backup
+
+2.3.7 
+modified : rewritten _enum_drives_lv to enumerate thru volumes not drive letters
+modified : selected.caption replaced with inttostr(integer(lvdisks.Selected.data)) (x32)
+modified : renamed convert to vmdk/vhd to create vmdk file descriptor
+modified : added raw to vhd in disk conversion
+modified : GetVolumeNameForVolumeMountPoint moved to udiskmgmt
+todo : move md5 hash to disk image
+added : if pos(':\',path)>0 then exit; in prep_src & prep_dst
+added : backup/restore in mbr editor (x32)
+modified : backup will now suggest a proper filename 
+modified : set disk ro and rw will go offline/online if disk is online (x32)
+modified : VDI2RAW,vmdk2raw,vhd2raw,restore_devio,backup_devio,EWF2Drive,Drive2EWF moved to new uconvert unit
+modified : createfile_devio,getfilesize_deviowrite_devio,prep_src,prep_dst,_lockdismount_vol,_unlock_vol moved to new uconvert unit (x32)
+modified : vdi,LibVMDK,libVHDI,LibEWFUnit,wsck removed from umain
+removed : privilege, ntdll, fmifs units
+modified : GetDriveParams moved udiskmgt
+removed : int13ext unit
+modified : uformat renamed to ufrmformat
+fixed : result set to 0 in lib._GetDosDrives
+modified : Drive2RAW,RAW2Drive moved to uconvert unit
+added : mode 0 in lib._EnumerateDosDevices to list all devices
+added : list volume shadow copy volumes in volumes
+added : add dos device in volumes
+modified : renamed createvhd to umsvirtdisk
+modified : renamed main to ufrmMain
+modified : replaced custom wsck unit with delphi winsock unit
+midified : libewf_SetCompressionValues uses LIBEWF_COMPRESS_FLAG_USE_EMPTY_BLOCK_COMPRESSION
+modified : ufrvolume, definedosdevice will try DDD_RAW_TARGET_PATH and 0
+modified : drive2raw will display the offset if reafile fails
+modified : xxx2RAW will propose to delete target file
+todo : consider 1mB instead of 65kB for memsize in xxx2RAW functions
+added : backup/restore from popup menu (x32)
+added : checkbox in disk/part/disk&part popupmenu (x32)
+added : offline/online after create partition
+added : refresh after format (modal form)
+added : try/catch in wim_logmessage
+
+2.3.8
+added : makeiso improvements around boot files
+added : extend volume will propose the closest max size possible
+added : make_vmdk reviewed to be compatible with vbox
+added : makeiso to handle bootsect.bin and bcdw
+added : netcat in imgconvert
+added : logmessage function in imgconvert
+modified : drive2raw & RAW2Drive now accept same parameters (logical/physical device or file as src/dst)
+added : esd support in capture, apply, export and getinfos
+added : will allow to clone a disk even if source is bigger than destination (x32)
+added : partition editor to backup a partition to another physicaldrive (same offset src/dst)
+added : GetDiskProperty->CreateFile with 0 instead of generic_read
+fixed : can backup a dosdevice (like a shadowcopy volume)
+added : can backup volume to volume
+added : change disk ID on gpt (parteditor)
+added : closehandle after detachvhd
+added : new function _Change_PartID_Ex_GPT used in part editor
+added : will do a offline/online cycle after Tfrmmain.create_partition only if disk is online
+added : volume size in volumes
+added : List_shadowvolumes_ in volumes
+added : resizevhd function - will resize disk within, not the container - opposite of expand
+fixed : a bug in compactvhd - will resize the container, not the disk within
+fixed : allow to detach permanent drive during clonedisk session (x32)
+todo : sync one last time to merge in one raw2raw method 
+todo : replace clone method by raw2raw
+todo : set/getautomount https://github.com/pbatard/rufus/blob/master/src/drive.c
+todo: write to rawio vhd https://github.com/Microsoft/Windows-classic-samples/blob/master/Samples/Hyper-V/Storage/cpp/RawIO.cpp
+added : will propose to extend volume even if grow partition failed
+added : vhds support
+added : partition editor display GPT partition unique GUID
+added : backup/restore to/from compressed LZ4 file
+added : netcat to backup/restore to/from network
+added : backup/restore to/from vhd/vhdx (x64 to test)
+added : wimcapture is lzms/esd compatible 
+todo : consider nfs in network screen
+added : physical bytes per sector info displayed thru lib unit
+added : vhdx will now be created with default physical bytes per sector i.e 4k
+added : createvhd accepts logical and physical sector size as param
+fixed : offline/online after create partition
+added : replaced vhd2raw and img2vhd by RawVHD (except for xp)
+modified : wim operations moved under "disk image"
+added : 7z extractor (mainly to extract files from iso and wim)
+added : disk and partition can be created while creating vhd (x32)
+added : vhd can be created with 512 or 4096 sectors
+added : lz4 compressor (x32)
+
+coming:
+add read support for vhd (fixed/dyn/diff), vmdk, qcow
+browse iso, wim, img, vhd ... (almost there)
+backup/restore to/from fixed/dynamic vhd (code is there)
+mirrorvirtualdisk?
+
+
+
+*************************
+todo:
+*extract bytes
+*one unique function to backup and restore (and clone disk)
+*parse/save/restore EBR
+*use temp folder instead of current app folder
+*devio compiled for ubuntu
+*************************
+devio examples
+devio --dll=libvhdi_proxy.dll;dllopen 9000 c:\test2.vhd
+devio 9000 c:\disk.img 0 0
+***********************************
+internal notes:
+*bcdedit /set {default} detecthal on before cloning win7?
+*correct size of disk/volume
+	disk (IOCTL_DISK_GET_LENGTH_INFO or IOCTL_DISK_GET_DRIVE_GEOMETRY_EX) 160041885696 
+	volume (IOCTL_DISK_GET_PARTITION_INFO_EX) vs getdiskfreespace (missing 3 sectors) or even bs (missing one sector)
+*****************************
+
+  

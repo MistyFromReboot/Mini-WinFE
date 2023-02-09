@@ -3,6 +3,10 @@
 Windows Forensic Environmnent - based on WinPE. This project has been developed to create a simplified method for building a Windows Forensic Environmnet (WinFE) for digital forensic acquisitions. Full documentation is included in the project download and on the following website - 
 [http://winfe.mistyprojects.co.uk/](http://winfe.mistyprojects.co.uk/).
 
+Download the project by selecting the required branch > click on the 'Code' button > select 'Download ZIP'. Alternatively, download from the following location(s) -
+- main branch - [http://winfe.mistyprojects.co.uk/Mini-WinFE-main.zip](http://winfe.mistyprojects.co.uk/Mini-WinFE-main.zip)
+- WinPE branch - [http://winfe.mistyprojects.co.uk/Mini-WinFE-WinPE.zip](http://winfe.mistyprojects.co.uk/Mini-WinFE-WinPE.zip)
+
 All you require to create a WinFE in a matter of minutes is the Mini-WinFE download, a Windows Source DVD (or mounted disc image) and any of the third party applications you want to include in the build - the WAIK or ADK is not required.
 
 Supported applications include -

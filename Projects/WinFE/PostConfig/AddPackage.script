@@ -4,8 +4,8 @@ Description=
 Selected=None
 Level=10
 Author=Misty
-Version=20220524
-Date=2022-05-24
+Version=20230209
+Date=2023-02-09
 Interface=Interface1
 
 [Interface1]
@@ -53,42 +53,49 @@ If,%Interface%,Equal,Interface2,Run,%ScriptFile%,MuliplePackages
 [MuliplePackages]
 set,%MYPATH%,%pFileBox1%,Global
 If,%MYPATH%,Equal,,Begin
-Message,"Package not selected. Aborting..."
-Exit
+  Message,"Package not selected. Aborting..."
+  Exit
 End
 If,Not,ExistDir,"%MYPATH%",Begin
-Message,"Could not find #$q%MYPATH%#$q - check path"
-Exit
+  Message,"Could not find #$q%MYPATH%#$q - check path"
+  Exit
 End
 StrFormat,Right,%MYPATH%,1,%endcharacter%
 If,Not,%endcharacter%,Equal,\,Begin
-Message,"Error. The #$qPATH to package(s)#$q entry in this script must end in a backslash (#$q\#$q).#$x#$xABORTING..."
-Exit
+  Message,"Error. The #$qPATH to package(s)#$q entry in this script must end in a backslash (#$q\#$q).#$x#$xABORTING..."
+  Exit
 End
 Set,%CONTINUE%,NO
 If,Question,"Running this script will extract all .7z files in the target path to the Mini-WinFE project directory. #$x#$xPlease ensure that any .7z files in the path are compatible project packages.#$x#$xSelect YES to CONTINUE or NO to ABORT.",Set,%CONTINUE%,YES
 If,%CONTINUE%,Equal,NO,Exit
 ShellExecute,Hide,"%Tools%\7z.exe","x #$q%MYPATH%*.7z#$q -y -o#$q%BaseDir%#$q"
-System,RefreshAllScripts
+If,%Builder%,Equal,PEBakery,System,RefreshAllScripts
+Else,System,RESCANSCRIPTS
 
 [SinglePackage]
 set,%MYPACKAGE%,%pFileBox1%,Global
 If,%MYPACKAGE%,Equal,,Begin
-Message,"Package not selected. Aborting..."
-Exit
+  Message,"Package not selected. Aborting..."
+  Exit
 End
 If,Not,ExistFile,"%MYPACKAGE%",Begin
-Message,"Could not find #$q%MYPACKAGE%#$q - check path"
-Exit
+  Message,"Could not find #$q%MYPACKAGE%#$q - check path"
+  Exit
 End
 StrFormat,EXT,"%MYPACKAGE%","%extension%"
 If,Not,"%extension%",Equal,".7z",Begin
-Message,"The file you have selected as not a .7z type file. #$xOnly .7z package files are supported. #$x#$xAborting script..."
-Exit
+  Message,"The file you have selected as not a .7z type file. #$xOnly .7z package files are supported. #$x#$xAborting script..."
+  Exit
 End
-Set,%CONTINUE%,NO
-If,Question,"Running this script will extract the selected .7z file to the Mini-WinFE project directory. #$x#$xPlease ensure that this file is a compatible project package.#$x#$xSelect YES to CONTINUE or NO to ABORT.",Set,%CONTINUE%,YES
-If,%CONTINUE%,Equal,NO,Exit
+If,ExistFile,"%Cache%\Temp\mini-winfe_package.tag",FileDelete,"%Cache%\Temp\mini-winfe_package.tag"
+If,ExistFile,"%BaseDir%\Projects\mini-winfe_package.tag",FileDelete,"%BaseDir%\Projects\mini-winfe_package.tag"
+ShellExecute,Hide,"%Tools%\7z.exe","e -y -r #$q%MYPACKAGE%#$q mini-winfe_package.tag -o#$q%Cache%\Temp#$q"
+If,Not,ExistFile,"%Cache%\Temp\mini-winfe_package.tag",Begin
+  Message,"The selected file does not appear to be a Mini-WinFE Package"
+  Exit,"The selected file does not appear to be a Mini-WinFE Package"
+End
 ShellExecute,Hide,"%Tools%\7z.exe","x #$q%MYPACKAGE%#$q -y -o#$q%BaseDir%#$q"
-System,RefreshAllScripts
-
+If,ExistFile,"%Cache%\Temp\mini-winfe_package.tag",FileDelete,"%Cache%\Temp\mini-winfe_package.tag"
+If,ExistFile,"%BaseDir%\Projects\mini-winfe_package.tag",FileDelete,"%BaseDir%\Projects\mini-winfe_package.tag"
+If,%Builder%,Equal,PEBakery,System,RefreshAllScripts
+Else,System,RESCANSCRIPTS
