@@ -1,0 +1,62 @@
+[main]
+Title=DPI scaling
+Description=Change the DPI scaling in WinPE (working in WinPE 4.0/5.x/10.x)
+Selected=False
+Level=4
+Author=Misty
+Version=20230316
+Date=2023-03-16
+
+[Interface]
+pBevel1=pBevel1,1,12,10,70,500,40
+pScrollBox1=125,1,4,20,80,70,20,,100,125,150,175,200,225,250,275,300
+pTextLabel1="DPI percentage",1,1,211,83,120,18,10,Bold
+pButton1=HELP,1,8,430,80,70,20,1.HELP,0,True,_1.HELP_,True
+pTextLabel2="More information",1,1,10,30,150,18,10,Bold
+pWebLabel2=http://mistyprojects.co.uk/documents/winpe_dpi/dpi.htm,1,10,150,30,220,18,http://mistyprojects.co.uk/documents/winpe_dpi/dpi.htm
+
+
+[process]
+If,%FullProjectRun%,Equal,NO,Begin
+  Run,"%ProjectDir%\Core\common.script",PostConfigRun
+  IniRead,"%TargetDir%\project.settings.ini",MAIN.SETTINGS,BOOT.WIM.IMAGE.NUMBER,%Boot.wim.Image.number%
+  Set,%ERROR%,0
+  If,Not,ExistFile,"%Target_config%\default",Set,%ERROR%,1
+  If,Not,ExistFile,"%OutputDir%\sources\boot.wim",Set,%ERROR%,1
+  If,%ERROR%,Equal,1,Exit,"Missing file"
+End
+If,%pScrollBox1%,Equal,,Exit
+If,%pScrollBox1%,Equal,100,Set,%DPI%,96
+If,%pScrollBox1%,Equal,125,Set,%DPI%,120
+If,%pScrollBox1%,Equal,150,Set,%DPI%,144
+If,%pScrollBox1%,Equal,175,Set,%DPI%,168
+If,%pScrollBox1%,Equal,200,Set,%DPI%,192
+If,%pScrollBox1%,Equal,225,Set,%DPI%,216
+If,%pScrollBox1%,Equal,250,Set,%DPI%,240
+If,%pScrollBox1%,Equal,275,Set,%DPI%,264
+If,%pScrollBox1%,Equal,300,Set,%DPI%,288
+If,ExistFile,"%Target_config%\default",If,Not,ExistRegSection,HKLM,_WinPE_DEFAULT,Begin
+  RegHiveLoad,_WinPE_DEFAULT,"%Target_config%\default"
+  RegWrite,HKLM,0x4,"_WinPE_Default\Control Panel\Desktop","DpiScalingVer","4120",NOWARN
+  RegWrite,HKLM,0x4,"_WinPE_Default\Control Panel\Desktop","Win8DpiScaling","1",NOWARN
+  RegWrite,HKLM,0x4,"_WinPE_Default\Control Panel\Desktop","LogPixels","%DPI%",NOWARN
+  RegHiveUnload,_WinPE_DEFAULT
+End
+IniWrite,"%OutputDir%\Project.Settings.ini",PROGRAMS,DPI,%pScrollBox1%#$p
+If,%FullProjectRun%,Equal,NO,Begin
+  Echo,Adding files to boot.wim...
+  If,%Builder%,Equal,PEBakery,WimPathAdd,%OutputDir%\sources\boot.wim,%Boot.wim.Image.number%,%TargetDir%,""
+  Else,ShellExecute,Hide,"%TOOLS%\wimlib\wimlib-imagex.exe","update #$q%OutputDir%\sources\boot.wim#$q %Boot.wim.Image.number% --command=#$qadd '%TargetDir%' '\'#$q"
+End
+
+[1.HELP]
+Message,"Booting WinPE on UEFI firmware can be problematic as there is no way of changing the screen resolution when WinPE has booted. This is due to the Graphics Output Protocol (GOP) mode and use of the native resolution detected from the EDID (Extended display Identification Data). There may be further issues due to WinPE scaling the screen based on resolution. As an example, on a Thinkpad T470s with full HD display (1920x1080 resolution) WinPE booted on UEFI firmware automatically scales to 150#$p causing issues with the visability of some menus/settings. #$x#$xUse this script to set DPI scaling manually."
+
+[AuthorEncoded]
+Logo=screen1.ico
+screen1.ico=537,716
+
+[EncodedFile-AuthorEncoded-screen1.ico]
+lines=0
+0=eJztmbtOwzAUhg+K1AxpFZUBqRMMIDF2bRcG5l4egaV9DZ6jb8BjIKpkZay68QZUYoABccjfyCV1YzW9xbE4qb6eKHXtz4kvSUx0lnzabUq+r+jphuiCiG4TkkP0QOnx5XZNdB6kqI2ZBUEQrDObzbjf73O9XmcMTVUCTsPhkOfzOZvcwzC07rmNZrOZW4der2fdrSi4Drp/EARraTzPqxR6W9L99Tra7ou7+p3CfzKZMHDRP45jrtVqS7Dvmn+r1VrlhX2X/DudzsaY0e12D8qzLP/RaGQc98bj8d752ui/x0T8xd+2/yH9ryimMg71V2NiGecZZR3LH3Nndi4qq52gzOy8vY8/7l0w/5fZL7JloWx1//Qf/V1vP1lc7b9ZcG9zan9TGTJ/ib/4y/NLEfKeH/PGxKr6A5ef30EURU6/PwEuv786Ntv8Go3G2u++71eKrFve+9vBYGAc96oG1lh0f1fWL+AI17w2huO4DnpbqgJYn8Aai8ldEATBAgiF41symJFP9IzobcYpkk0Rfx7T+H23Hr8u07gI06jSG+I78yfiK/MHYsi8SOIL4v1fVMdX6dT/tuW/8lBeuq+qR5reVG91XnY9n78US+U+eJzjLk4uSk3NM9TLTM5nGAUjDuxThdDnGLHLu5atk2dgAgATMQdiM1DZOgEAAAACAAAAJwAAAM4BAAAAAAAAAQAAAAAAAAAAAAAA
+

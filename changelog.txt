@@ -1,4 +1,11 @@
 
+20230316
+========
+* \Settings\dpi_scaling.script
+* Changelog updated
+* Readme files updated
+
+
 20230209
 ========
 * Changelog added
